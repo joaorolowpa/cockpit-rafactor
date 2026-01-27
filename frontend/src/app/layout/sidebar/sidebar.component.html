@@ -1,0 +1,105 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed()">
+  <!-- Sidebar Header -->
+<div class="sidebar-header">
+  <div class="logo-container">
+    @if (!isCollapsed()) {
+      <div class="header-logo">
+        <i class="fas fa-star"></i>
+      </div>
+    }
+    @if (!isCollapsed()) {
+      <span class="logo-text">Milestones</span>
+    }
+  </div>
+  <button class="sidebar-toggle" (click)="toggleCollapse()">
+    <i class="fas fa-chevron-left"></i>
+  </button>
+</div>
+
+  <!-- Sidebar Content -->
+  <div class="sidebar-content">
+    <!-- Search Form -->
+    <div class="search-form" (click)="onSearchClick()">
+      <i class="fas fa-search"></i>
+      <input 
+        type="search" 
+        class="search-input" 
+        placeholder="Search menu..."
+        [value]="searchTerm()"
+        (input)="onSearchChange($any($event.target).value)"
+        (click)="$event.stopPropagation()"
+      />
+      @if (searchTerm() && !isCollapsed()) {
+        <button class="clear-btn" (click)="clearSearch(); $event.stopPropagation()" type="button">
+          <i class="fas fa-times"></i>
+        </button>
+      }
+    </div>
+
+    <!-- Menu List -->
+    <ul class="menu-list">
+      @for (item of getFilteredMenuItems(); track item.label) {
+        <li class="menu-item">
+          @if (item.children && item.children.length > 0) {
+            <!-- Parent with children -->
+            <div 
+              class="menu-link parent-item" 
+              [class.expanded]="isExpanded(item.label)"
+              (click)="toggleExpand(item.label)"
+              [title]="isCollapsed() ? item.label : ''"
+            >
+              <i [class]="item.icon" class="menu-icon"></i>
+              <span class="menu-label">{{ item.label }}</span>
+              @if (!isCollapsed()) {
+                <i 
+                  class="fas chevron-icon" 
+                  [class.fa-chevron-down]="isExpanded(item.label)"
+                  [class.fa-chevron-right]="!isExpanded(item.label)"
+                ></i>
+              }
+            </div>
+            
+            <!-- Submenu -->
+            @if (isExpanded(item.label) && !isCollapsed()) {
+              <ul class="submenu-list">
+                @for (child of item.children; track child.label) {
+                  <li class="submenu-item">
+                    <a 
+                      [routerLink]="child.route" 
+                      routerLinkActive="active"
+                      class="menu-link child-item"
+                    >
+                      <span class="menu-label">{{ child.label }}</span>
+                    </a>
+                  </li>
+                }
+              </ul>
+            }
+          } @else {
+            <!-- Simple menu item -->
+            <a 
+              [routerLink]="item.route" 
+              routerLinkActive="active"
+              class="menu-link"
+              [title]="isCollapsed() ? item.label : ''"
+            >
+              <i [class]="item.icon" class="menu-icon"></i>
+              <span class="menu-label">{{ item.label }}</span>
+            </a>
+          }
+        </li>
+      }
+    </ul>
+  </div>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer">
+    <div class="user-menu" [title]="isCollapsed() ? userMenuItem.label : ''">
+      <i [class]="userMenuItem.icon" class="user-icon"></i>
+      <div class="user-info">
+        <span class="user-name">{{ userMenuItem.label }}</span>
+        <span class="user-role">Developer</span>
+      </div>
+    </div>
+  </div>
+</aside>
