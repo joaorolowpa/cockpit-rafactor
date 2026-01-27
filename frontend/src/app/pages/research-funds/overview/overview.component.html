@@ -1,3 +1,36 @@
 <div class="page-container">
-  <h1 class="page-title">Research - Funds Overview</h1>
+  <div class="page-header">
+    <h1 class="page-title">Research - Funds Overview</h1>
+    <p class="page-description">Overview of fund metrics and performance data</p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="skeleton-wrapper">
+        @for (item of [1, 2, 3]; track item) {
+          <div class="skeleton-group">
+            <div class="skeleton skeleton-header"></div>
+            <div class="skeleton skeleton-content"></div>
+            <div class="skeleton skeleton-content"></div>
+          </div>
+        }
+      </div>
+    </div>
+  } @else if (error()) {
+    <div class="error-container">
+      <i class="fas fa-exclamation-circle"></i>
+      <p>{{ error() }}</p>
+      <button class="retry-btn" (click)="loadData()">
+        <i class="fas fa-redo"></i>
+        Retry
+      </button>
+    </div>
+  } @else if (groupedFunds().length === 0) {
+    <div class="empty-container">
+      <i class="fas fa-folder-open"></i>
+      <p>No funds data available</p>
+    </div>
+  } @else {
+    <app-funds-accordion [groupedFunds]="groupedFunds()" />
+  }
 </div>

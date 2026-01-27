@@ -1,0 +1,58 @@
+<div class="accordion-container">
+  @for (group of groupedFunds(); track $index) {
+    <div class="fund-group">
+      <!-- Fund Header -->
+      <div 
+        class="fund-header"
+        [class.expanded]="isFundExpanded($index)"
+        (click)="toggleFund($index)"
+      >
+        <div class="fund-title">
+          <span>{{ group.fundName }}</span>
+          <span class="badge">{{ group.relationships.length }} relationships</span>
+        </div>
+        <i 
+          class="fas chevron"
+          [class.fa-chevron-down]="isFundExpanded($index)"
+          [class.fa-chevron-right]="!isFundExpanded($index)"
+        ></i>
+      </div>
+
+      <!-- Relationships -->
+      @if (isFundExpanded($index)) {
+        <div class="relationships-container">
+          @for (relationship of group.relationships; track relationship.id) {
+            <div class="relationship-item">
+              <!-- Relationship Header -->
+              <div 
+                class="relationship-header"
+                (click)="toggleRelationship(relationship.id)"
+              >
+                <div class="relationship-title">
+                  <i class="fas fa-chart-line"></i>
+                  <span>{{ relationship.asset_display_name }}</span>
+                  <span class="currency-badge">{{ relationship.currency }}</span>
+                </div>
+                <i 
+                  class="fas chevron-small"
+                  [class.fa-chevron-down]="isRelationshipExpanded(relationship.id)"
+                  [class.fa-chevron-right]="!isRelationshipExpanded(relationship.id)"
+                ></i>
+              </div>
+
+              <!-- Metrics Table -->
+              @if (isRelationshipExpanded(relationship.id) && relationship.relationship_metrics) {
+                <div class="metrics-container">
+                  <app-metrics-table 
+                    [metrics]="relationship.relationship_metrics"
+                    [relationshipName]="relationship.asset_display_name"
+                  />
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

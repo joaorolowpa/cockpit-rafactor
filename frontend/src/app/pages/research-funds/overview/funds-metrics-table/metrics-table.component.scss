@@ -1,0 +1,262 @@
+.metrics-container {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table-title {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+
+  h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  flex-wrap: wrap;
+}
+
+.toolbar-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    color: #2c3e50;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.active {
+    background: #f39c12;
+    color: white;
+    border-color: #f39c12;
+
+    &:hover {
+      background: #e67e22;
+      border-color: #e67e22;
+    }
+  }
+
+  i {
+    font-size: 0.75rem;
+  }
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 500px;
+  transition: max-height 0.3s ease;
+
+  &.expanded {
+    max-height: 80vh;
+  }
+}
+
+.metrics-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  min-width: 800px;
+
+  thead {
+    position: sticky;
+    top: 0;
+    background: #f1f5f9;
+    z-index: 10;
+
+    th {
+      padding: 0.875rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #475569;
+      border-bottom: 2px solid #cbd5e1;
+      font-size: 0.8125rem;
+      white-space: nowrap;
+
+      &.checkbox-col {
+        width: 50px;
+        text-align: center;
+        position: sticky;
+        left: 0;
+        background: #f1f5f9;
+        z-index: 12;
+        border-right: 2px solid #cbd5e1;
+      }
+
+      &.series-name-col {
+        min-width: 250px;
+        position: sticky;
+        left: 50px;
+        background: #f1f5f9;
+        z-index: 11;
+      }
+
+      &.date-col {
+        min-width: 120px;
+        text-align: center;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: #f8fafc;
+      }
+
+      &.selected {
+        background: #eff6ff;
+      }
+
+      &:not(:last-child) {
+        border-bottom: 1px solid #e2e8f0;
+      }
+    }
+
+    td {
+      padding: 0.875rem 1rem;
+      color: #2c3e50;
+      white-space: nowrap;
+
+      &.checkbox-col {
+        text-align: center;
+        position: sticky;
+        left: 0;
+        background: white;
+        z-index: 6;
+        border-right: 2px solid #e2e8f0;
+        
+        input[type="checkbox"] {
+          width: 16px;
+          height: 16px;
+          cursor: pointer;
+          accent-color: #f39c12;
+        }
+      }
+
+      &.series-name-cell {
+        font-weight: 500;
+        color: #64748b;
+        font-style: italic;
+        position: sticky;
+        left: 50px;
+        background: white;
+        z-index: 5;
+      }
+
+      &.value-cell {
+        text-align: right;
+        font-family: 'Courier New', monospace;
+        font-size: 0.8125rem;
+      }
+    }
+
+    // Mantém background nas colunas fixas durante hover/selected
+    tr:hover {
+      td.checkbox-col,
+      td.series-name-cell {
+        background: #f8fafc;
+      }
+    }
+
+    tr.selected {
+      td.checkbox-col,
+      td.series-name-cell {
+        background: #eff6ff;
+      }
+    }
+  }
+
+  .empty-cell {
+    text-align: center !important;
+    padding: 3rem 2rem !important;
+    color: #94a3b8;
+    font-style: italic;
+  }
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.filter-icon {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #475569;
+  }
+}
+
+// Scroll customizado
+.table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+
+  &:hover {
+    background: #94a3b8;
+  }
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 0.75rem 1rem;
+  }
+
+  .toolbar-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .metrics-table {
+    font-size: 0.8125rem;
+
+    thead th,
+    tbody td {
+      padding: 0.625rem 0.75rem;
+    }
+  }
+}
