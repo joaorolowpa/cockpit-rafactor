@@ -128,11 +128,6 @@ export class SidebarComponent implements OnInit {
       label: 'Backoffice',
       icon: 'fas fa-folder',
       route: '/backoffice'
-    },
-    {
-      label: 'Developer Utils',
-      icon: 'fas fa-code',
-      route: '/developer-utils'
     }
   ];
 

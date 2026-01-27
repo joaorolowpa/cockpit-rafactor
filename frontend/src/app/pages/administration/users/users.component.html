@@ -1,3 +1,31 @@
 <div class="page-container">
-  <h1 class="page-title">Users</h1>
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Admin Panel</h1>
+      <p class="page-description">Manage users and roles</p>
+    </div>
+    <button class="create-btn" (click)="openCreateDialog()">
+      <i class="fas fa-plus"></i>
+      Create User
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading users...</p>
+    </div>
+  } @else {
+    <app-users-table 
+      [users]="users()" 
+      (userUpdated)="loadUsers()"
+    />
+  }
 </div>
+
+@if (showCreateDialog()) {
+  <app-user-form-dialog 
+    (close)="onDialogClose()"
+    (userCreated)="onUserCreated()"
+  />
+}

@@ -1,0 +1,81 @@
+<div class="dialog-overlay" (click)="onClose()">
+  <div class="dialog-content" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <div>
+        <h2>Change Roles</h2>
+        <p class="user-name">{{ user().name }}</p>
+      </div>
+      <button class="close-btn" (click)="onClose()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="dialog-body">
+      <p class="description">Select the roles you want to assign to this user.</p>
+
+      <div class="roles-grid">
+        @for (role of availableRoles; track role) {
+          <label class="role-item">
+            <input 
+              type="checkbox"
+              [checked]="isRoleSelected(role)"
+              (change)="toggleRole(role)"
+            />
+            <span class="role-label">{{ role }}</span>
+          </label>
+        }
+      </div>
+
+      <!-- Summary Section -->
+      <div class="summary-section">
+        <div class="summary-header" (click)="toggleSummary()">
+          <h4>Active Roles Summary</h4>
+          <button type="button" class="toggle-btn">
+            <i 
+              class="fas" 
+              [class.fa-chevron-down]="showSummary()"
+              [class.fa-chevron-right]="!showSummary()"
+            ></i>
+          </button>
+        </div>
+        
+        @if (showSummary()) {
+          <div class="summary-content">
+            @if (selectedRoles().length === 0) {
+              <p class="no-roles-selected">No roles selected</p>
+            } @else {
+              <div class="selected-roles">
+                @for (role of selectedRoles(); track role) {
+                  <span class="role-badge">{{ role }}</span>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <button 
+        type="button" 
+        class="cancel-btn" 
+        (click)="onClose()"
+      >
+        Cancel
+      </button>
+      <button 
+        type="button" 
+        class="submit-btn"
+        [disabled]="isSubmitting()"
+        (click)="onSubmit()"
+      >
+        @if (isSubmitting()) {
+          <span class="spinner-small"></span>
+          Saving...
+        } @else {
+          Save Changes
+        }
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+<div class="dialog-overlay" (click)="onClose()">
+  <div class="dialog-content" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h2>Create User</h2>
+      <button class="close-btn" (click)="onClose()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="dialog-body">
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input 
+            id="email"
+            type="email" 
+            formControlName="email"
+            placeholder="user@example.com"
+          />
+          @if (form.controls.email.touched && form.controls.email.errors?.['required']) {
+            <span class="error-message">Email is required</span>
+          }
+          @if (form.controls.email.touched && form.controls.email.errors?.['email']) {
+            <span class="error-message">Please enter a valid email</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="name">Name *</label>
+          <input 
+            id="name"
+            type="text" 
+            formControlName="name"
+            placeholder="John Doe"
+          />
+          @if (form.controls.name.touched && form.controls.name.errors?.['required']) {
+            <span class="error-message">Name is required</span>
+          }
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              formControlName="user_active"
+            />
+            <span>Active User</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="dialog-footer">
+        <button 
+          type="button" 
+          class="cancel-btn" 
+          (click)="onClose()"
+        >
+          Cancel
+        </button>
+        <button 
+          type="submit" 
+          class="submit-btn"
+          [disabled]="form.invalid || isSubmitting()"
+        >
+          @if (isSubmitting()) {
+            <span class="spinner-small"></span>
+            Creating...
+          } @else {
+            Create User
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

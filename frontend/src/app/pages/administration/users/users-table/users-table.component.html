@@ -1,0 +1,128 @@
+<div class="table-container">
+  <!-- Filters -->
+  <div class="filters-bar">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input 
+        type="text" 
+        placeholder="Search by name or email..."
+        [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)"
+      />
+      @if (searchTerm()) {
+        <button class="clear-btn" (click)="searchTerm.set('')">
+          <i class="fas fa-times"></i>
+        </button>
+      }
+    </div>
+
+    <select 
+      class="role-filter"
+      [value]="selectedRole()"
+      (change)="selectedRole.set($any($event.target).value)"
+    >
+      <option value="">All Roles</option>
+      @for (role of availableRoles; track role) {
+        <option [value]="role">{{ role }}</option>
+      }
+    </select>
+
+    @if (searchTerm() || selectedRole()) {
+      <button class="clear-filters-btn" (click)="clearFilters()">
+        Clear Filters
+      </button>
+    }
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrapper">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Roles</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of filteredUsers; track user.id) {
+          <tr>
+            <td>{{ user.id }}</td>
+            <td class="name-cell">{{ user.name }}</td>
+            <td class="email-cell">{{ user.email }}</td>
+            <td>
+              <span 
+                class="status-badge" 
+                [class.active]="user.user_active"
+                [class.inactive]="!user.user_active"
+              >
+                {{ user.user_active ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td>
+              <div class="roles-container">
+                @if (user.roles.length === 0) {
+                  <span class="no-roles">No roles assigned</span>
+                } @else {
+                  @for (role of user.roles; track role) {
+                    <span class="role-badge">{{ role }}</span>
+                  }
+                }
+              </div>
+            </td>
+            <td class="actions-cell">
+              <div class="actions-menu-wrapper">
+                <button 
+                  class="actions-btn"
+                  (click)="toggleActionsMenu(user.id)"
+                >
+                  <i class="fas fa-ellipsis-vertical"></i>
+                </button>
+                
+                @if (showActionsMenu() === user.id) {
+                  <div class="actions-dropdown">
+                    <button 
+                      class="dropdown-item"
+                      (click)="openEditRoles(user)"
+                    >
+                      <i class="fas fa-user-shield"></i>
+                      Change Roles
+                    </button>
+                    <button class="dropdown-item" (click)="toggleUserActive(user)">
+                      <i class="fas fa-toggle-on"></i>
+                      {{ user.user_active ? 'Deactivate' : 'Activate' }}
+                    </button>
+                  </div>
+                }
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="empty-state">
+              <i class="fas fa-users"></i>
+              <p>No users found</p>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-footer">
+    <span class="results-count">
+      Showing {{ filteredUsers.length }} of {{ users().length }} users
+    </span>
+  </div>
+</div>
+
+@if (editingUser()) {
+  <app-edit-roles-dialog
+    [user]="editingUser()!"
+    (close)="closeEditDialog()"
+    (rolesUpdated)="onRolesUpdated()"
+  />
+}

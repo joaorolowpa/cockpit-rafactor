@@ -137,10 +137,6 @@ export const routes: Routes = [
       {
         path: 'backoffice',
         loadComponent: () => import('./pages/backoffice/backoffice.component').then(m => m.BackofficeComponent)
-      },
-      {
-        path: 'developer-utils',
-        loadComponent: () => import('./pages/developer-utils/developer-utils.component').then(m => m.DeveloperUtilsComponent)
       }
     ]
   }
