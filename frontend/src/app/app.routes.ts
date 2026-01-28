@@ -100,7 +100,7 @@ export const routes: Routes = [
           },
           {
             path: 'funds',
-            loadComponent: () => import('./pages/research-manager/funds/funds.component').then(m => m.FundsComponent)
+            loadComponent: () => import('./pages/research-manager/funds/funds.component').then(m => m.FundManagersComponent)
           }
         ]
       },

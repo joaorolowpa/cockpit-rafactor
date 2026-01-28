@@ -1,3 +1,64 @@
 <div class="page-container">
-  <h1 class="page-title">Research - Manager Funds</h1>
+  <div class="page-header">
+    <h1 class="page-title">Fund Managers</h1>
+    <p class="page-subtitle">Manage your fund managers</p>
+  </div>
+
+  <div class="search-container">
+    <div class="search-wrapper">
+      <i class="fa fa-search"></i>
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Search for a fund or company..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        [disabled]="loading"
+      />
+      <button 
+        *ngIf="searchTerm" 
+        class="clear-btn"
+        (click)="clearSearch()"
+      >
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <i class="fa fa-spinner fa-spin"></i>
+    <p>Loading fund managers...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-state">
+    <i class="fa fa-exclamation-circle"></i>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="loadFunds()">
+      <i class="fa fa-refresh"></i> Retry
+    </button>
+  </div>
+
+  <!-- Funds Grid -->
+  <div *ngIf="!loading && !error" class="funds-grid">
+    <div 
+      *ngFor="let fund of filteredFunds" 
+      class="fund-card"
+      (click)="onFundClick(fund)"
+    >
+      <div class="fund-initial">
+        {{ fund.display_name.charAt(0) }}
+      </div>
+      <div class="fund-info">
+        <span class="fund-name">{{ fund.display_name }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && filteredFunds.length === 0" class="empty-state">
+    <i class="fa fa-search"></i>
+    <p>No fund managers found</p>
+  </div>
 </div>
