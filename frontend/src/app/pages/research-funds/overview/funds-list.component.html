@@ -26,7 +26,7 @@
               <!-- Relationship Header -->
               <div 
                 class="relationship-header"
-                (click)="toggleRelationship(relationship.id)"
+                (click)="toggleRelationship(relationship.id); $event.stopPropagation()"
               >
                 <div class="relationship-title">
                   <i class="fas fa-chart-line"></i>

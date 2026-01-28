@@ -37,7 +37,7 @@ export interface Metrics {
 }
 
 export interface RelationshipWithMetrics extends Relationship {
-  metrics?: Metrics;
+  relationship_metrics?: Metrics;
 }
 
 export interface GroupedFund {
