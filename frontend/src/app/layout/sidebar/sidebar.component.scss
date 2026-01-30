@@ -6,7 +6,7 @@
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
-  background: radial-gradient(circle at top, #273545 0%, #1c2630 55%, #141b21 100%);
+  background: #1c2630ee;
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 12px 0 28px rgba(8, 12, 16, 0.18);
   transition: width 0.35s ease;
@@ -123,7 +123,7 @@
   display: flex;
   padding: 0 14px;
   white-space: nowrap;
-  background: rgba(17, 24, 32, 0.75);
+  background: rgba(17, 24, 32, 0);
   border: 1px solid rgba(255, 255, 255, 0.12);
   transition: all 0.2s ease;
   position: relative;

@@ -2,6 +2,16 @@
   <app-sidebar />
   <div class="content-wrapper">
     <main class="main-content">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        @for (crumb of breadcrumbs(); track crumb.url; let last = $last) {
+          @if (!last) {
+            <a class="breadcrumb-link" [routerLink]="crumb.url">{{ crumb.label }}</a>
+            <span class="breadcrumb-separator">/</span>
+          } @else {
+            <span class="breadcrumb-current">{{ crumb.label }}</span>
+          }
+        }
+      </nav>
       <router-outlet />
     </main>
   </div>
