@@ -55,6 +55,7 @@
                     <a
                       class="menu-link submenu-link"
                       [routerLink]="child.routerLink"
+                      (click)="onNavigate(child, $event, item)"
                       routerLinkActive="active"
                     >
                       <span class="submenu-label">{{ child.label }}</span>
@@ -67,6 +68,7 @@
             <a
               class="menu-link"
               [routerLink]="item.routerLink"
+              (click)="onNavigate(item, $event)"
               routerLinkActive="active"
             >
               <i class="menu-icon" [class]="item.icon"></i>

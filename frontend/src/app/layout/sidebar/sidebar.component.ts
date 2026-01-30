@@ -1,6 +1,6 @@
 import { Component, signal, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 interface SidebarMenuItem {
   label: string;
@@ -137,6 +137,8 @@ export class SidebarComponent implements OnInit {
     routerLink: '#'
   };
 
+  constructor(private readonly router: Router) {}
+
   ngOnInit(): void {
     if (window.innerWidth > 768) {
       this.isCollapsed.set(false);
@@ -221,5 +223,22 @@ export class SidebarComponent implements OnInit {
 
   protected clearSearch(): void {
     this.searchTerm.set('');
+  }
+
+  protected onNavigate(item: SidebarMenuItem, event: Event, parent?: SidebarMenuItem): void {
+    if (!item.routerLink) {
+      return;
+    }
+
+    if (this.isCollapsed()) {
+      event.preventDefault();
+      this.isCollapsed.set(false);
+      if (parent) {
+        this.expandedItems.set({ ...this.expandedItems(), [parent.label]: true });
+      }
+      setTimeout(() => {
+        void this.router.navigateByUrl(item.routerLink!);
+      }, 250);
+    }
   }
 }

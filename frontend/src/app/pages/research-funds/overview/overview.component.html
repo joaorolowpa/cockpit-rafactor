@@ -5,16 +5,9 @@
   </div>
 
   @if (isLoading()) {
-    <div class="loading-container">
-      <div class="skeleton-wrapper">
-        @for (item of [1, 2, 3]; track item) {
-          <div class="skeleton-group">
-            <div class="skeleton skeleton-header"></div>
-            <div class="skeleton skeleton-content"></div>
-            <div class="skeleton skeleton-content"></div>
-          </div>
-        }
-      </div>
+    <div class="loading-state">
+      <i class="pi pi-spinner pi-spin"></i>
+      <p>Loading funds overview...</p>
     </div>
   } @else if (error()) {
     <div class="error-container">
