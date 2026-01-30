@@ -80,7 +80,7 @@
   </div>
 
   <div class="sidebar-footer">
-    <div class="user-menu" [title]="isCollapsed() ? userMenuItem.label ?? '' : ''">
+    <div class="user-menu" [title]="isCollapsed() ? userMenuItem.label : ''">
       <i class="user-icon" [class]="userMenuItem.icon"></i>
       @if (!isCollapsed()) {
         <div class="user-info">

@@ -46,6 +46,49 @@ export interface GroupedFund {
 }
 
 // Configuração de séries para exibição (igual ao React)
+export interface FundManagerContent {
+  firm_about?: string | null;
+  firm_strategies?: string | null;
+  website?: string | null;
+  firm_aum?: string | null;
+  contact_information?: string | null;
+}
+
+export interface FundManagerDetails {
+  id: number;
+  display_name?: string;
+  content?: FundManagerContent;
+}
+
+export interface FundNote {
+  note_id: number;
+  note_title: string;
+  content_preview?: string;
+  created_at: string;
+  created_by_name?: string;
+}
+
+export interface FundManagerDocument {
+  id: number;
+  document_type: string;
+  entity_display_name: string;
+  entity_type: string;
+  created_by_name?: string;
+  date_reference?: string | null;
+  created_at?: string | null;
+}
+
+export interface RelationshipDetailsContent {
+  sectors?: string | null;
+  investment_team?: string | null;
+  profile_of_investments?: string | null;
+}
+
+export interface RelationshipDetails {
+  id: number;
+  content?: RelationshipDetailsContent;
+}
+
 export const DISPLAY_SERIES = [
   'METRICS_DPI',
   'METRICS_DPI_ADJ',

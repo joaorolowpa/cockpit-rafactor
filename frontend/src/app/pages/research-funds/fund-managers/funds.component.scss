@@ -101,6 +101,8 @@
   border: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
+  text-decoration: none;
+  color: inherit;
 
   &:hover {
     transform: translateY(-2px);

@@ -49,10 +49,10 @@
 
   <!-- Funds Grid -->
   <div *ngIf="!loading() && !error()" class="funds-grid">
-    <div 
+    <a 
       *ngFor="let fund of filteredFunds()" 
       class="fund-card"
-      (click)="onFundClick(fund)"
+      [routerLink]="['/research-funds/fund-managers', fund.id]"
     >
       <div class="fund-initial">
         {{ fund.display_name.charAt(0) }}
@@ -60,7 +60,7 @@
       <div class="fund-info">
         <span class="fund-name">{{ fund.display_name }}</span>
       </div>
-    </div>
+    </a>
   </div>
 
   <!-- Empty State -->

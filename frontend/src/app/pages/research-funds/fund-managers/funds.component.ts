@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { Router } from '@angular/router';
-import { Fund, FundService } from './fund.service';
+import { RouterLink } from '@angular/router';
+import { Fund } from '../../../models/funds.model';
+import { FundsService } from '../funds.service';
 
 @Component({
   selector: 'app-fund-managers',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule],
+  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, RouterLink],
   templateUrl: './funds.component.html',
   styleUrl: './funds.component.scss'
 })
@@ -20,10 +21,7 @@ export class FundManagersComponent implements OnInit {
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
 
-  constructor(
-    private router: Router,
-    private fundService: FundService
-  ) {}
+  constructor(private fundService: FundsService) {}
 
   ngOnInit(): void {
     this.loadFunds();
@@ -33,14 +31,14 @@ export class FundManagersComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    this.fundService.getFundsManagers().subscribe({
-      next: (funds) => {
+    this.fundService.getFundManagers().subscribe({
+      next: (funds: Fund[]) => {
         console.log('✅ Funds received:', funds.length);
         this.funds.set(funds);
         this.filteredFunds.set([...funds]);
         this.loading.set(false);
       },
-      error: (err) => {
+      error: (err: unknown) => {
         console.error('❌ Error loading funds:', err);
         this.error.set('Failed to load fund managers');
         this.loading.set(false);
@@ -66,9 +64,5 @@ export class FundManagersComponent implements OnInit {
   clearSearch(): void {
     this.searchTerm.set('');
     this.filteredFunds.set([...this.funds()]);
-  }
-
-  onFundClick(fund: Fund): void {
-    this.router.navigate(['/research-funds/fund-managers', fund.id]);
   }
 }

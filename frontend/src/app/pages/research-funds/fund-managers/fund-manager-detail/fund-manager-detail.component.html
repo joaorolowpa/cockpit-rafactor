@@ -1,0 +1,236 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="title-row">
+      <div>
+        <h1 class="page-title">{{ fund()?.display_name || 'Fund Manager' }}</h1>
+        <p class="page-subtitle" *ngIf="fund()">ID {{ fund()?.id }}</p>
+      </div>
+      <a pButton label="Back" class="back-btn" [routerLink]="['/research-funds/fund-managers']"></a>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading()" class="loading-state">
+    <i class="pi pi-spinner pi-spin"></i>
+    <p>Loading fund manager...</p>
+  </div>
+
+  <div *ngIf="error() && !isLoading()" class="error-state">
+    <i class="pi pi-exclamation-circle"></i>
+    <p>{{ error() }}</p>
+    <a
+      pButton
+      label="Back to list"
+      class="retry-btn"
+      [routerLink]="['/research-funds/fund-managers']"
+    ></a>
+  </div>
+
+  <div *ngIf="!isLoading() && !error()" class="content">
+    <div class="tabs">
+      <button class="tab-btn" [class.active]="activeTab() === 'home'" (click)="setTab('home')">Home</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'relationships'" (click)="setTab('relationships')">Relationships</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'documents'" (click)="setTab('documents')">Documents</button>
+    </div>
+
+    <div class="tab-content" *ngIf="activeTab() === 'home'">
+      <div class="card">
+        <h3>Overview</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Created By</span>
+            <span class="value">{{ fund()?.created_by_name || '-' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Created At</span>
+            <span class="value">{{ fund()?.created_at | date: 'medium' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Manager ID</span>
+            <span class="value">{{ fund()?.id }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>About</h3>
+        <div class="section">
+          <div class="section-title">Firm</div>
+          <div [innerHTML]="sanitizeHtml(fundDetails()?.content?.firm_about)"></div>
+        </div>
+        <div class="section">
+          <div class="section-title">Strategies</div>
+          <div [innerHTML]="sanitizeHtml(fundDetails()?.content?.firm_strategies)"></div>
+        </div>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Website</span>
+            <a class="link" [href]="fundDetails()?.content?.website" target="_blank" rel="noopener">
+              {{ fundDetails()?.content?.website || '-' }}
+            </a>
+          </div>
+          <div class="info-item">
+            <span class="label">AUM</span>
+            <span class="value">{{ fundDetails()?.content?.firm_aum || '-' }}</span>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-title">Contact Information</div>
+          <div [innerHTML]="sanitizeHtml(fundDetails()?.content?.contact_information)"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Notes</h3>
+        <div *ngIf="notesError()" class="notice">Failed to load notes.</div>
+        <div *ngIf="!notesError() && notes().length === 0" class="empty-state">
+          <i class="pi pi-info-circle"></i>
+          <p>No notes available for this fund manager</p>
+        </div>
+        <div *ngIf="!notesError() && notes().length > 0" class="notes-grid">
+          <div class="note-card" *ngFor="let note of notes()">
+            <div class="note-title">{{ note.note_title }}</div>
+            <div class="note-meta">{{ note.created_by_name || '-' }} · {{ note.created_at | date: 'mediumDate' }}</div>
+            <div class="note-preview">{{ note.content_preview || '' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" *ngIf="activeTab() === 'relationships'">
+      <div class="card">
+        <div class="card-header">
+          <h3>Relationships</h3>
+          <span class="badge">{{ relationships().length }}</span>
+        </div>
+
+        <div *ngIf="relationshipsError()" class="notice">
+          Failed to load relationships.
+        </div>
+
+        <div *ngIf="!relationshipsError() && relationships().length === 0" class="empty-state">
+          <i class="pi pi-search"></i>
+          <p>No relationships found</p>
+        </div>
+
+        <div *ngIf="!relationshipsError() && relationships().length > 0">
+          <div class="relationship-controls">
+            <select
+              class="relationship-dropdown"
+              [ngModel]="selectedRelationshipId()"
+              (ngModelChange)="selectedRelationshipId.set($event)"
+            >
+              <option [ngValue]="null" disabled>Select relationship</option>
+              <option *ngFor="let option of relationshipOptions()" [ngValue]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+            <button pButton label="Edit" class="back-btn" disabled></button>
+          </div>
+
+          <div class="section">
+            <div class="section-title">About</div>
+            <div *ngIf="relationshipDetailsError()" class="notice">
+              Failed to load relationship details.
+            </div>
+            <div *ngIf="!relationshipDetailsError() && relationshipDetails()?.content">
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="label">Sector</span>
+                  <span class="value">{{ relationshipDetails()?.content?.sectors || '-' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Investment Team</span>
+                  <span class="value">{{ relationshipDetails()?.content?.investment_team || '-' }}</span>
+                </div>
+              </div>
+              <div class="section">
+                <div class="section-title">Profile of Investments</div>
+                <div [innerHTML]="sanitizeHtml(relationshipDetails()?.content?.profile_of_investments)"></div>
+              </div>
+            </div>
+            <div *ngIf="!relationshipDetailsError() && !relationshipDetails()?.content" class="empty-state">
+              <i class="pi pi-info-circle"></i>
+              <p>No details available for this relationship.</p>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Charts</div>
+            <div *ngIf="!selectedMetrics()" class="empty-state">
+              <i class="pi pi-chart-line"></i>
+              <p>No charts available for this relationship.</p>
+            </div>
+            <div *ngIf="selectedMetrics()" class="charts-grid">
+              <div class="chart-card" *ngFor="let series of relationshipSeries">
+                <div class="chart-title">{{ series.label }}</div>
+                <div class="chart-body">
+                  <p-chart
+                    type="line"
+                    [data]="getChartData(series.key)"
+                    [options]="chartOptions"
+                  ></p-chart>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">Metrics</div>
+            <div *ngIf="!selectedMetrics()" class="empty-state">
+              <i class="pi pi-info-circle"></i>
+              <p>No metrics available for this relationship.</p>
+            </div>
+            <div *ngIf="selectedMetrics()" class="relationships-accordion">
+              <app-funds-accordion [groupedFunds]="selectedRelationshipGroup()" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" *ngIf="activeTab() === 'documents'">
+      <div class="card">
+        <div class="card-header">
+          <h3>Documents</h3>
+          <span class="badge">{{ documents().length }}</span>
+        </div>
+
+        <div *ngIf="documentsError()" class="notice">
+          Failed to load documents.
+        </div>
+
+        <div *ngIf="!documentsError() && documents().length === 0" class="empty-state">
+          <i class="pi pi-folder-open"></i>
+          <p>No documents available</p>
+        </div>
+
+        <div *ngIf="!documentsError() && documents().length > 0" class="table-wrapper">
+          <table class="documents-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Document Type</th>
+                <th>Entity Display Name</th>
+                <th>Entity Type</th>
+                <th>Created By</th>
+                <th>Date Reference</th>
+                <th>Created At</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let document of documents()">
+                <td>{{ document.id }}</td>
+                <td>{{ mapDocumentType(document.document_type) }}</td>
+                <td>{{ document.entity_display_name }}</td>
+                <td class="chip">{{ document.entity_type ? document.entity_type.toUpperCase().replace('_', ' ') : '-' }}</td>
+                <td>{{ document.created_by_name || '-' }}</td>
+                <td>{{ document.date_reference ? (document.date_reference | date: 'yyyy-MM-dd') : '-' }}</td>
+                <td>{{ document.created_at ? (document.created_at | date: 'medium') : '-' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
