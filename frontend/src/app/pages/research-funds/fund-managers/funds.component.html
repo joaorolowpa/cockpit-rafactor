@@ -11,12 +11,12 @@
         type="text" 
         class="search-input" 
         placeholder="Search for a fund or company..."
-        [(ngModel)]="searchTerm"
-        (input)="onSearch()"
-        [disabled]="loading"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event); onSearch()"
+        [disabled]="loading()"
       />
       <button 
-        *ngIf="searchTerm" 
+        *ngIf="searchTerm()" 
         class="clear-btn"
         (click)="clearSearch()"
       >
@@ -26,24 +26,24 @@
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="loading" class="loading-state">
+  <div *ngIf="loading()" class="loading-state">
     <i class="fa fa-spinner fa-spin"></i>
     <p>Loading fund managers...</p>
   </div>
 
   <!-- Error State -->
-  <div *ngIf="error && !loading" class="error-state">
+  <div *ngIf="error() && !loading()" class="error-state">
     <i class="fa fa-exclamation-circle"></i>
-    <p>{{ error }}</p>
+    <p>{{ error() }}</p>
     <button class="retry-btn" (click)="loadFunds()">
       <i class="fa fa-refresh"></i> Retry
     </button>
   </div>
 
   <!-- Funds Grid -->
-  <div *ngIf="!loading && !error" class="funds-grid">
+  <div *ngIf="!loading() && !error()" class="funds-grid">
     <div 
-      *ngFor="let fund of filteredFunds" 
+      *ngFor="let fund of filteredFunds()" 
       class="fund-card"
       (click)="onFundClick(fund)"
     >
@@ -57,7 +57,7 @@
   </div>
 
   <!-- Empty State -->
-  <div *ngIf="!loading && !error && filteredFunds.length === 0" class="empty-state">
+  <div *ngIf="!loading() && !error() && filteredFunds().length === 0" class="empty-state">
     <i class="fa fa-search"></i>
     <p>No fund managers found</p>
   </div>

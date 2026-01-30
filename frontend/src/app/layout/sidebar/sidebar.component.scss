@@ -79,13 +79,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  background: linear-gradient(135deg, #2C3E50 0%, #1a252f 100%);
   border-radius: 50%;
   color: white;
   font-size: 1.375rem;
-  box-shadow: 0 3px 9px rgba(243, 156, 18, 0.3);
+  box-shadow: 0 3px 9px rgba(44, 62, 80, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.15); // ✨ Borda para separar da sidebar
 }
 
+// ✅ ADICIONAR ISSO
+.logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; // ou cover, dependendo do resultado que você quer
+  border-radius: 50%; // mantém a imagem redonda
+  padding: 4px; // opcional: adiciona um espaçamento interno
+}
 .logo-text {
   font-size: 1.5rem;
   font-weight: 600;

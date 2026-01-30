@@ -64,7 +64,7 @@ export const routes: Routes = [
           },
           {
             path: 'fund-managers',
-            loadComponent: () => import('./pages/research-funds/fund-managers/fund-managers.component').then(m => m.FundManagersComponent)
+            loadComponent: () => import('./pages/research-funds/fund-managers/funds.component').then(m => m.FundManagersComponent)
           },
           {
             path: 'notes',
@@ -100,7 +100,7 @@ export const routes: Routes = [
           },
           {
             path: 'funds',
-            loadComponent: () => import('./pages/research-manager/funds/funds.component').then(m => m.FundManagersComponent)
+            loadComponent: () => import('./pages/research-funds/fund-managers/funds.component').then(m => m.FundManagersComponent)
           }
         ]
       },
