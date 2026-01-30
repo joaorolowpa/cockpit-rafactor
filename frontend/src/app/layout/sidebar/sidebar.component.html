@@ -1,13 +1,12 @@
 <aside class="sidebar" [class.collapsed]="isCollapsed()">
   <div class="sidebar-header">
+
     <div class="logo-container">
       <div class="logo-badge">
-        <img class="logo-image" src="/assets/Imagem1.png" alt="Logo" />
+        <img class="logo-image" src="/assets/milestones.png" alt="Milestones logo" />
       </div>
-      @if (!isCollapsed()) {
-        <span class="logo-text">Milestones</span>
-      }
     </div>
+
     <button class="sidebar-toggle" type="button" (click)="toggleCollapse()">
       <i
         class="fa-solid fa-angle-left"
