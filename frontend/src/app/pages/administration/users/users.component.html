@@ -4,10 +4,12 @@
       <h1 class="page-title">Admin Panel</h1>
       <p class="page-description">Manage users and roles</p>
     </div>
-    <button class="create-btn" (click)="openCreateDialog()">
-      <i class="fas fa-plus"></i>
-      Create User
-    </button>
+    <p-button
+      label="Create User"
+      icon="pi pi-plus"
+      styleClass="create-btn"
+      (onClick)="openCreateDialog()"
+    />
   </div>
 
   @if (isLoading()) {

@@ -1,144 +1,143 @@
 import { Component, signal, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { MenuItem } from '../../models/menu-item.model';
+
+interface SidebarMenuItem {
+  label: string;
+  icon?: string;
+  routerLink?: string;
+  items?: SidebarMenuItem[];
+  expanded?: boolean;
+}
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent implements OnInit {
-  protected readonly expandedItems = signal<Set<string>>(new Set());
   protected readonly isCollapsed = signal<boolean>(false);
   protected searchTerm = signal<string>('');
-  
-  protected readonly menuItems: MenuItem[] = [
+  protected readonly expandedItems = signal<Record<string, boolean>>({});
+
+  protected readonly menuItems: SidebarMenuItem[] = [
     {
       label: 'Home',
-      icon: 'fas fa-home',
-      route: '/home'
+      icon: 'fa-solid fa-house',
+      routerLink: '/home'
     },
     {
       label: 'Administration',
-      icon: 'fas fa-cog',
-      route: '/administration',
-      children: [
+      icon: 'fa-solid fa-users',
+      items: [
         {
           label: 'Users',
-          route: '/administration/users'
+          routerLink: '/administration/users'
         }
       ]
     },
     {
       label: 'Compliance',
       icon: 'fa-solid fa-shield',
-      route: '/compliance',
-      children: [
+      items: [
         {
           label: 'Clients',
-          route: '/compliance/clients'
+          routerLink: '/compliance/clients'
         },
         {
           label: 'Investor Position',
-          route: '/compliance/investor-position'
+          routerLink: '/compliance/investor-position'
         }
       ]
     },
     {
       label: 'Research - Funds',
-      icon: 'fas fa-graduation-cap',
-      route: '/research-funds',
-      children: [
+      icon: 'fa-solid fa-chart-line',
+      items: [
         {
           label: 'Overview',
-          route: '/research-funds/overview'
+          routerLink: '/research-funds/overview'
         },
         {
           label: 'Backoffice',
-          route: '/research-funds/backoffice'
+          routerLink: '/research-funds/backoffice'
         },
         {
           label: 'Fund Managers',
-          route: '/research-funds/fund-managers'
+          routerLink: '/research-funds/fund-managers'
         },
         {
           label: 'Notes',
-          route: '/research-funds/notes'
+          routerLink: '/research-funds/notes'
         }
       ]
     },
     {
       label: 'Research - Equities',
-      icon: 'fas fa-graduation-cap',
-      route: '/research-equities',
-      children: [
+      icon: 'fa-solid fa-chart-bar',
+      items: [
         {
           label: 'Companies',
-          route: '/research-equities/companies'
+          routerLink: '/research-equities/companies'
         },
         {
           label: 'Coverage List',
-          route: '/research-equities/coverage-list'
+          routerLink: '/research-equities/coverage-list'
         }
       ]
     },
     {
       label: 'Research - Manager',
-      icon: 'fas fa-graduation-cap',
-      route: '/research-manager',
-      children: [
+      icon: 'fa-solid fa-briefcase',
+      items: [
         {
           label: 'Funds',
-          route: '/research-manager/funds'
+          routerLink: '/research-manager/funds'
         }
       ]
     },
     {
       label: 'WPA (Accounting)',
-      icon: 'fas fa-file-alt',
-      route: '/wpa-accounting',
-      children: [
+      icon: 'fa-solid fa-database',
+      items: [
         {
           label: 'NAV',
-          route: '/wpa-accounting/nav'
+          routerLink: '/wpa-accounting/nav'
         },
         {
           label: 'Create Assets',
-          route: '/wpa-accounting/create-assets'
+          routerLink: '/wpa-accounting/create-assets'
         },
         {
           label: 'Assets Values',
-          route: '/wpa-accounting/assets-values'
+          routerLink: '/wpa-accounting/assets-values'
         },
         {
           label: 'Deposits Ledger',
-          route: '/wpa-accounting/deposits-ledger'
+          routerLink: '/wpa-accounting/deposits-ledger'
         },
         {
           label: 'Controls',
-          route: '/wpa-accounting/controls'
+          routerLink: '/wpa-accounting/controls'
         }
       ]
     },
     {
       label: 'Backoffice',
-      icon: 'fas fa-folder',
-      route: '/backoffice'
+      icon: 'fa-solid fa-folder',
+      routerLink: '/backoffice'
     }
   ];
 
-  protected readonly userMenuItem: MenuItem = {
-    label: 'João LOCAL DEV',
-    icon: 'fas fa-user',
-    route: '#'
+  protected readonly userMenuItem: SidebarMenuItem = {
+    label: 'Joao LOCAL DEV',
+    icon: 'fa-solid fa-user',
+    routerLink: '#'
   };
 
   ngOnInit(): void {
-    // Expand sidebar by default on large screens
     if (window.innerWidth > 768) {
       this.isCollapsed.set(false);
     } else {
@@ -153,33 +152,13 @@ export class SidebarComponent implements OnInit {
     }
   }
 
-  protected toggleExpand(itemLabel: string): void {
-    if (this.isCollapsed()) return;
-    
-    const expanded = this.expandedItems();
-    if (expanded.has(itemLabel)) {
-      expanded.delete(itemLabel);
-    } else {
-      expanded.add(itemLabel);
-    }
-    this.expandedItems.set(new Set(expanded));
-  }
-
-  protected isExpanded(itemLabel: string): boolean {
-    return this.expandedItems().has(itemLabel);
-  }
-
   protected toggleCollapse(): void {
     this.isCollapsed.set(!this.isCollapsed());
-    if (this.isCollapsed()) {
-      this.expandedItems.set(new Set());
-    }
   }
 
   protected onSearchClick(): void {
     if (this.isCollapsed()) {
       this.isCollapsed.set(false);
-      // Focus on input after animation
       setTimeout(() => {
         const input = document.querySelector('.search-input') as HTMLInputElement;
         input?.focus();
@@ -189,54 +168,58 @@ export class SidebarComponent implements OnInit {
 
   protected onSearchChange(value: string): void {
     this.searchTerm.set(value.toLowerCase());
-    
-    if (value) {
-      const itemsToExpand = new Set<string>();
-      this.menuItems.forEach(item => {
-        if (item.children && this.hasMatchingChildren(item)) {
-          itemsToExpand.add(item.label);
-        }
-      });
-      this.expandedItems.set(itemsToExpand);
-    }
   }
 
-  protected getFilteredMenuItems(): MenuItem[] {
+  protected getFilteredMenuItems(): SidebarMenuItem[] {
     const term = this.searchTerm();
     if (!term) {
       return this.menuItems;
     }
 
-    return this.menuItems.map(item => {
-      if (item.label.toLowerCase().includes(term)) {
-        return item;
-      }
-
-      if (item.children) {
-        const filteredChildren = item.children.filter(child =>
-          child.label.toLowerCase().includes(term)
+    return this.menuItems
+      .map(item => {
+        const itemMatches = (item.label ?? '').toLowerCase().includes(term);
+        const children = item.items ?? [];
+        const filteredChildren = children.filter(child =>
+          (child.label ?? '').toLowerCase().includes(term)
         );
 
-        if (filteredChildren.length > 0) {
-          return { ...item, children: filteredChildren };
+        if (itemMatches) {
+          return { ...item, expanded: true };
         }
-      }
 
-      return null;
-    }).filter(item => item !== null) as MenuItem[];
+        if (filteredChildren.length > 0) {
+          return { ...item, items: filteredChildren, expanded: true };
+        }
+
+        return null;
+      })
+      .filter(item => item !== null) as SidebarMenuItem[];
   }
 
-  private hasMatchingChildren(item: MenuItem): boolean {
-    const term = this.searchTerm();
-    if (!item.children) return false;
-    
-    return item.children.some(child =>
-      child.label.toLowerCase().includes(term)
-    );
+  protected toggleItem(item: SidebarMenuItem): void {
+    if (!item.items || item.items.length === 0) {
+      return;
+    }
+
+    const key = item.label;
+    const isExpanded = this.expandedItems()[key] ?? false;
+    this.expandedItems.set({ ...this.expandedItems(), [key]: !isExpanded });
+  }
+
+  protected isItemExpanded(item: SidebarMenuItem): boolean {
+    if (item.expanded) {
+      return true;
+    }
+
+    if (this.searchTerm() && item.items && item.items.length > 0) {
+      return true;
+    }
+
+    return this.expandedItems()[item.label] ?? false;
   }
 
   protected clearSearch(): void {
     this.searchTerm.set('');
-    this.expandedItems.set(new Set());
   }
 }

@@ -96,7 +96,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  background: linear-gradient(135deg, #B17840 0%, #B17840 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -108,7 +108,7 @@
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+    box-shadow: 0 4px 8px rgba(177, 120, 64, 0.3);
   }
 
   i {

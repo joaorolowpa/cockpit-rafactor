@@ -1,5 +1,6 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
 import { User } from '../../../models/user.model';
 import { UsersService } from './user.service';
 import { UsersTableComponent } from './users-table/users-table.component';
@@ -9,7 +10,7 @@ import { UserFormDialogComponent } from './users-form-dialog/user-form-dialog.co
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, UsersTableComponent, UserFormDialogComponent],
+  imports: [CommonModule, ButtonModule, UsersTableComponent, UserFormDialogComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })

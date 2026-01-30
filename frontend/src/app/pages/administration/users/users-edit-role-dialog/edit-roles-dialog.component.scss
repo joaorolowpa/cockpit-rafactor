@@ -117,18 +117,20 @@
     border-color: #cbd5e1;
   }
 
-  input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: #f39c12;
-  }
-
   .role-label {
     font-size: 0.9375rem;
     font-weight: 500;
     color: #2c3e50;
   }
+}
+
+:host ::ng-deep .role-item .p-checkbox .p-checkbox-box {
+  border-color: #B17840;
+}
+
+:host ::ng-deep .role-item .p-checkbox .p-checkbox-box.p-highlight {
+  background: #B17840;
+  border-color: #B17840;
 }
 
 .summary-section {
@@ -171,7 +173,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
 
-  i {
+  .p-button-icon {
     font-size: 0.875rem;
     transition: transform 0.2s ease;
   }
@@ -240,13 +242,13 @@
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  background: linear-gradient(135deg, #B17840 0%, #B17840 100%);
   color: white;
-  box-shadow: 0 2px 4px rgba(243, 156, 18, 0.2);
+  box-shadow: 0 2px 4px rgba(177, 120, 64, 0.2);
 
   &:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+    box-shadow: 0 4px 8px rgba(177, 120, 64, 0.3);
   }
 
   &:disabled {

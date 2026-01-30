@@ -2,17 +2,22 @@
   <!-- Filters -->
   <div class="filters-bar">
     <div class="search-box">
-      <i class="fas fa-search"></i>
-      <input 
-        type="text" 
+      <i class="pi pi-search"></i>
+      <input
+        type="text"
+        pInputText
         placeholder="Search by name or email..."
         [value]="searchTerm()"
         (input)="searchTerm.set($any($event.target).value)"
       />
       @if (searchTerm()) {
-        <button class="clear-btn" (click)="searchTerm.set('')">
-          <i class="fas fa-times"></i>
-        </button>
+        <button
+          pButton
+          type="button"
+          icon="pi pi-times"
+          class="clear-btn p-button-text p-button-plain"
+          (click)="searchTerm.set('')"
+        ></button>
       }
     </div>
 
@@ -28,9 +33,13 @@
     </select>
 
     @if (searchTerm() || selectedRole()) {
-      <button class="clear-filters-btn" (click)="clearFilters()">
-        Clear Filters
-      </button>
+      <button
+        pButton
+        type="button"
+        label="Clear Filters"
+        class="clear-filters-btn p-button-text p-button-plain"
+        (click)="clearFilters()"
+      ></button>
     }
   </div>
 
@@ -75,26 +84,32 @@
             </td>
             <td class="actions-cell">
               <div class="actions-menu-wrapper">
-                <button 
-                  class="actions-btn"
+                <button
+                  pButton
+                  type="button"
+                  icon="pi pi-ellipsis-v"
+                  class="actions-btn p-button-text p-button-plain"
                   (click)="toggleActionsMenu(user.id)"
-                >
-                  <i class="fas fa-ellipsis-vertical"></i>
-                </button>
+                ></button>
                 
                 @if (showActionsMenu() === user.id) {
                   <div class="actions-dropdown">
-                    <button 
-                      class="dropdown-item"
+                    <button
+                      pButton
+                      type="button"
+                      icon="pi pi-shield"
+                      label="Change Roles"
+                      class="dropdown-item p-button-text p-button-plain"
                       (click)="openEditRoles(user)"
-                    >
-                      <i class="fas fa-user-shield"></i>
-                      Change Roles
-                    </button>
-                    <button class="dropdown-item" (click)="toggleUserActive(user)">
-                      <i class="fas fa-toggle-on"></i>
-                      {{ user.user_active ? 'Deactivate' : 'Activate' }}
-                    </button>
+                    ></button>
+                    <button
+                      pButton
+                      type="button"
+                      icon="pi pi-power-off"
+                      [label]="user.user_active ? 'Deactivate' : 'Activate'"
+                      class="dropdown-item p-button-text p-button-plain"
+                      (click)="toggleUserActive(user)"
+                    ></button>
                   </div>
                 }
               </div>
@@ -103,7 +118,7 @@
         } @empty {
           <tr>
             <td colspan="6" class="empty-state">
-              <i class="fas fa-users"></i>
+              <i class="pi pi-users"></i>
               <p>No users found</p>
             </td>
           </tr>

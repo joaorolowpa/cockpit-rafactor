@@ -11,10 +11,10 @@
           <span>{{ group.fundName }}</span>
           <span class="badge">{{ group.relationships.length }} relationships</span>
         </div>
-        <i 
-          class="fas chevron"
-          [class.fa-chevron-down]="isFundExpanded($index)"
-          [class.fa-chevron-right]="!isFundExpanded($index)"
+        <i
+          class="pi chevron"
+          [class.pi-chevron-down]="isFundExpanded($index)"
+          [class.pi-chevron-right]="!isFundExpanded($index)"
         ></i>
       </div>
 
@@ -29,14 +29,14 @@
                 (click)="toggleRelationship(relationship.id); $event.stopPropagation()"
               >
                 <div class="relationship-title">
-                  <i class="fas fa-chart-line"></i>
+                  <i class="pi pi-chart-line"></i>
                   <span>{{ relationship.asset_display_name }}</span>
                   <span class="currency-badge">{{ relationship.currency }}</span>
                 </div>
-                <i 
-                  class="fas chevron-small"
-                  [class.fa-chevron-down]="isRelationshipExpanded(relationship.id)"
-                  [class.fa-chevron-right]="!isRelationshipExpanded(relationship.id)"
+                <i
+                  class="pi chevron-small"
+                  [class.pi-chevron-down]="isRelationshipExpanded(relationship.id)"
+                  [class.pi-chevron-right]="!isRelationshipExpanded(relationship.id)"
                 ></i>
               </div>
 

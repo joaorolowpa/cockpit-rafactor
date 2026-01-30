@@ -18,16 +18,20 @@
     </div>
   } @else if (error()) {
     <div class="error-container">
-      <i class="fas fa-exclamation-circle"></i>
+      <i class="pi pi-exclamation-circle"></i>
       <p>{{ error() }}</p>
-      <button class="retry-btn" (click)="loadData()">
-        <i class="fas fa-redo"></i>
-        Retry
-      </button>
+      <button
+        pButton
+        type="button"
+        icon="pi pi-replay"
+        label="Retry"
+        class="retry-btn p-button-text"
+        (click)="loadData()"
+      ></button>
     </div>
   } @else if (groupedFunds().length === 0) {
     <div class="empty-container">
-      <i class="fas fa-folder-open"></i>
+      <i class="pi pi-folder-open"></i>
       <p>No funds data available</p>
     </div>
   } @else {

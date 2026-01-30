@@ -1,15 +1,20 @@
-<header class="header">
-  <div class="header-content">
-    <div class="search-container">
-      <i class="fas fa-search search-icon"></i>
-      <input
-        type="text"
-        pInputText
-        [(ngModel)]="searchValue"
-        placeholder="Search for a fund or company..."
-        class="search-input"
-      />
-      <i class="fas fa-chevron-down dropdown-icon"></i>
+<p-toolbar styleClass="header-toolbar">
+  <ng-template pTemplate="start">
+    <div class="search-wrap">
+      <p-inputGroup>
+        <p-inputGroupAddon>
+          <i class="pi pi-search"></i>
+        </p-inputGroupAddon>
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="searchValue"
+          placeholder="Search for a fund or company..."
+        />
+        <p-inputGroupAddon>
+          <i class="pi pi-chevron-down"></i>
+        </p-inputGroupAddon>
+      </p-inputGroup>
     </div>
-  </div>
-</header>
+  </ng-template>
+</p-toolbar>

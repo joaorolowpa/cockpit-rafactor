@@ -5,9 +5,11 @@
         <h2>Change Roles</h2>
         <p class="user-name">{{ user().name }}</p>
       </div>
-      <button class="close-btn" (click)="onClose()">
-        <i class="fas fa-times"></i>
-      </button>
+      <p-button
+        icon="pi pi-times"
+        styleClass="close-btn p-button-text p-button-plain"
+        (onClick)="onClose()"
+      />
     </div>
 
     <div class="dialog-body">
@@ -16,10 +18,10 @@
       <div class="roles-grid">
         @for (role of availableRoles; track role) {
           <label class="role-item">
-            <input 
-              type="checkbox"
-              [checked]="isRoleSelected(role)"
-              (change)="toggleRole(role)"
+            <p-checkbox
+              [binary]="true"
+              [ngModel]="isRoleSelected(role)"
+              (onChange)="toggleRole(role)"
             />
             <span class="role-label">{{ role }}</span>
           </label>
@@ -30,13 +32,12 @@
       <div class="summary-section">
         <div class="summary-header" (click)="toggleSummary()">
           <h4>Active Roles Summary</h4>
-          <button type="button" class="toggle-btn">
-            <i 
-              class="fas" 
-              [class.fa-chevron-down]="showSummary()"
-              [class.fa-chevron-right]="!showSummary()"
-            ></i>
-          </button>
+          <p-button
+            type="button"
+            [icon]="showSummary() ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+            styleClass="toggle-btn p-button-text p-button-plain"
+            (onClick)="toggleSummary()"
+          />
         </div>
         
         @if (showSummary()) {
@@ -56,26 +57,20 @@
     </div>
 
     <div class="dialog-footer">
-      <button 
-        type="button" 
-        class="cancel-btn" 
-        (click)="onClose()"
-      >
-        Cancel
-      </button>
-      <button 
-        type="button" 
-        class="submit-btn"
+      <p-button
+        type="button"
+        label="Cancel"
+        styleClass="cancel-btn p-button-text p-button-plain"
+        (onClick)="onClose()"
+      />
+      <p-button
+        type="button"
+        label="Save Changes"
+        styleClass="submit-btn"
+        [loading]="isSubmitting()"
         [disabled]="isSubmitting()"
-        (click)="onSubmit()"
-      >
-        @if (isSubmitting()) {
-          <span class="spinner-small"></span>
-          Saving...
-        } @else {
-          Save Changes
-        }
-      </button>
+        (onClick)="onSubmit()"
+      />
     </div>
   </div>
 </div>

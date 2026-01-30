@@ -37,11 +37,11 @@
   transition: all 0.2s ease;
 
   &:focus-within {
-    border-color: #f39c12;
-    box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+    border-color: #B17840;
+    box-shadow: 0 0 0 3px rgba(177, 120, 64, 0.1);
   }
 
-  i.fa-search {
+  i.pi-search {
     color: #94a3b8;
     font-size: 1rem;
   }
@@ -105,7 +105,7 @@
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-color: #f39c12;
+    border-color: #B17840;
   }
 }
 
@@ -139,7 +139,7 @@
   transition: color 0.2s ease;
 
   .fund-card:hover & {
-    color: #f39c12;
+    color: #B17840;
   }
 }
 
@@ -217,7 +217,7 @@
 
   i {
     font-size: 3rem;
-    color: #f39c12;
+    color: #B17840;
     margin-bottom: 1rem;
   }
 
@@ -255,7 +255,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: #f39c12;
+  background: #B17840;
   color: white;
   border: none;
   border-radius: 8px;
@@ -265,7 +265,7 @@
   transition: all 0.2s ease;
 
   &:hover {
-    background: #e67e22;
+    background: #B17840;
     transform: translateY(-1px);
   }
 

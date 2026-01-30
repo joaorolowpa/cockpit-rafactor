@@ -1,6 +1,5 @@
-/* Google Fonts - Roboto */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-@import '@fortawesome/fontawesome-free/css/all.css';
+/* Google Fonts - IBM Plex Sans */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
 
 /* Global Styles */
 * {
@@ -12,14 +11,15 @@
 html,
 body {
   height: 100%;
-  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   margin: 0;
-  background-color: #f5f5f5;
+  background-color: #f6f6f4;
+  color: #1f2937;
 }
 
 /* Override PrimeNG button styles for custom buttons */
@@ -27,4 +27,14 @@ body {
   background: transparent;
   border: none;
   box-shadow: none;
+}
+
+:root {
+  --accent: #b17840;
+  --accent-strong: #9a6a33;
+  --surface-0: #f6f6f4;
+  --surface-1: #ffffff;
+  --text-900: #1f2937;
+  --text-600: #5b6570;
+  --border-200: #e5e7eb;
 }

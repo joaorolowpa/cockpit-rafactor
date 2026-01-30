@@ -6,40 +6,48 @@
 
   <!-- Toolbar -->
   <div class="toolbar">
-    <button class="toolbar-btn" disabled>
-      <i class="fas fa-cog"></i>
-      Settings
-    </button>
-    <button 
-      class="toolbar-btn"
+    <button
+      pButton
+      type="button"
+      label="Settings"
+      icon="pi pi-cog"
+      class="toolbar-btn p-button-text p-button-plain"
+      disabled
+    ></button>
+    <button
+      pButton
+      type="button"
+      label="Accumulate Rows"
+      icon="pi pi-arrow-up"
+      class="toolbar-btn p-button-text p-button-plain"
       [class.active]="isAccumulated()"
       (click)="toggleAccumulate()"
-    >
-      <i class="fas fa-arrow-up"></i>
-      Accumulate Rows
-    </button>
-    <button 
-      class="toolbar-btn"
+    ></button>
+    <button
+      pButton
+      type="button"
+      [label]="showExpandedView() ? 'Collapse Table' : 'Expand Table'"
+      icon="pi pi-expand"
+      class="toolbar-btn p-button-text p-button-plain"
       (click)="toggleExpandedView()"
-    >
-      <i class="fas fa-expand"></i>
-      {{ showExpandedView() ? 'Collapse Table' : 'Expand Table' }}
-    </button>
-    <button 
-      class="toolbar-btn"
+    ></button>
+    <button
+      pButton
+      type="button"
+      label="Copy Selected Rows"
+      icon="pi pi-copy"
+      class="toolbar-btn p-button-text p-button-plain"
       (click)="copySelectedRows()"
       [disabled]="selectedRows().size === 0"
-    >
-      <i class="fas fa-copy"></i>
-      Copy Selected Rows
-    </button>
-    <button 
-      class="toolbar-btn"
+    ></button>
+    <button
+      pButton
+      type="button"
+      label="Copy Table"
+      icon="pi pi-table"
+      class="toolbar-btn p-button-text p-button-plain"
       (click)="copyTable()"
-    >
-      <i class="fas fa-table"></i>
-      Copy Table
-    </button>
+    ></button>
   </div>
 
   <!-- Table Wrapper -->
@@ -51,19 +59,19 @@
       <thead>
         <tr>
           <th class="checkbox-col">
-            <i class="fas fa-filter filter-icon"></i>
+            <i class="pi pi-filter filter-icon"></i>
           </th>
           <th class="series-name-col">
             <div class="header-content">
               <span>Series Name</span>
-              <i class="fas fa-filter filter-icon"></i>
+              <i class="pi pi-filter filter-icon"></i>
             </div>
           </th>
           @for (date of tableData().dateColumns; track date) {
             <th class="date-col">
               <div class="header-content">
                 <span>{{ date }}</span>
-                <i class="fas fa-filter filter-icon"></i>
+                <i class="pi pi-filter filter-icon"></i>
               </div>
             </th>
           }
@@ -73,10 +81,10 @@
         @for (row of tableData().rows; track row.seriesName) {
           <tr [class.selected]="isRowSelected(row.seriesName)">
             <td class="checkbox-col">
-              <input 
-                type="checkbox"
-                [checked]="isRowSelected(row.seriesName)"
-                (change)="toggleRowSelection(row.seriesName)"
+              <p-checkbox
+                [binary]="true"
+                [ngModel]="isRowSelected(row.seriesName)"
+                (onChange)="toggleRowSelection(row.seriesName)"
               />
             </td>
             <td class="series-name-cell">

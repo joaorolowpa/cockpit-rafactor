@@ -48,8 +48,8 @@
 
   &:hover:not(:disabled) {
     background: #f9fafb;
-    border-color: #f39c12;
-    color: #f39c12;
+    border-color: #B17840;
+    color: #B17840;
   }
 
   &:disabled {
@@ -58,13 +58,13 @@
   }
 
   &.active {
-    background: #f39c12;
+    background: #B17840;
     color: white;
-    border-color: #f39c12;
+    border-color: #B17840;
 
     &:hover {
-      background: #e67e22;
-      border-color: #e67e22;
+      background: #B17840;
+      border-color: #B17840;
     }
   }
 
@@ -166,7 +166,7 @@
           width: 17px;
           height: 17px;
           cursor: pointer;
-          accent-color: #f39c12;
+          accent-color: #B17840;
         }
       }
 
@@ -247,7 +247,7 @@
   border-radius: 4px;
 
   &:hover {
-    background: #f39c12;
+    background: #B17840;
   }
 }
 
