@@ -1,12 +1,6 @@
 <div class="page-container">
   <div class="page-header">
-    <div class="title-row">
-      <div>
-        <h1 class="page-title">{{ fund()?.display_name || 'Fund Manager' }}</h1>
-        <p class="page-subtitle" *ngIf="fund()">ID {{ fund()?.id }}</p>
-      </div>
-      <a pButton label="Back" class="back-btn" [routerLink]="['/research-funds/fund-managers']"></a>
-    </div>
+    <h1 class="page-title">{{ fund()?.display_name || 'Fund Manager' }}</h1>
   </div>
 
   <div *ngIf="isLoading()" class="loading-state">
@@ -27,39 +21,23 @@
 
   <div *ngIf="!isLoading() && !error()" class="content">
     <div class="tabs">
-      <button class="tab-btn" [class.active]="activeTab() === 'home'" (click)="setTab('home')">Home</button>
+      <button class="tab-btn" [class.active]="activeTab() === 'home'" (click)="setTab('home')">Overview</button>
       <button class="tab-btn" [class.active]="activeTab() === 'relationships'" (click)="setTab('relationships')">Relationships</button>
       <button class="tab-btn" [class.active]="activeTab() === 'documents'" (click)="setTab('documents')">Documents</button>
     </div>
 
     <div class="tab-content" *ngIf="activeTab() === 'home'">
-      <div class="card">
-        <h3>Overview</h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <span class="label">Created By</span>
-            <span class="value">{{ fund()?.created_by_name || '-' }}</span>
-          </div>
-          <div class="info-item">
-            <span class="label">Created At</span>
-            <span class="value">{{ fund()?.created_at | date: 'medium' }}</span>
-          </div>
-          <div class="info-item">
-            <span class="label">Manager ID</span>
-            <span class="value">{{ fund()?.id }}</span>
-          </div>
-        </div>
-      </div>
+      
 
       <div class="card">
         <h3>About</h3>
         <div class="section">
           <div class="section-title">Firm</div>
-          <div [innerHTML]="sanitizeHtml(fundDetails()?.content?.firm_about)"></div>
+          <div class="rich-content" [innerHTML]="sanitizeHtml(fundDetails()?.content?.firm_about)"></div>
         </div>
         <div class="section">
           <div class="section-title">Strategies</div>
-          <div [innerHTML]="sanitizeHtml(fundDetails()?.content?.firm_strategies)"></div>
+          <div class="rich-content" [innerHTML]="sanitizeHtml(fundDetails()?.content?.firm_strategies)"></div>
         </div>
         <div class="info-grid">
           <div class="info-item">
@@ -75,7 +53,7 @@
         </div>
         <div class="section">
           <div class="section-title">Contact Information</div>
-          <div [innerHTML]="sanitizeHtml(fundDetails()?.content?.contact_information)"></div>
+          <div class="rich-content" [innerHTML]="sanitizeHtml(fundDetails()?.content?.contact_information)"></div>
         </div>
       </div>
 
@@ -143,14 +121,14 @@
                   <span class="value">{{ relationshipDetails()?.content?.investment_team || '-' }}</span>
                 </div>
               </div>
-              <div class="section">
-                <div class="section-title">Profile of Investments</div>
-                <div [innerHTML]="sanitizeHtml(relationshipDetails()?.content?.profile_of_investments)"></div>
-              </div>
+                <div class="section">
+                  <div class="section-title">Profile of Investments</div>
+                  <div class="rich-content" [innerHTML]="sanitizeHtml(relationshipDetails()?.content?.profile_of_investments)"></div>
+                </div>
             </div>
             <div *ngIf="!relationshipDetailsError() && !relationshipDetails()?.content" class="empty-state">
               <i class="pi pi-info-circle"></i>
-              <p>No details available for this relationship.</p>
+              <p>No details available for this relationship. {{!relationshipDetailsError() }}  {{!relationshipDetails()?.content}}     </p>
             </div>
           </div>
 

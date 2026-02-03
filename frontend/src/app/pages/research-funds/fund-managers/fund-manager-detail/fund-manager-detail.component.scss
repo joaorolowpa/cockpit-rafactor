@@ -1,42 +1,32 @@
 .page-container {
   padding: 1.5rem;
   max-width: 100%;
+  background: #f8fafc;
+  border-radius: 16px;
 }
 
 .page-header {
-  margin-bottom: 1.5rem;
-}
-
-.title-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .page-title {
   font-size: 2rem;
   font-weight: 600;
   color: #2c3e50;
-  margin: 0;
+  margin: 0 0 0.5rem 0;
 }
 
 .page-subtitle {
   font-size: 0.9375rem;
   color: #64748b;
-  margin: 0.25rem 0 0 0;
-}
-
-.back-btn {
-  background: #B17840;
-  border: none;
+  margin: 0;
 }
 
 .tabs {
   display: flex;
   gap: 0.5rem;
   border-bottom: 1px solid #e2e8f0;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .tab-btn {
@@ -54,6 +44,12 @@
     border-bottom-color: #B17840;
     font-weight: 600;
   }
+}
+
+.tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
 }
 
 .relationship-controls {
@@ -82,9 +78,9 @@
 .card {
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 1rem 1.25rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .card-header {
@@ -92,10 +88,14 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1rem;
+
+  h3 {
+    margin: 0;
+  }
 }
 
 .section {
-  margin-top: 1rem;
+  margin-top: 2rem;
   color: #2c3e50;
 
   &:first-of-type {
@@ -110,6 +110,21 @@
   color: #94a3b8;
   font-weight: 600;
   margin-bottom: 0.5rem;
+}
+
+.rich-content {
+  color: #2c3e50;
+  line-height: 1.6;
+
+  p {
+    margin: 0 0 0.75rem 0;
+  }
+
+  ul,
+  ol {
+    padding-left: 1.2rem;
+    margin: 0 0 0.75rem 0;
+  }
 }
 
 .link {
@@ -145,6 +160,11 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  margin-top: 20px;
 }
 
 .label {
@@ -206,6 +226,7 @@
   padding: 0.75rem;
   border-radius: 6px;
   font-size: 0.875rem;
+  margin-top: 10px;
 }
 
 .empty-state {
@@ -237,7 +258,7 @@
 
 .note-card {
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 0.75rem 1rem;
   background: #f8fafc;
 }
@@ -273,7 +294,7 @@
 
 .chart-card {
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 0.75rem;
   background: #ffffff;
 }
@@ -324,9 +345,9 @@
 }
 
 @media (max-width: 768px) {
-  .title-row {
-    flex-direction: column;
-    align-items: flex-start;
+  .page-container {
+    padding: 1rem;
+    border-radius: 12px;
   }
 
   .page-title {

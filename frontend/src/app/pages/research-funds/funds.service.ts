@@ -82,6 +82,7 @@ export class FundsService {
   }
 
   getFundRelationshipDetails(relationshipId: number): Observable<RelationshipDetails> {
+    console.log('entrou aqui?????????')
     return this.http.get<RelationshipDetails>(`${this.baseUrl}/fund-relationships/${relationshipId}/details`, {
       headers: this.getHeaders()
     });

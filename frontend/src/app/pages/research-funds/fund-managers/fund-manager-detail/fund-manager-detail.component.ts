@@ -41,6 +41,7 @@ export class FundManagerDetailComponent implements OnInit {
   protected relationshipDetails = signal<RelationshipDetails | null>(null);
   protected relationshipDetailsError = signal<boolean>(false);
   protected selectedRelationshipId = signal<number | null>(null);
+  protected readonly relationshipId$ = toObservable(this.selectedRelationshipId);
   protected activeTab = signal<FundManagerTab>('home');
   protected readonly relationshipSeries = [
     { key: 'METRICS_DPI', label: 'DPI (Distributed / Capital Calls)' },
@@ -259,12 +260,13 @@ export class FundManagerDetailComponent implements OnInit {
       this.isLoading.set(false);
     });
 
-    toObservable(this.selectedRelationshipId).pipe(
+    this.relationshipId$.pipe(
       filter((id): id is number => Number.isFinite(id)),
       distinctUntilChanged(),
       switchMap((relationshipId) => {
         this.relationshipDetails.set(null);
         this.relationshipDetailsError.set(false);
+        console.log("getFundRelationshipDetails", relationshipId);
         return this.fundsService.getFundRelationshipDetails(relationshipId).pipe(
           catchError(() => {
             this.relationshipDetailsError.set(true);
@@ -274,6 +276,7 @@ export class FundManagerDetailComponent implements OnInit {
       }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe((details) => {
+      console.log("getFundRelationshipDetails result", details);
       this.relationshipDetails.set(details);
     });
   }
