@@ -1,0 +1,32 @@
+<div class="editor">
+  @if (label()) {
+    <label class="editor-label">{{ label() }}</label>
+  }
+
+  <div class="toolbar">
+    <button type="button" class="tool-btn" (click)="exec('bold')" aria-label="Bold"><strong>B</strong></button>
+    <button type="button" class="tool-btn" (click)="exec('italic')" aria-label="Italic"><em>I</em></button>
+    <button type="button" class="tool-btn" (click)="exec('underline')" aria-label="Underline"><span class="underline">U</span></button>
+    <span class="divider"></span>
+    <button type="button" class="tool-btn" (click)="exec('insertUnorderedList')" aria-label="Bulleted list">&#8226; List</button>
+    <button type="button" class="tool-btn" (click)="exec('insertOrderedList')" aria-label="Numbered list">1. List</button>
+    <span class="divider"></span>
+    <button type="button" class="tool-btn" (click)="insertLink()" aria-label="Insert link">Link</button>
+    <button type="button" class="tool-btn" (click)="exec('removeFormat')" aria-label="Clear formatting">Clear</button>
+  </div>
+
+  <div class="editable-wrap">
+    <div
+      #editable
+      class="editable"
+      contenteditable="true"
+      role="textbox"
+      aria-multiline="true"
+      (input)="onInput($event)"
+      (paste)="onPaste($event)"
+    ></div>
+    @if (isEmpty && placeholder()) {
+      <div class="placeholder">{{ placeholder() }}</div>
+    }
+  </div>
+</div>

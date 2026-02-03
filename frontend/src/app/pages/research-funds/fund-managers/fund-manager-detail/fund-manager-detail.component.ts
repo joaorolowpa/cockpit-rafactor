@@ -11,13 +11,14 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Fund, FundManagerDetails, FundManagerDocument, FundNote, GroupedFund, Metrics, Relationship, RelationshipDetails, RelationshipWithMetrics } from '../../../../models/funds.model';
 import { FundsService } from '../../funds.service';
 import { FundsAccordionComponent } from '../../overview/funds-list.component';
+import { FundManagerEditDialogComponent } from './fund-manager-edit-dialog/fund-manager-edit-dialog.component';
 
 type FundManagerTab = 'home' | 'relationships' | 'documents';
 
 @Component({
   selector: 'app-fund-manager-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, ChartModule, RouterLink, FundsAccordionComponent],
+  imports: [CommonModule, FormsModule, ButtonModule, ChartModule, RouterLink, FundsAccordionComponent, FundManagerEditDialogComponent],
   templateUrl: './fund-manager-detail.component.html',
   styleUrl: './fund-manager-detail.component.scss'
 })
@@ -43,6 +44,8 @@ export class FundManagerDetailComponent implements OnInit {
   protected selectedRelationshipId = signal<number | null>(null);
   protected readonly relationshipId$ = toObservable(this.selectedRelationshipId);
   protected activeTab = signal<FundManagerTab>('home');
+  protected showEditDialog = signal<boolean>(false);
+  protected fundManagerId = signal<number | null>(null);
   protected readonly relationshipSeries = [
     { key: 'METRICS_DPI', label: 'DPI (Distributed / Capital Calls)' },
     { key: 'METRICS_DPI_ADJ', label: 'DPI EX Equalization' },
@@ -240,6 +243,7 @@ export class FundManagerDetailComponent implements OnInit {
       }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(({ fund, relationships, metrics, details, notes, documents, id }) => {
+      this.fundManagerId.set(id);
       this.fund.set(fund);
       this.relationships.set(relationships);
       this.metrics.set(metrics);
@@ -279,6 +283,19 @@ export class FundManagerDetailComponent implements OnInit {
       console.log("getFundRelationshipDetails result", details);
       this.relationshipDetails.set(details);
     });
+  }
+
+  protected openEditDialog(): void {
+    this.showEditDialog.set(true);
+  }
+
+  protected closeEditDialog(): void {
+    this.showEditDialog.set(false);
+  }
+
+  protected onDetailsUpdated(details: FundManagerDetails): void {
+    this.fundDetails.set(details);
+    this.showEditDialog.set(false);
   }
 
   protected setTab(tab: FundManagerTab): void {

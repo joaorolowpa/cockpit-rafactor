@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, forkJoin, map } from 'rxjs';
-import { Fund, Relationship, Metrics, GroupedFund, FundManagerDetails, FundManagerDocument, FundNote, RelationshipDetails } from '../../models/funds.model';
+import { Fund, Relationship, Metrics, GroupedFund, FundManagerContent, FundManagerDetails, FundManagerDocument, FundNote, RelationshipDetails } from '../../models/funds.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +31,26 @@ export class FundsService {
     return this.http.get<FundManagerDetails>(`${this.baseUrl}/fund-managers/${fundManagerId}/details`, {
       headers: this.getHeaders()
     });
+  }
+
+  updateFundManagerDetails(
+    fundManagerId: number,
+    payload: FundManagerContent,
+    lastUpdatedBy?: string | number
+  ): Observable<FundManagerDetails> {
+    let params = new HttpParams();
+    if (lastUpdatedBy !== undefined && lastUpdatedBy !== null) {
+      params = params.set('last_updated_by', String(lastUpdatedBy));
+    }
+
+    return this.http.post<FundManagerDetails>(
+      `${this.baseUrl}/fund-managers/${fundManagerId}/details`,
+      payload,
+      {
+        params,
+        headers: this.getHeaders()
+      }
+    );
   }
 
   getRelationships(fundManagerIds: number[]): Observable<Relationship[]> {

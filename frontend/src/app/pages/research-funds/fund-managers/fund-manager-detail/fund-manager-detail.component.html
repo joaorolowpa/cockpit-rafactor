@@ -30,7 +30,10 @@
       
 
       <div class="card">
-        <h3>About</h3>
+        <div class="card-header">
+          <h3>About</h3>
+          <button pButton label="Edit" class="back-btn" (click)="openEditDialog()"></button>
+        </div>
         <div class="section">
           <div class="section-title">Firm</div>
           <div class="rich-content" [innerHTML]="sanitizeHtml(fundDetails()?.content?.firm_about)"></div>
@@ -212,3 +215,12 @@
     </div>
   </div>
 </div>
+
+@if (showEditDialog() && fundManagerId()) {
+  <app-fund-manager-edit-dialog
+    [fundManagerId]="fundManagerId()!"
+    [content]="fundDetails()?.content ?? null"
+    (close)="closeEditDialog()"
+    (updated)="onDetailsUpdated($event)"
+  />
+}

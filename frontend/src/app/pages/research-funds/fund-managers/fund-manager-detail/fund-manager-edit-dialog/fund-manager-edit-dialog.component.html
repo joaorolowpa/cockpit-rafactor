@@ -1,0 +1,83 @@
+<div class="dialog-overlay" (click)="onClose()">
+  <div class="dialog-content" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <div>
+        <h2>Edit Fund Manager</h2>
+        <p class="subtitle">Update firm details and contact information</p>
+      </div>
+      <p-button
+        icon="pi pi-times"
+        styleClass="close-btn p-button-text p-button-plain"
+        (onClick)="onClose()"
+      />
+    </div>
+
+    <div class="dialog-body">
+      <div class="form-group">
+        <label for="website">Website</label>
+        <input
+          id="website"
+          pInputText
+          type="text"
+          [ngModel]="form().website"
+          (ngModelChange)="updateField('website', $event)"
+          placeholder="https://example.com"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="firm_aum">Firm AUM</label>
+        <input
+          id="firm_aum"
+          pInputText
+          type="text"
+          [ngModel]="form().firm_aum"
+          (ngModelChange)="updateField('firm_aum', $event)"
+          placeholder="$1.2B"
+        />
+      </div>
+
+      <app-rich-text-editor
+        [label]="'Firm About'"
+        [value]="form().firm_about ?? ''"
+        [placeholder]="'Enter a brief description of the fund manager.'"
+        (valueChange)="updateField('firm_about', $event)"
+      />
+
+      <app-rich-text-editor
+        [label]="'Firm Strategies'"
+        [value]="form().firm_strategies ?? ''"
+        [placeholder]="'Enter the strategies of the fund manager.'"
+        (valueChange)="updateField('firm_strategies', $event)"
+      />
+
+      <app-rich-text-editor
+        [label]="'Contact Information'"
+        [value]="form().contact_information ?? ''"
+        [placeholder]="'Enter the contact information of the fund manager.'"
+        (valueChange)="updateField('contact_information', $event)"
+      />
+
+      @if (errorMessage()) {
+        <p class="error-message">{{ errorMessage() }}</p>
+      }
+    </div>
+
+    <div class="dialog-footer">
+      <p-button
+        type="button"
+        label="Cancel"
+        styleClass="cancel-btn p-button-text p-button-plain"
+        (onClick)="onClose()"
+      />
+      <p-button
+        type="button"
+        label="Save Changes"
+        styleClass="submit-btn"
+        [loading]="isSubmitting()"
+        [disabled]="isSubmitting()"
+        (onClick)="onSubmit()"
+      />
+    </div>
+  </div>
+</div>
