@@ -18,16 +18,21 @@
           </div>
           <div class="feed-card-body">
             <div class="doc-row" *ngFor="let doc of group.documents">
-              <div class="doc-main">
-                <div class="doc-title">{{ doc.company_name || 'Company Document' }}</div>
-                <div class="doc-meta">
-                  <span>{{ doc.document_type }}</span>
-                  <span>·</span>
-                  <span>{{ doc.user_name || doc.user_email || '-' }}</span>
+              <div class="doc-content">
+                <div class="doc-date-key">{{ group.date }}</div>
+                <div class="doc-meta-line">
+                  Created at {{ formatCreatedAt(doc.created_at) }} by {{ doc.creator_name }}
                 </div>
               </div>
-              <div class="doc-time">
-                {{ doc.created_at ? (doc.created_at | date: 'shortTime') : '-' }}
+              <div class="doc-actions">
+                <button
+                  pButton
+                  type="button"
+                  icon="pi pi-download"
+                  label=""
+                  class="p-button-text p-button-plain doc-download-btn"
+                  (click)="downloadDocument(doc)"
+                ></button>
               </div>
             </div>
           </div>
@@ -37,7 +42,7 @@
 
     @if (hasMore()) {
       <div class="feed-footer">
-        <button class="btn-secondary" type="button" (click)="loadMore()">
+        <button pButton class="btn-secondary" type="button" (click)="loadMore()">
           Load More Documents
         </button>
       </div>

@@ -22,7 +22,7 @@
 
   i {
     font-size: 1rem;
-    color: inherit;
+    color: var(--accent);
   }
 
   &.active {
@@ -33,21 +33,6 @@
   }
 }
 
-.tab-btn[data-tab='fund_managers'] i {
-  color: #1d4ed8;
-}
-
-.tab-btn[data-tab='fund_relationships'] i {
-  color: #16a34a;
-}
-
-.tab-btn[data-tab='funds_classifications'] i {
-  color: #d97706;
-}
-
-.tab-btn[data-tab='transactions_ledger'] i {
-  color: #6d28d9;
-}
 
 .toolbar-actions {
   display: flex;

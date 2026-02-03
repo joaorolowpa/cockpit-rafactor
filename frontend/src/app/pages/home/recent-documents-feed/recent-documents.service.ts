@@ -6,7 +6,7 @@ export interface RecentDocument {
   id: number;
   company_id: number;
   created_by: number;
-  user_name: string;
+  creator_name: string;
   user_email: string;
   text_html: string | null;
   text_markdown: string | null;
@@ -41,6 +41,19 @@ export class RecentDocumentsService {
     return this.http.get<RecentDocument[]>(this.apiUrl, {
       params,
       headers: this.getHeaders()
+    });
+  }
+
+  downloadDocument(filePath: string, userId = 1): Observable<Blob> {
+    const url = 'http://127.0.0.1:8000/v1/files/download-file';
+    const params = new HttpParams()
+      .set('user_id', userId.toString())
+      .set('datalake_filepath', filePath);
+
+    return this.http.get(url, {
+      params,
+      headers: this.getHeaders(),
+      responseType: 'blob'
     });
   }
 }

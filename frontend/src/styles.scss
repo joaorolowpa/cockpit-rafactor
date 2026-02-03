@@ -19,8 +19,15 @@ body {
 body {
   margin: 0;
   background-color: #f6f6f4;
-  color: #1f2937;
+  color: #212d3d;
 }
+
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
 
 /* Override PrimeNG button styles for custom buttons */
 .p-button-text {

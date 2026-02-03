@@ -2,6 +2,7 @@ import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RecentDocumentsService, RecentDocument } from './recent-documents.service';
+import { ButtonModule } from 'primeng/button';
 
 interface GroupedDocuments {
   date: string;
@@ -12,7 +13,7 @@ interface GroupedDocuments {
 @Component({
   selector: 'app-recent-documents-feed',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonModule],
   templateUrl: './recent-documents-feed.component.html',
   styleUrl: './recent-documents-feed.component.scss'
 })
@@ -47,7 +48,7 @@ export class RecentDocumentsFeedComponent {
       .sort(([a], [b]) => b.localeCompare(a))
       .map(([date, documents]) => ({
         date,
-        displayDate: formatDate(new Date(date), 'PPP', 'en-US'),
+        displayDate: this.formatWithOrdinal(new Date(date)),
         documents
       }));
   });
@@ -82,5 +83,58 @@ export class RecentDocumentsFeedComponent {
 
   protected loadMore(): void {
     this.displayLimit.set(this.displayLimit() + 10);
+  }
+
+  protected downloadDocument(doc: RecentDocument): void {
+    const filePath = doc.file_path;
+    if (!filePath) return;
+
+    this.service.downloadDocument(filePath, 1).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = this.getDownloadFileName(doc);
+        link.click();
+        URL.revokeObjectURL(url);
+      },
+      error: () => {
+        this.errorMessage.set('Failed to download document');
+      }
+    });
+  }
+
+  private getDownloadFileName(doc: RecentDocument): string {
+    const fallback = `document-${doc.id || 'file'}`;
+    const path = doc.file_path || '';
+    const name = path.split('/').pop()?.trim();
+    return name && name.length > 0 ? name : fallback;
+  }
+
+  protected formatCreatedAt(value?: string | null): string {
+    if (!value) return '-';
+    return formatDate(new Date(value), 'MMM d, y', 'en-US');
+  }
+
+  private formatWithOrdinal(value: Date): string {
+    const day = value.getDate();
+    const suffix = this.getOrdinalSuffix(day);
+    const month = formatDate(value, 'MMMM', 'en-US');
+    const year = formatDate(value, 'y', 'en-US');
+    return `${month} ${day}${suffix}, ${year}`;
+  }
+
+  private getOrdinalSuffix(day: number): string {
+    if (day >= 11 && day <= 13) return 'th';
+    switch (day % 10) {
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
+    }
   }
 }

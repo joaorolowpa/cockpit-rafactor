@@ -1,13 +1,13 @@
 .feed-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .feed-header h2 {
   margin: 0;
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: 1.25rem;
+  font-weight: 700;
   color: #111827;
 }
 
@@ -27,18 +27,18 @@
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   background: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
 }
 
 .feed-card-header {
-  padding: 0.75rem 1rem;
+  padding: 0.9rem 1.1rem;
   border-bottom: 1px solid #e5e7eb;
-  background: #f8fafc;
+  background: #f9fafb;
 }
 
 .feed-date {
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 700;
   color: #111827;
 }
 
@@ -52,32 +52,63 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.75rem 1rem;
+  padding: 0.95rem 1.1rem;
   border-bottom: 1px solid #f1f5f9;
+  transition: background 0.2s ease;
 }
 
 .doc-row:last-child {
   border-bottom: none;
 }
 
-.doc-title {
-  font-size: 0.95rem;
+.doc-row:hover {
+  background: #fafafa;
+}
+
+.doc-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.doc-date-key {
+  font-size: 0.9rem;
   font-weight: 600;
   color: #111827;
 }
 
-.doc-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.doc-meta-line {
   font-size: 0.85rem;
   color: #6b7280;
 }
 
-.doc-time {
-  font-size: 0.85rem;
-  color: #6b7280;
-  white-space: nowrap;
+.doc-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.doc-download-btn {
+  padding: 0.4rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.doc-download-btn:enabled:hover {
+  background: #111111;
+  color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .doc-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .doc-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
 }
 
 .feed-footer {
