@@ -89,6 +89,26 @@ export interface RelationshipDetails {
   content?: RelationshipDetailsContent;
 }
 
+export interface FundClassification {
+  id?: number;
+  display_name?: string | null;
+  lote45_asset_type?: string | null;
+  milestones_fund_type?: string | null;
+  milestones_benchmark?: string | null;
+}
+
+export interface FundTransaction {
+  id?: number;
+  fund_manager_display_name?: string | null;
+  asset_display_name?: string | null;
+  transaction_type?: string | null;
+  transaction_date?: string | null;
+  amount?: number | null;
+  currency?: string | null;
+  created_by_name?: string | null;
+  created_at?: string | null;
+}
+
 export const DISPLAY_SERIES = [
   'METRICS_DPI',
   'METRICS_DPI_ADJ',

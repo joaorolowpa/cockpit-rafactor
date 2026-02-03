@@ -1,3 +1,197 @@
 <div class="page-container">
-  <h1 class="page-title">Research - Funds Backoffice</h1>
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Funds Backoffice</h1>
+      <p class="page-subtitle">
+        Create and manage funds, relationships, transactions and classifications.
+      </p>
+    </div>
+    <button class="primary-btn" type="button" (click)="onPrimaryAction()">
+      {{ topBarConfig().buttonLabel }}
+    </button>
+  </div>
+
+  <div class="tabs">
+    @for (tab of tabs; track tab.key) {
+      <button
+        class="tab-btn"
+        [class.active]="activeTab() === tab.key"
+        [attr.data-tab]="tab.key"
+        type="button"
+        (click)="setTab(tab.key)"
+      >
+        <i [class]="tab.icon"></i>
+        <span>{{ tab.label }}</span>
+      </button>
+    }
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrapper">
+      <i class="pi pi-search"></i>
+      <input
+        class="search-input"
+        type="text"
+        [placeholder]="getSearchPlaceholder()"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+      />
+    </div>
+    <div class="toolbar-actions">
+      <button class="ghost-btn" type="button" (click)="copyTable('us')">
+        <i class="pi pi-plus-circle"></i>
+        Copy US
+      </button>
+      <button class="ghost-btn" type="button" (click)="copyTable('br')">
+        <i class="pi pi-plus-circle"></i>
+        Copy BR
+      </button>
+      <button class="ghost-btn" type="button" (click)="toggleCompactView()">
+        <i class="pi pi-sliders-h"></i>
+        View
+      </button>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <i class="pi pi-spinner pi-spin"></i>
+      <p>Loading backoffice data...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error-state">
+      <i class="pi pi-exclamation-circle"></i>
+      <p>{{ errorMessage() }}</p>
+    </div>
+  } @else {
+    <div class="table-wrapper" [class.compact]="compactView()">
+      @if (activeTab() === 'fund_managers') {
+        @if (filteredFundManagers().length === 0) {
+          <div class="empty-state">
+            <i class="pi pi-info-circle"></i>
+            <p>No fund managers found.</p>
+          </div>
+        } @else {
+          <table class="backoffice-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>ID</th>
+                <th>Display Name</th>
+                <th>Created By</th>
+                <th>Created At</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (fund of filteredFundManagers(); track fund.id; let i = $index) {
+                <tr>
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ fund.id }}</td>
+                  <td>{{ fund.display_name }}</td>
+                  <td>{{ fund.created_by_name || '-' }}</td>
+                  <td>{{ fund.created_at || '-' }}</td>
+                  <td>
+                    <button class="icon-btn" type="button">...</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      } @else if (activeTab() === 'fund_relationships') {
+        @if (filteredRelationships().length === 0) {
+          <div class="empty-state">
+            <i class="pi pi-info-circle"></i>
+            <p>No fund relationships found.</p>
+          </div>
+        } @else {
+          <table class="backoffice-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Fund Manager</th>
+                <th>Asset</th>
+                <th>Commitment</th>
+                <th>NAV</th>
+                <th>IRR</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (rel of filteredRelationships(); track rel.id) {
+                <tr>
+                  <td>{{ rel.id }}</td>
+                  <td>{{ rel.fund_manager_display_name }}</td>
+                  <td>{{ rel.asset_display_name }}</td>
+                  <td>{{ rel.commitment }}</td>
+                  <td>{{ rel.nav }}</td>
+                  <td>{{ rel.irr }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      } @else if (activeTab() === 'funds_classifications') {
+        @if (filteredClassifications().length === 0) {
+          <div class="empty-state">
+            <i class="pi pi-info-circle"></i>
+            <p>No classifications found.</p>
+          </div>
+        } @else {
+          <table class="backoffice-table">
+            <thead>
+              <tr>
+                <th>Display Name</th>
+                <th>Asset Type</th>
+                <th>Fund Type</th>
+                <th>Benchmark</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of filteredClassifications(); track item.id) {
+                <tr>
+                  <td>{{ item.display_name || '-' }}</td>
+                  <td>{{ item.lote45_asset_type || '-' }}</td>
+                  <td>{{ item.milestones_fund_type || '-' }}</td>
+                  <td>{{ item.milestones_benchmark || '-' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      } @else if (activeTab() === 'transactions_ledger') {
+        @if (filteredTransactions().length === 0) {
+          <div class="empty-state">
+            <i class="pi pi-info-circle"></i>
+            <p>No transactions found.</p>
+          </div>
+        } @else {
+          <table class="backoffice-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Fund Manager</th>
+                <th>Asset</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of filteredTransactions(); track item.id) {
+                <tr>
+                  <td>{{ item.id }}</td>
+                  <td>{{ item.fund_manager_display_name || '-' }}</td>
+                  <td>{{ item.asset_display_name || '-' }}</td>
+                  <td>{{ item.transaction_type || '-' }}</td>
+                  <td>{{ item.amount ?? '-' }}</td>
+                  <td>{{ item.transaction_date || '-' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      }
+    </div>
+  }
 </div>

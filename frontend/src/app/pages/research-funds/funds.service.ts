@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, forkJoin, map } from 'rxjs';
-import { Fund, Relationship, Metrics, GroupedFund, FundManagerContent, FundManagerDetails, FundManagerDocument, FundNote, RelationshipDetails } from '../../models/funds.model';
+import { Fund, Relationship, Metrics, GroupedFund, FundClassification, FundManagerContent, FundManagerDetails, FundManagerDocument, FundNote, FundTransaction, RelationshipDetails } from '../../models/funds.model';
 
 @Injectable({
   providedIn: 'root'
@@ -68,6 +68,12 @@ export class FundsService {
     });
   }
 
+  getRelationshipsAll(): Observable<Relationship[]> {
+    return this.http.get<Relationship[]>(`${this.baseUrl}/relationships`, {
+      headers: this.getHeaders()
+    });
+  }
+
   getMetrics(fundManagerIds: number[]): Observable<Metrics[]> {
     console.log('Fetching metrics for fund manager IDs:', fundManagerIds);
     
@@ -104,6 +110,18 @@ export class FundsService {
   getFundRelationshipDetails(relationshipId: number): Observable<RelationshipDetails> {
     console.log('entrou aqui?????????')
     return this.http.get<RelationshipDetails>(`${this.baseUrl}/fund-relationships/${relationshipId}/details`, {
+      headers: this.getHeaders()
+    });
+  }
+
+  getFundClassifications(): Observable<FundClassification[]> {
+    return this.http.get<FundClassification[]>(`${this.baseUrl}/classifications`, {
+      headers: this.getHeaders()
+    });
+  }
+
+  getFundTransactions(): Observable<FundTransaction[]> {
+    return this.http.get<FundTransaction[]>(`${this.baseUrl}/transactions`, {
       headers: this.getHeaders()
     });
   }
