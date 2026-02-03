@@ -1,7 +1,6 @@
 import { Component, input, output, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { User, UserRole } from '../../../../models/user.model';
 import { UsersService } from '../user.service';
@@ -10,7 +9,7 @@ import { UsersService } from '../user.service';
 @Component({
   selector: 'app-edit-roles-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, CheckboxModule],
+  imports: [CommonModule, FormsModule, CheckboxModule],
   templateUrl: './edit-roles-dialog.component.html',
   styleUrl: './edit-roles-dialog.component.scss'
 })

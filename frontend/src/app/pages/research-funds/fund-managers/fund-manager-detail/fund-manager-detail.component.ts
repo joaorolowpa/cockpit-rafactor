@@ -2,7 +2,6 @@ import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angula
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
 import { forkJoin, of } from 'rxjs';
 import { catchError, distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
@@ -18,7 +17,7 @@ type FundManagerTab = 'home' | 'relationships' | 'documents';
 @Component({
   selector: 'app-fund-manager-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, ChartModule, RouterLink, FundsAccordionComponent, FundManagerEditDialogComponent],
+  imports: [CommonModule, FormsModule, ChartModule, RouterLink, FundsAccordionComponent, FundManagerEditDialogComponent],
   templateUrl: './fund-manager-detail.component.html',
   styleUrl: './fund-manager-detail.component.scss'
 })

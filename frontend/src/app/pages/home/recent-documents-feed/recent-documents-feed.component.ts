@@ -2,7 +2,6 @@ import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RecentDocumentsService, RecentDocument } from './recent-documents.service';
-import { ButtonModule } from 'primeng/button';
 
 interface GroupedDocuments {
   date: string;
@@ -13,7 +12,7 @@ interface GroupedDocuments {
 @Component({
   selector: 'app-recent-documents-feed',
   standalone: true,
-  imports: [CommonModule, ButtonModule],
+  imports: [CommonModule],
   templateUrl: './recent-documents-feed.component.html',
   styleUrl: './recent-documents-feed.component.scss'
 })

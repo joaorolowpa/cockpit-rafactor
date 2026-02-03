@@ -1,7 +1,6 @@
 import { Component, input, output, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { User, UserRole } from '../../../../models/user.model';
 import { UsersService } from '../user.service';
@@ -10,7 +9,7 @@ import { EditRolesDialogComponent } from '../users-edit-role-dialog/edit-roles-d
 @Component({
   selector: 'app-users-table',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, EditRolesDialogComponent],
+  imports: [CommonModule, FormsModule, InputTextModule, EditRolesDialogComponent],
   templateUrl: './users-table.component.html',
   styleUrl: './users-table.component.scss'
 })

@@ -18,12 +18,12 @@
       />
       <button 
         *ngIf="searchTerm()" 
-        pButton
         type="button"
-        icon="pi pi-times"
-        class="clear-btn p-button-text p-button-plain"
+        class="clear-btn"
         (click)="clearSearch()"
-      ></button>
+      >
+        <i class="pi pi-times"></i>
+      </button>
     </div>
   </div>
 
@@ -38,13 +38,13 @@
     <i class="pi pi-exclamation-circle"></i>
     <p>{{ error() }}</p>
     <button
-      pButton
       type="button"
-      icon="pi pi-refresh"
-      label="Retry"
-      class="btn-secondary p-button-text"
+      class="btn btn-secondary"
       (click)="loadFunds()"
-    ></button>
+    >
+      <i class="pi pi-refresh"></i>
+      <span>Retry</span>
+    </button>
   </div>
 
   <!-- Funds Grid -->

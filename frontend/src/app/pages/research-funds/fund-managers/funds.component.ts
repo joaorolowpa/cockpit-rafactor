@@ -1,7 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { RouterLink } from '@angular/router';
 import { Fund } from '../../../models/funds.model';
@@ -10,7 +9,7 @@ import { FundsService } from '../funds.service';
 @Component({
   selector: 'app-fund-managers',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, RouterLink],
+  imports: [CommonModule, FormsModule, InputTextModule, RouterLink],
   templateUrl: './funds.component.html',
   styleUrl: './funds.component.scss'
 })

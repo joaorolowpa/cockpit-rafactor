@@ -5,11 +5,13 @@
         <h2>Change Roles</h2>
         <p class="user-name">{{ user().name }}</p>
       </div>
-      <p-button
-        icon="pi pi-times"
-        styleClass="close-btn p-button-text p-button-plain"
-        (onClick)="onClose()"
-      />
+      <button
+        type="button"
+        class="btn btn-icon btn-text close-btn"
+        (click)="onClose()"
+      >
+        <i class="pi pi-times"></i>
+      </button>
     </div>
 
     <div class="dialog-body">
@@ -32,12 +34,13 @@
       <div class="summary-section">
         <div class="summary-header" (click)="toggleSummary()">
           <h4>Active Roles Summary</h4>
-          <p-button
+          <button
             type="button"
-            [icon]="showSummary() ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-            styleClass="toggle-btn p-button-text p-button-plain"
-            (onClick)="toggleSummary()"
-          />
+            class="btn btn-icon btn-text toggle-btn"
+            (click)="toggleSummary()"
+          >
+            <i [class]="showSummary() ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+          </button>
         </div>
         
         @if (showSummary()) {
@@ -57,20 +60,24 @@
     </div>
 
     <div class="dialog-footer">
-      <p-button
+      <button
         type="button"
-        label="Cancel"
-        styleClass="cancel-btn p-button-text p-button-plain"
-        (onClick)="onClose()"
-      />
-      <p-button
+        class="btn btn-ghost cancel-btn"
+        (click)="onClose()"
+      >
+        Cancel
+      </button>
+      <button
         type="button"
-        label="Save Changes"
-        styleClass="submit-btn"
-        [loading]="isSubmitting()"
+        class="btn btn-primary"
         [disabled]="isSubmitting()"
-        (onClick)="onSubmit()"
-      />
+        (click)="onSubmit()"
+      >
+        <span>Save Changes</span>
+        @if (isSubmitting()) {
+          <span class="btn-spinner" aria-hidden="true"></span>
+        }
+      </button>
     </div>
   </div>
 </div>

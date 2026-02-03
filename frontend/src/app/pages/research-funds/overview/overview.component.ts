@@ -1,6 +1,5 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
 import { GroupedFund, Fund } from '../../../models/funds.model';
 import { FundsAccordionComponent } from './funds-list.component';
 import { FundsService } from '../funds.service';
@@ -9,7 +8,7 @@ import { FundsService } from '../funds.service';
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [CommonModule, ButtonModule, FundsAccordionComponent],
+  imports: [CommonModule, FundsAccordionComponent],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss'
 })

@@ -1,7 +1,6 @@
 import { Component, input, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { Metrics, DISPLAY_SERIES, SERIES_CONFIG } from '../../../../models/funds.model';
 
@@ -15,7 +14,7 @@ interface SeriesRow {
 @Component({
   selector: 'app-metrics-table',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, CheckboxModule],
+  imports: [CommonModule, FormsModule, CheckboxModule],
   templateUrl: './metrics-table.component.html',
   styleUrl: './metrics-table.component.scss'
 })

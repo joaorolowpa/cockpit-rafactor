@@ -1,7 +1,6 @@
 import { Component, effect, input, output, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FundManagerContent, FundManagerDetails } from '../../../../../models/funds.model';
 import { FundsService } from '../../../funds.service';
@@ -10,7 +9,7 @@ import { RichTextEditorComponent } from './rich-text-editor/rich-text-editor.com
 @Component({
   selector: 'app-fund-manager-edit-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, RichTextEditorComponent],
+  imports: [CommonModule, FormsModule, InputTextModule, RichTextEditorComponent],
   templateUrl: './fund-manager-edit-dialog.component.html',
   styleUrl: './fund-manager-edit-dialog.component.scss'
 })

@@ -5,11 +5,10 @@
       <p class="page-subtitle">Manage users and roles</p>
     </div>
     <div class="page-actions">
-      <p-button
-        label="Create User"
-        icon="pi pi-plus"
-        (onClick)="openCreateDialog()"
-      />
+      <button class="btn btn-primary admin-create-btn" type="button" (click)="openCreateDialog()">
+        <i class="pi pi-plus"></i>
+        <span>Create User</span>
+      </button>
     </div>
   </div>
 

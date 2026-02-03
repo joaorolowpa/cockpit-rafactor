@@ -29,11 +29,107 @@ body {
     color: #2c3e50;
   }
 
-/* Override PrimeNG button styles for custom buttons */
-.p-button-text {
-  background: transparent;
-  border: none;
+/* Buttons - system design */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.btn i {
+  font-size: 0.9rem;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
   box-shadow: none;
+  transform: none;
+}
+
+.btn-primary {
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #11111100;
+  border-color: #111;
+  transform: translateY(-1px);
+  color: #111;
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: #111827;
+  border-color: var(--border-200);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #d1d5db;
+}
+
+.btn-ghost {
+  background: #f8fafc;
+  color: #64748b;
+  border-color: #e2e8f0;
+  font-weight: 500;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.9rem;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: #e2e8f0;
+  color: #2c3e50;
+}
+
+.btn-text {
+  background: transparent;
+  border-color: transparent;
+  color: #111827;
+  padding: 0.45rem 0.75rem;
+  font-weight: 600;
+}
+
+.btn-text:hover:not(:disabled) {
+  background: #f1f5f9;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 8px;
+}
+
+.btn-icon.btn-text {
+  background: transparent;
+}
+
+.btn-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: btn-spin 0.7s linear infinite;
+}
+
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
 }
 
 :root {
@@ -87,53 +183,6 @@ body {
 }
 
 /* Buttons */
-.btn-primary,
-.btn-secondary,
-.btn-ghost {
-  border-radius: var(--radius-sm);
-  font-size: 0.95rem;
-  font-weight: 600;
-  padding: 0.7rem 1.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-primary {
-  background: #111111;
-  color: #ffffff;
-  border: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.btn-primary:hover {
-  background: #1f2937;
-  transform: translateY(-1px);
-}
-
-.btn-secondary {
-  background: #ffffff;
-  color: #111827;
-  border: 1px solid var(--border-200);
-}
-
-.btn-secondary:hover {
-  background: #f8fafc;
-  border-color: #d1d5db;
-}
-
-.btn-ghost {
-  background: #f8fafc;
-  color: #64748b;
-  border: 1px solid #e2e8f0;
-  padding: 0.55rem 0.9rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.btn-ghost:hover {
-  background: #e2e8f0;
-  color: #2c3e50;
-}
 
 /* Tables (UsersTable standard) */
 .table-container {

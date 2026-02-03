@@ -26,13 +26,13 @@
               </div>
               <div class="doc-actions">
                 <button
-                  pButton
+                  class="btn btn-text doc-download-btn"
                   type="button"
-                  icon="pi pi-download"
-                  label=""
-                  class="p-button-text p-button-plain doc-download-btn"
                   (click)="downloadDocument(doc)"
-                ></button>
+                >
+                  <i class="pi pi-download"></i>
+                  <span>Download</span>
+                </button>
               </div>
             </div>
           </div>
@@ -42,7 +42,7 @@
 
     @if (hasMore()) {
       <div class="feed-footer">
-        <button pButton class="btn-secondary" type="button" (click)="loadMore()">
+        <button class="btn btn-secondary" type="button" (click)="loadMore()">
           Load More Documents
         </button>
       </div>

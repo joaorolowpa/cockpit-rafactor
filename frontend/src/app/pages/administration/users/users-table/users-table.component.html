@@ -12,12 +12,12 @@
       />
       @if (searchTerm()) {
         <button
-          pButton
           type="button"
-          icon="pi pi-times"
-          class="clear-btn p-button-text p-button-plain"
+          class="clear-btn"
           (click)="searchTerm.set('')"
-        ></button>
+        >
+          <i class="pi pi-times"></i>
+        </button>
       }
     </div>
 
@@ -34,12 +34,12 @@
 
     @if (searchTerm() || selectedRole()) {
       <button
-        pButton
         type="button"
-        label="Clear Filters"
-        class="clear-filters-btn p-button-text p-button-plain"
+        class="btn btn-ghost clear-filters-btn"
         (click)="clearFilters()"
-      ></button>
+      >
+        Clear Filters
+      </button>
     }
   </div>
 
@@ -85,31 +85,31 @@
             <td class="actions-cell">
               <div class="actions-menu-wrapper">
                 <button
-                  pButton
                   type="button"
-                  icon="pi pi-ellipsis-v"
-                  class="actions-btn p-button-text p-button-plain"
+                  class="btn btn-icon btn-text actions-btn"
                   (click)="toggleActionsMenu(user.id)"
-                ></button>
+                >
+                  <i class="pi pi-ellipsis-v"></i>
+                </button>
                 
                 @if (showActionsMenu() === user.id) {
                   <div class="actions-dropdown">
                     <button
-                      pButton
                       type="button"
-                      icon="pi pi-shield"
-                      label="Change Roles"
-                      class="dropdown-item p-button-text p-button-plain"
+                      class="btn btn-text dropdown-item"
                       (click)="openEditRoles(user)"
-                    ></button>
+                    >
+                      <i class="pi pi-shield"></i>
+                      <span>Change Roles</span>
+                    </button>
                     <button
-                      pButton
                       type="button"
-                      icon="pi pi-power-off"
-                      [label]="user.user_active ? 'Deactivate' : 'Activate'"
-                      class="dropdown-item p-button-text p-button-plain"
+                      class="btn btn-text dropdown-item"
                       (click)="toggleUserActive(user)"
-                    ></button>
+                    >
+                      <i class="pi pi-power-off"></i>
+                      <span>{{ user.user_active ? 'Deactivate' : 'Activate' }}</span>
+                    </button>
                   </div>
                 }
               </div>

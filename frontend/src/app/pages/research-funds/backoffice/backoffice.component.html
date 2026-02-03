@@ -7,7 +7,7 @@
       </p>
     </div>
     <div class="page-actions">
-      <button class="btn-primary" type="button" (click)="onPrimaryAction()">
+      <button class="btn btn-primary" type="button" (click)="onPrimaryAction()">
         {{ topBarConfig().buttonLabel }}
       </button>
     </div>
@@ -39,15 +39,15 @@
       />
     </div>
     <div class="toolbar-actions">
-      <button class="btn-ghost" type="button" (click)="copyTable('us')">
+      <button class="btn btn-ghost" type="button" (click)="copyTable('us')">
         <i class="pi pi-plus-circle"></i>
         Copy US
       </button>
-      <button class="btn-ghost" type="button" (click)="copyTable('br')">
+      <button class="btn btn-ghost" type="button" (click)="copyTable('br')">
         <i class="pi pi-plus-circle"></i>
         Copy BR
       </button>
-      <button class="btn-ghost" type="button" (click)="toggleCompactView()">
+      <button class="btn btn-ghost" type="button" (click)="toggleCompactView()">
         <i class="pi pi-sliders-h"></i>
         View
       </button>
@@ -94,7 +94,7 @@
                   <td>{{ fund.created_by_name || '-' }}</td>
                   <td>{{ fund.created_at || '-' }}</td>
                   <td>
-                    <button class="icon-btn" type="button">...</button>
+                    <button class="btn btn-text icon-btn" type="button">...</button>
                   </td>
                 </tr>
               }
