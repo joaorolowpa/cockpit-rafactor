@@ -14,7 +14,7 @@
     <a
       pButton
       label="Back to list"
-      class="retry-btn"
+      class="btn-secondary p-button-text"
       [routerLink]="['/research-funds/fund-managers']"
     ></a>
   </div>
@@ -32,7 +32,7 @@
       <div class="card">
         <div class="card-header">
           <h3>About</h3>
-          <button pButton label="Edit" class="back-btn" (click)="openEditDialog()"></button>
+          <button pButton label="Edit" class="btn-secondary" (click)="openEditDialog()"></button>
         </div>
         <div class="section">
           <div class="section-title">Firm</div>
@@ -105,7 +105,7 @@
                 {{ option.label }}
               </option>
             </select>
-            <button pButton label="Edit" class="back-btn" disabled></button>
+            <button pButton label="Edit" class="btn-secondary" disabled></button>
           </div>
 
           <div class="section">
@@ -186,7 +186,7 @@
         </div>
 
         <div *ngIf="!documentsError() && documents().length > 0" class="table-wrapper">
-          <table class="documents-table">
+          <table class="data-table">
             <thead>
               <tr>
                 <th>ID</th>

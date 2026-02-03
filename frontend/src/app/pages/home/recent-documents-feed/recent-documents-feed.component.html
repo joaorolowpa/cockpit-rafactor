@@ -1,0 +1,46 @@
+<div class="feed-container">
+  <div class="feed-header">
+    <h2>Recent Company Documents</h2>
+  </div>
+
+  @if (isLoading()) {
+    <div class="feed-state">Loading recent documents...</div>
+  } @else if (errorMessage()) {
+    <div class="feed-state">{{ errorMessage() }}</div>
+  } @else if (allDocuments().length === 0) {
+    <div class="feed-state">No recent documents found</div>
+  } @else {
+    <div class="feed-groups">
+      @for (group of groupedDocuments(); track group.date) {
+        <div class="feed-card">
+          <div class="feed-card-header">
+            <span class="feed-date">{{ group.displayDate }}</span>
+          </div>
+          <div class="feed-card-body">
+            <div class="doc-row" *ngFor="let doc of group.documents">
+              <div class="doc-main">
+                <div class="doc-title">{{ doc.company_name || 'Company Document' }}</div>
+                <div class="doc-meta">
+                  <span>{{ doc.document_type }}</span>
+                  <span>·</span>
+                  <span>{{ doc.user_name || doc.user_email || '-' }}</span>
+                </div>
+              </div>
+              <div class="doc-time">
+                {{ doc.created_at ? (doc.created_at | date: 'shortTime') : '-' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (hasMore()) {
+      <div class="feed-footer">
+        <button class="btn-secondary" type="button" (click)="loadMore()">
+          Load More Documents
+        </button>
+      </div>
+    }
+  }
+</div>

@@ -35,20 +35,20 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1rem;
-  background: white;
-  border: 1px solid #d1d5db;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: #64748b;
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
 
   &:hover:not(:disabled) {
-    background: #f9fafb;
-    border-color: #B17840;
-    color: #B17840;
+    background: #e2e8f0;
+    color: #2c3e50;
+    border-color: #e2e8f0;
   }
 
   &:disabled {
@@ -57,13 +57,13 @@
   }
 
   &.active {
-    background: #B17840;
-    color: white;
-    border-color: #B17840;
+    background: #111111;
+    color: #ffffff;
+    border-color: #111111;
 
     &:hover {
-      background: #B17840;
-      border-color: #B17840;
+      background: #1f2937;
+      border-color: #1f2937;
     }
   }
 

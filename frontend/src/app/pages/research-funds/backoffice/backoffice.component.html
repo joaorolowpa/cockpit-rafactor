@@ -6,9 +6,11 @@
         Create and manage funds, relationships, transactions and classifications.
       </p>
     </div>
-    <button class="primary-btn" type="button" (click)="onPrimaryAction()">
-      {{ topBarConfig().buttonLabel }}
-    </button>
+    <div class="page-actions">
+      <button class="btn-primary" type="button" (click)="onPrimaryAction()">
+        {{ topBarConfig().buttonLabel }}
+      </button>
+    </div>
   </div>
 
   <div class="tabs">
@@ -26,27 +28,26 @@
     }
   </div>
 
-  <div class="toolbar">
-    <div class="search-wrapper">
+  <div class="filters-bar">
+    <div class="search-box">
       <i class="pi pi-search"></i>
       <input
-        class="search-input"
         type="text"
         [placeholder]="getSearchPlaceholder()"
-        [ngModel]="searchTerm()"
-        (ngModelChange)="searchTerm.set($event)"
+        [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)"
       />
     </div>
     <div class="toolbar-actions">
-      <button class="ghost-btn" type="button" (click)="copyTable('us')">
+      <button class="btn-ghost" type="button" (click)="copyTable('us')">
         <i class="pi pi-plus-circle"></i>
         Copy US
       </button>
-      <button class="ghost-btn" type="button" (click)="copyTable('br')">
+      <button class="btn-ghost" type="button" (click)="copyTable('br')">
         <i class="pi pi-plus-circle"></i>
         Copy BR
       </button>
-      <button class="ghost-btn" type="button" (click)="toggleCompactView()">
+      <button class="btn-ghost" type="button" (click)="toggleCompactView()">
         <i class="pi pi-sliders-h"></i>
         View
       </button>
@@ -64,7 +65,8 @@
       <p>{{ errorMessage() }}</p>
     </div>
   } @else {
-    <div class="table-wrapper" [class.compact]="compactView()">
+    <div class="table-container">
+      <div class="table-wrapper" [class.compact]="compactView()">
       @if (activeTab() === 'fund_managers') {
         @if (filteredFundManagers().length === 0) {
           <div class="empty-state">
@@ -72,7 +74,7 @@
             <p>No fund managers found.</p>
           </div>
         } @else {
-          <table class="backoffice-table">
+          <table class="data-table">
             <thead>
               <tr>
                 <th>#</th>
@@ -106,7 +108,7 @@
             <p>No fund relationships found.</p>
           </div>
         } @else {
-          <table class="backoffice-table">
+          <table class="data-table">
             <thead>
               <tr>
                 <th>ID</th>
@@ -138,7 +140,7 @@
             <p>No classifications found.</p>
           </div>
         } @else {
-          <table class="backoffice-table">
+          <table class="data-table">
             <thead>
               <tr>
                 <th>Display Name</th>
@@ -166,7 +168,7 @@
             <p>No transactions found.</p>
           </div>
         } @else {
-          <table class="backoffice-table">
+          <table class="data-table">
             <thead>
               <tr>
                 <th>ID</th>
@@ -192,6 +194,7 @@
           </table>
         }
       }
+      </div>
     </div>
   }
 </div>

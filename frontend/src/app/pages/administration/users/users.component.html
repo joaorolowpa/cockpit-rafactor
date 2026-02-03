@@ -1,15 +1,17 @@
 <div class="page-container">
   <div class="page-header">
-    <div class="header-content">
+    <div>
       <h1 class="page-title">Admin Panel</h1>
-      <p class="page-description">Manage users and roles</p>
+      <p class="page-subtitle">Manage users and roles</p>
     </div>
-    <p-button
-      label="Create User"
-      icon="pi pi-plus"
-      styleClass="create-btn"
-      (onClick)="openCreateDialog()"
-    />
+    <div class="page-actions">
+      <p-button
+        label="Create User"
+        icon="pi pi-plus"
+        styleClass="btn-primary"
+        (onClick)="openCreateDialog()"
+      />
+    </div>
   </div>
 
   @if (isLoading()) {

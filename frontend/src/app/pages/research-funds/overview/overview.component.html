@@ -1,7 +1,9 @@
 <div class="page-container">
   <div class="page-header">
-    <h1 class="page-title">Research - Funds Overview</h1>
-    <p class="page-description">Overview of fund metrics and performance data</p>
+    <div>
+      <h1 class="page-title">Research - Funds Overview</h1>
+      <p class="page-subtitle">Overview of fund metrics and performance data</p>
+    </div>
   </div>
 
   @if (isLoading()) {
@@ -18,7 +20,7 @@
         type="button"
         icon="pi pi-replay"
         label="Retry"
-        class="retry-btn p-button-text"
+        class="btn-secondary p-button-text"
         (click)="loadData()"
       ></button>
     </div>
