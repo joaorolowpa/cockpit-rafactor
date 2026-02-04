@@ -134,10 +134,11 @@
         @for (row of tableData().rows; track row.seriesName) {
           <tr [class.selected]="isRowSelected(row.seriesName)">
             <td class="checkbox-col">
-              <p-checkbox
-                [binary]="true"
-                [ngModel]="isRowSelected(row.seriesName)"
-                (onChange)="toggleRowSelection(row.seriesName)"
+              <input
+                type="checkbox"
+                class="row-checkbox"
+                [checked]="isRowSelected(row.seriesName)"
+                (change)="toggleRowSelection(row.seriesName)"
               />
             </td>
             <td class="series-name-cell">

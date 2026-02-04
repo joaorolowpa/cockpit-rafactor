@@ -230,17 +230,47 @@
         background: white;
         z-index: 6;
         border-right: 1px solid #f3f4f6;
+        min-width: 50px;
+        width: 50px;
         
         :host ::ng-deep .p-checkbox .p-checkbox-box {
           width: 18px;
           height: 18px;
           border-radius: 0;
           border: 1px solid #B17840;
+          background: #ffffff;
         }
 
         :host ::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
           background: #B17840;
           border-color: #B17840;
+        }
+
+        .row-checkbox {
+          width: 18px;
+          height: 18px;
+          margin: 0;
+          cursor: pointer;
+          appearance: none;
+          border: 1px solid #B17840;
+          border-radius: 2px;
+          background: #ffffff;
+          display: inline-grid;
+          place-content: center;
+        }
+
+        .row-checkbox:checked {
+          background: #B17840;
+          border-color: #B17840;
+        }
+
+        .row-checkbox:checked::after {
+          content: "";
+          width: 8px;
+          height: 5px;
+          border-left: 2px solid #ffffff;
+          border-bottom: 2px solid #ffffff;
+          transform: rotate(-45deg);
         }
       }
 
