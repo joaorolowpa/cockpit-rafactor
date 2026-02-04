@@ -1,4 +1,8 @@
-<div class="metrics-container">
+@if (showExpandedView()) {
+  <div class="expanded-backdrop" (click)="toggleExpandedView()"></div>
+}
+
+<div class="metrics-container" [class.expanded-mode]="showExpandedView()">
   <!-- Header com título do relationship -->
   <div class="table-title">
     <h3>{{ relationshipName() }}</h3>
@@ -6,14 +10,68 @@
 
   <!-- Toolbar -->
   <div class="toolbar">
-    <button
-      class="btn toolbar-btn"
-      type="button"
-      disabled
-    >
-      <i class="pi pi-cog"></i>
-      <span>Settings</span>
-    </button>
+    <div class="settings-menu">
+      <button
+        class="btn toolbar-btn"
+        type="button"
+        (click)="toggleSettingsMenu()"
+      >
+        <i class="pi pi-cog"></i>
+        <span>Settings</span>
+      </button>
+
+      @if (showSettings()) {
+        <div class="settings-panel">
+          <div class="settings-group">
+            <label>Grouping Period</label>
+            <select
+              [ngModel]="groupingPeriod()"
+              (ngModelChange)="groupingPeriod.set($event)"
+            >
+              @for (option of groupingPeriodOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="settings-group">
+            <label>Thousand Separator</label>
+            <select
+              [ngModel]="thousandSeparator()"
+              (ngModelChange)="thousandSeparator.set($event)"
+            >
+              @for (option of separatorOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="settings-group">
+            <label>Decimal Separator</label>
+            <select
+              [ngModel]="decimalSeparator()"
+              (ngModelChange)="decimalSeparator.set($event)"
+            >
+              @for (option of separatorOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="settings-group">
+            <label>Date Format</label>
+            <select
+              [ngModel]="dateFormat()"
+              (ngModelChange)="dateFormat.set($event)"
+            >
+              @for (option of dateFormatOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </div>
+        </div>
+      }
+    </div>
     <button
       class="btn toolbar-btn"
       type="button"
@@ -51,28 +109,23 @@
   </div>
 
   <!-- Table Wrapper -->
-  <div 
-    class="table-wrapper"
-    [class.expanded]="showExpandedView()"
-  >
+  <div class="table-shell" [class.expanded]="showExpandedView()">
+    <div 
+      class="table-wrapper"
+      [class.expanded]="showExpandedView()"
+    >
     <table class="metrics-table">
       <thead>
         <tr>
           <th class="checkbox-col">
-            <i class="pi pi-filter filter-icon"></i>
+            <span class="checkbox-placeholder"></span>
           </th>
           <th class="series-name-col">
-            <div class="header-content">
-              <span>Series Name</span>
-              <i class="pi pi-filter filter-icon"></i>
-            </div>
+            <span>Series Name</span>
           </th>
           @for (date of tableData().dateColumns; track date) {
             <th class="date-col">
-              <div class="header-content">
-                <span>{{ date }}</span>
-                <i class="pi pi-filter filter-icon"></i>
-              </div>
+              <span>{{ date }}</span>
             </th>
           }
         </tr>
@@ -92,7 +145,7 @@
             </td>
             @for (date of tableData().dateColumns; track date) {
               <td class="value-cell">
-                {{ row.values[date] || '-' }}
+                {{ formatValue(row.values[date], row.type) }}
               </td>
             }
           </tr>
@@ -105,5 +158,6 @@
         }
       </tbody>
     </table>
+    </div>
   </div>
 </div>

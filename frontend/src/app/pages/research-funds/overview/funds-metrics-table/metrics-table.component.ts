@@ -7,8 +7,19 @@ import { Metrics, DISPLAY_SERIES, SERIES_CONFIG } from '../../../../models/funds
 interface SeriesRow {
   seriesName: string;
   originalCode: string;
-  values: { [date: string]: string | number };
+  values: { [date: string]: string | number | null };
   type: 'percent' | 'value';
+}
+
+type GroupingPeriod = 'normal' | 'month' | 'quarter' | 'year';
+type Separator = ',' | '.';
+type DateFormat = 'yyyy-MM-dd' | 'yyyy-MMM-dd' | 'yyyy-QQQ' | 'yyyy-dd-MM';
+
+interface DateGroup {
+  key: string;
+  label: string;
+  sortValue: number;
+  rawDates: string[];
 }
 
 @Component({
@@ -25,6 +36,31 @@ export class MetricsTableComponent {
   protected showExpandedView = signal<boolean>(false);
   protected selectedRows = signal<Set<string>>(new Set());
   protected isAccumulated = signal<boolean>(false);
+  protected showSettings = signal<boolean>(false);
+
+  protected groupingPeriod = signal<GroupingPeriod>('quarter');
+  protected thousandSeparator = signal<Separator>(',');
+  protected decimalSeparator = signal<Separator>('.');
+  protected dateFormat = signal<DateFormat>('yyyy-QQQ');
+
+  protected readonly groupingPeriodOptions: { label: string; value: GroupingPeriod }[] = [
+    { label: 'Normal', value: 'normal' },
+    { label: 'Month', value: 'month' },
+    { label: 'Quarter', value: 'quarter' },
+    { label: 'Year', value: 'year' }
+  ];
+
+  protected readonly separatorOptions: { label: string; value: Separator }[] = [
+    { label: 'Comma (,)', value: ',' },
+    { label: 'Dot (.)', value: '.' }
+  ];
+
+  protected readonly dateFormatOptions: { label: string; value: DateFormat }[] = [
+    { label: '2024-12-31', value: 'yyyy-MM-dd' },
+    { label: '2024-Dec-31', value: 'yyyy-MMM-dd' },
+    { label: '2024-Q4', value: 'yyyy-QQQ' },
+    { label: '2024-31-12', value: 'yyyy-dd-MM' }
+  ];
 
   protected tableData = computed(() => {
     const m = this.metrics();
@@ -45,7 +81,10 @@ export class MetricsTableComponent {
     }
 
     // Extrai as datas
-    const dates = m.timeseries.data.map(row => String(row[dateColumnIndex]));
+    const rawDates = m.timeseries.data.map(row => String(row[dateColumnIndex]));
+    const grouping = this.groupingPeriod();
+    const dateFormat = this.dateFormat();
+    const dateGroups = this.buildDateGroups(rawDates, grouping, dateFormat);
 
     // Filtra apenas as colunas que estão em DISPLAY_SERIES
     const seriesColumns = m.timeseries.columns
@@ -58,13 +97,18 @@ export class MetricsTableComponent {
 
     // Constrói as rows (apenas as séries filtradas)
     const rows: SeriesRow[] = seriesColumns.map(({ col: seriesCode, index: actualIndex }) => {
-      const values: { [date: string]: string | number } = {};
+      const values: { [date: string]: string | number | null } = {};
       const config = SERIES_CONFIG[seriesCode];
+
+      dateGroups.forEach(group => {
+        values[group.label] = null;
+      });
       
       m.timeseries.data.forEach((row, rowIndex) => {
-        const date = dates[rowIndex];
+        const rawDate = rawDates[rowIndex];
+        const groupLabel = this.getGroupLabelForDate(rawDate, dateGroups);
         const value = row[actualIndex];
-        values[date] = this.formatValue(value, config?.type || 'value');
+        values[groupLabel] = value as string | number | null;
       });
 
       return { 
@@ -78,36 +122,141 @@ export class MetricsTableComponent {
     console.log('Rows created:', rows.length);
 
     return { 
-      headers: ['Series Name', ...dates],
+      headers: ['Series Name', ...dateGroups.map(group => group.label)],
       rows,
-      dateColumns: dates
+      dateColumns: dateGroups.map(group => group.label)
     };
   });
 
-  protected formatValue(value: unknown, type: 'percent' | 'value' = 'value'): string | number {
+    protected formatValue(value: unknown, type: 'percent' | 'value' = 'value'): string | number {
     if (value === null || value === undefined) return '-';
-    
+
     if (typeof value === 'number') {
       if (type === 'percent') {
-        // Valores vêm como decimal (0.8308 = 83.08%)
-        return `${(value * 100).toFixed(2)}%`;
+        // Values come as decimal (0.8308 = 83.08%)
+        return `${this.formatNumber(value * 100)}%`;
       }
-      
-      // Valores monetários grandes
-      if (Math.abs(value) >= 1000) {
-        return value.toLocaleString('en-US', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        });
-      }
-      
-      return value.toFixed(2);
+
+      return this.formatNumber(value);
     }
-    
+
     return String(value);
   }
 
-  protected toggleExpandedView(): void {
+  protected formatNumber(value: number): string {
+    const thousandSeparator = this.thousandSeparator();
+    const decimalSeparator = this.decimalSeparator();
+    const fixed = value.toFixed(2);
+    const parts = fixed.split('.');
+    const integerPart = parts[0];
+    const decimalPart = parts[1];
+    const withThousands = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
+    return decimalPart ? `${withThousands}${decimalSeparator}${decimalPart}` : withThousands;
+  }
+
+  protected buildDateGroups(rawDates: string[], grouping: GroupingPeriod, dateFormat: DateFormat): DateGroup[] {
+    const groups = new Map<string, DateGroup>();
+
+    rawDates.forEach((rawDate, index) => {
+      const parsedDate = this.parseDate(rawDate);
+      const groupInfo = this.getGroupingInfo(rawDate, parsedDate, grouping, index);
+
+      if (!groups.has(groupInfo.key)) {
+        groups.set(groupInfo.key, {
+          key: groupInfo.key,
+          label: this.formatDate(groupInfo.representativeDate, rawDate, dateFormat),
+          sortValue: groupInfo.sortValue,
+          rawDates: [rawDate]
+        });
+      } else {
+        groups.get(groupInfo.key)!.rawDates.push(rawDate);
+      }
+    });
+
+    return Array.from(groups.values()).sort((a, b) => a.sortValue - b.sortValue);
+  }
+
+  protected getGroupLabelForDate(rawDate: string, groups: DateGroup[]): string {
+    for (const group of groups) {
+      if (group.rawDates.includes(rawDate)) return group.label;
+    }
+    return rawDate;
+  }
+
+  protected getGroupingInfo(rawDate: string, parsedDate: Date | null, grouping: GroupingPeriod, fallbackIndex: number): {
+    key: string;
+    representativeDate: Date | null;
+    sortValue: number;
+  } {
+    if (!parsedDate) {
+      return {
+        key: `${grouping}:${rawDate}`,
+        representativeDate: null,
+        sortValue: fallbackIndex
+      };
+    }
+
+    const year = parsedDate.getFullYear();
+    const month = parsedDate.getMonth();
+    const quarter = Math.floor(month / 3) + 1;
+
+    switch (grouping) {
+      case 'month': {
+        const key = `${year}-${month + 1}`;
+        const repDate = new Date(year, month, 1);
+        return { key, representativeDate: repDate, sortValue: repDate.getTime() };
+      }
+      case 'quarter': {
+        const key = `${year}-Q${quarter}`;
+        const repDate = new Date(year, (quarter - 1) * 3, 1);
+        return { key, representativeDate: repDate, sortValue: repDate.getTime() };
+      }
+      case 'year': {
+        const key = `${year}`;
+        const repDate = new Date(year, 0, 1);
+        return { key, representativeDate: repDate, sortValue: repDate.getTime() };
+      }
+      case 'normal':
+      default: {
+        return {
+          key: `normal:${rawDate}`,
+          representativeDate: parsedDate,
+          sortValue: parsedDate.getTime()
+        };
+      }
+    }
+  }
+
+  protected parseDate(rawDate: string): Date | null {
+    const parsed = new Date(rawDate);
+    return isNaN(parsed.getTime()) ? null : parsed;
+  }
+
+  protected formatDate(date: Date | null, rawDate: string, format: DateFormat): string {
+    if (!date) return rawDate;
+
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
+    const monthIndex = month + 1;
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const quarter = Math.floor(month / 3) + 1;
+
+    const pad = (value: number) => String(value).padStart(2, '0');
+
+    switch (format) {
+      case 'yyyy-MMM-dd':
+        return `${year}-${months[month]}-${pad(day)}`;
+      case 'yyyy-QQQ':
+        return `${year}-Q${quarter}`;
+      case 'yyyy-dd-MM':
+        return `${year}-${pad(day)}-${pad(monthIndex)}`;
+      case 'yyyy-MM-dd':
+      default:
+        return `${year}-${pad(monthIndex)}-${pad(day)}`;
+    }
+  }
+protected toggleExpandedView(): void {
     this.showExpandedView.set(!this.showExpandedView());
   }
 
@@ -129,6 +278,10 @@ export class MetricsTableComponent {
     this.isAccumulated.set(!this.isAccumulated());
   }
 
+  protected toggleSettingsMenu(): void {
+    this.showSettings.set(!this.showSettings());
+  }
+
   protected copySelectedRows(): void {
     const selected = this.selectedRows();
     if (selected.size === 0) {
@@ -141,7 +294,7 @@ export class MetricsTableComponent {
     
     const header = ['Series Name', ...data.dateColumns].join('\t');
     const rows = selectedData.map(row => {
-      const values = data.dateColumns.map(date => row.values[date] || '-');
+      const values = data.dateColumns.map(date => this.formatValue(row.values[date], row.type) || '-');
       return [row.seriesName, ...values].join('\t');
     });
     
@@ -154,7 +307,7 @@ export class MetricsTableComponent {
     const data = this.tableData();
     const header = ['Series Name', ...data.dateColumns].join('\t');
     const rows = data.rows.map(row => {
-      const values = data.dateColumns.map(date => row.values[date] || '-');
+      const values = data.dateColumns.map(date => this.formatValue(row.values[date], row.type) || '-');
       return [row.seriesName, ...values].join('\t');
     });
     
@@ -163,3 +316,4 @@ export class MetricsTableComponent {
     alert('Table copied to clipboard');
   }
 }
+

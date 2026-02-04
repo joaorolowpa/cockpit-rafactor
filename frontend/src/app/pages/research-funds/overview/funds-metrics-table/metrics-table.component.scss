@@ -2,15 +2,16 @@
 .metrics-container {
   background: white;
   border: 1px solid #e5e7eb;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  position: relative;
 }
 
 .table-title {
   padding: 1.5rem 2rem;
   border-bottom: 1px solid #e5e7eb;
-  background: #fafafa;
+  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
 
   h3 {
     margin: 0;
@@ -28,6 +29,55 @@
   background: white;
   border-bottom: 1px solid #e5e7eb;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.settings-menu {
+  position: relative;
+}
+
+.settings-panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  z-index: 20;
+  min-width: 240px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.settings-group {
+  display: grid;
+  gap: 0.375rem;
+
+  label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    letter-spacing: 0.02em;
+  }
+
+  select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #111827;
+    background: #ffffff;
+    outline: none;
+    transition: all 0.2s ease;
+
+    &:focus {
+      border-color: #B17840;
+      box-shadow: 0 0 0 3px rgba(177, 120, 64, 0.12);
+    }
+  }
 }
 
 .toolbar-btn {
@@ -35,9 +85,9 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1rem;
-  background: #f8fafc;
+  background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 500;
   color: #64748b;
@@ -46,9 +96,9 @@
   white-space: nowrap;
 
   &:hover:not(:disabled) {
-    background: #e2e8f0;
-    color: #2c3e50;
-    border-color: #e2e8f0;
+    background: #f8fafc;
+    color: #1f2937;
+    border-color: #cbd5e1;
   }
 
   &:disabled {
@@ -57,19 +107,39 @@
   }
 
   &.active {
-    background: #111111;
+    background: #111827;
     color: #ffffff;
-    border-color: #111111;
+    border-color: #111827;
 
     &:hover {
-      background: #1f2937;
-      border-color: #1f2937;
+      background: #0f172a;
+      border-color: #0f172a;
     }
   }
 
   i {
     font-size: 0.8125rem;
   }
+}
+
+.expanded-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 90;
+}
+
+.metrics-container.expanded-mode {
+  position: fixed;
+  inset: 4vh 2vw;
+  z-index: 100;
+  border-radius: 16px;
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.35);
+}
+
+.table-shell {
+  position: relative;
 }
 
 .table-wrapper {
@@ -79,7 +149,7 @@
   transition: max-height 0.3s ease;
 
   &.expanded {
-    max-height: 80vh;
+    max-height: calc(100vh - 260px);
   }
 }
 
@@ -161,11 +231,16 @@
         z-index: 6;
         border-right: 1px solid #f3f4f6;
         
-        input[type="checkbox"] {
-          width: 17px;
-          height: 17px;
-          cursor: pointer;
-          accent-color: #B17840;
+        :host ::ng-deep .p-checkbox .p-checkbox-box {
+          width: 18px;
+          height: 18px;
+          border-radius: 0;
+          border: 1px solid #B17840;
+        }
+
+        :host ::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
+          background: #B17840;
+          border-color: #B17840;
         }
       }
 
@@ -211,22 +286,10 @@
   }
 }
 
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.625rem;
-}
-
-.filter-icon {
-  font-size: 0.75rem;
-  color: #9ca3af;
-  cursor: pointer;
-  transition: color 0.15s ease;
-
-  &:hover {
-    color: #6b7280;
-  }
+.checkbox-placeholder {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
 }
 
 // Scrollbar mais limpa
