@@ -83,35 +83,25 @@
               </div>
             </td>
             <td class="actions-cell">
-              <div class="actions-menu-wrapper">
+              <div class="actions-inline">
                 <button
                   type="button"
-                  class="btn btn-icon btn-text actions-btn"
-                  (click)="toggleActionsMenu(user.id)"
+                  class="btn btn-icon btn-text action-icon-btn"
+                  (click)="openEditRoles(user)"
+                  title="Change Roles"
+                  aria-label="Change Roles"
                 >
-                  <i class="pi pi-ellipsis-v"></i>
+                  <i class="pi pi-shield"></i>
                 </button>
-                
-                @if (showActionsMenu() === user.id) {
-                  <div class="actions-dropdown">
-                    <button
-                      type="button"
-                      class="btn btn-text dropdown-item"
-                      (click)="openEditRoles(user)"
-                    >
-                      <i class="pi pi-shield"></i>
-                      <span>Change Roles</span>
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-text dropdown-item"
-                      (click)="toggleUserActive(user)"
-                    >
-                      <i class="pi pi-power-off"></i>
-                      <span>{{ user.user_active ? 'Deactivate' : 'Activate' }}</span>
-                    </button>
-                  </div>
-                }
+                <button
+                  type="button"
+                  class="btn btn-icon btn-text action-icon-btn"
+                  (click)="toggleUserActive(user)"
+                  [title]="user.user_active ? 'Deactivate' : 'Activate'"
+                  [attr.aria-label]="user.user_active ? 'Deactivate' : 'Activate'"
+                >
+                  <i class="pi pi-power-off"></i>
+                </button>
               </div>
             </td>
           </tr>
