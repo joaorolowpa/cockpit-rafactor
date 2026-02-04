@@ -132,6 +132,15 @@
 
 :host ::ng-deep .checkbox-label .p-checkbox .p-checkbox-box {
   border-color: #B17840;
+  border-radius: 0;
+  width: 18px;
+  height: 18px;
+  background: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #B17840;
+  box-sizing: border-box;
 }
 
 :host ::ng-deep .checkbox-label .p-checkbox .p-checkbox-box.p-highlight {
