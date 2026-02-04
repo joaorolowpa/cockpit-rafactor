@@ -1,0 +1,138 @@
+// ========== FUNDS GRID ==========
+.funds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.fund-card {
+  display: flex;
+  height: 4rem;
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-color: #B17840;
+  }
+}
+
+.fund-initial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  flex-shrink: 0;
+  background: #2c3e50;
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.fund-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  overflow: hidden;
+}
+
+.fund-name {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #2c3e50;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s ease;
+
+  .fund-card:hover & {
+    color: #B17840;
+  }
+}
+
+// ========== RESPONSIVE ==========
+@media (max-width: 1024px) {
+  .funds-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .funds-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .fund-card {
+    height: 3.5rem;
+  }
+
+  .fund-initial {
+    width: 3.5rem;
+    font-size: 1rem;
+  }
+
+  .fund-name {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .funds-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ========== LOADING STATE ==========
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+
+  i {
+    font-size: 3rem;
+    color: #B17840;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #64748b;
+    margin: 0;
+  }
+}
+
+// ========== ERROR STATE ==========
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+
+  i {
+    font-size: 3rem;
+    color: #ef4444;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #64748b;
+    margin: 0 0 1.5rem 0;
+  }
+}
+
