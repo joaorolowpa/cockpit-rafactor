@@ -69,18 +69,21 @@
               }
             </select>
           </div>
+
+          <div class="settings-group">
+            <label>Empty Value Display</label>
+            <select
+              [ngModel]="emptyValueDisplay()"
+              (ngModelChange)="emptyValueDisplay.set($event)"
+            >
+              @for (option of emptyValueDisplayOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+          </div>
         </div>
       }
     </div>
-    <button
-      class="btn toolbar-btn"
-      type="button"
-      [class.active]="isAccumulated()"
-      (click)="toggleAccumulate()"
-    >
-      <i class="pi pi-arrow-up"></i>
-      <span>Accumulate Rows</span>
-    </button>
     <button
       class="btn toolbar-btn"
       type="button"

@@ -47,10 +47,31 @@
         <i class="pi pi-plus-circle"></i>
         Copy BR
       </button>
-      <button class="btn btn-ghost" type="button" (click)="toggleCompactView()">
-        <i class="pi pi-sliders-h"></i>
-        View
-      </button>
+      <div class="view-menu">
+        <button class="btn btn-ghost" type="button" (click)="toggleColumnMenu()">
+          <i class="pi pi-sliders-h"></i>
+          View
+        </button>
+        @if (showColumnMenu()) {
+          <div class="view-menu-panel">
+            <div class="view-menu-section">    
+            </div>
+            <div class="view-menu-section">
+              <label class="view-menu-title">Columns</label>
+              @for (column of getActiveTabAllColumns(); track column.key) {
+                <label class="view-menu-item">
+                  <input
+                    type="checkbox"
+                    [checked]="isColumnVisible(activeTab(), column.key)"
+                    (change)="toggleColumnVisibility(activeTab(), column.key)"
+                  />
+                  <span>{{ column.label }}</span>
+                </label>
+              }
+            </div>
+          </div>
+        }
+      </div>
     </div>
   </div>
 
@@ -77,25 +98,33 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>#</th>
-                <th>ID</th>
-                <th>Display Name</th>
-                <th>Created By</th>
-                <th>Created At</th>
-                <th>Actions</th>
+                @if (isColumnVisible('fund_managers', 'id')) { <th>ID</th> }
+                @if (isColumnVisible('fund_managers', 'display_name')) { <th>Display Name</th> }
+                @if (isColumnVisible('fund_managers', 'created_by_name')) { <th>Created By</th> }
+                @if (isColumnVisible('fund_managers', 'created_at')) { <th>Created At</th> }
+                @if (isColumnVisible('fund_managers', 'actions')) { <th>Actions</th> }
               </tr>
             </thead>
             <tbody>
               @for (fund of filteredFundManagers(); track fund.id; let i = $index) {
                 <tr>
-                  <td>{{ i + 1 }}</td>
-                  <td>{{ fund.id }}</td>
-                  <td>{{ fund.display_name }}</td>
-                  <td>{{ fund.created_by_name || '-' }}</td>
-                  <td>{{ fund.created_at || '-' }}</td>
-                  <td>
-                    <button class="btn btn-text icon-btn" type="button">...</button>
-                  </td>
+                  @if (isColumnVisible('fund_managers', 'id')) { <td>{{ fund.id }}</td> }
+                  @if (isColumnVisible('fund_managers', 'display_name')) { <td>{{ fund.display_name }}</td> }
+                  @if (isColumnVisible('fund_managers', 'created_by_name')) { <td>{{ fund.created_by_name || '-' }}</td> }
+                  @if (isColumnVisible('fund_managers', 'created_at')) { <td>{{ fund.created_at || '-' }}</td> }
+                  @if (isColumnVisible('fund_managers', 'actions')) {
+                    <td>
+                      <button
+                        class="btn btn-text icon-btn delete-btn"
+                        type="button"
+                        disabled
+                        aria-label="Delete fund manager"
+                        title="Delete (disabled)"
+                      >
+                        <i class="pi pi-trash"></i>
+                      </button>
+                    </td>
+                  }
                 </tr>
               }
             </tbody>
@@ -111,23 +140,23 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Fund Manager</th>
-                <th>Asset</th>
-                <th>Commitment</th>
-                <th>NAV</th>
-                <th>IRR</th>
+                @if (isColumnVisible('fund_relationships', 'id')) { <th>ID</th> }
+                @if (isColumnVisible('fund_relationships', 'fund_manager_display_name')) { <th>Fund Manager</th> }
+                @if (isColumnVisible('fund_relationships', 'asset_display_name')) { <th>Asset</th> }
+                @if (isColumnVisible('fund_relationships', 'commitment')) { <th>Commitment</th> }
+                @if (isColumnVisible('fund_relationships', 'nav')) { <th>NAV</th> }
+                @if (isColumnVisible('fund_relationships', 'irr')) { <th>IRR</th> }
               </tr>
             </thead>
             <tbody>
               @for (rel of filteredRelationships(); track rel.id) {
                 <tr>
-                  <td>{{ rel.id }}</td>
-                  <td>{{ rel.fund_manager_display_name }}</td>
-                  <td>{{ rel.asset_display_name }}</td>
-                  <td>{{ rel.commitment }}</td>
-                  <td>{{ rel.nav }}</td>
-                  <td>{{ rel.irr }}</td>
+                  @if (isColumnVisible('fund_relationships', 'id')) { <td>{{ rel.id }}</td> }
+                  @if (isColumnVisible('fund_relationships', 'fund_manager_display_name')) { <td>{{ rel.fund_manager_display_name }}</td> }
+                  @if (isColumnVisible('fund_relationships', 'asset_display_name')) { <td>{{ rel.asset_display_name }}</td> }
+                  @if (isColumnVisible('fund_relationships', 'commitment')) { <td>{{ rel.commitment }}</td> }
+                  @if (isColumnVisible('fund_relationships', 'nav')) { <td>{{ rel.nav }}</td> }
+                  @if (isColumnVisible('fund_relationships', 'irr')) { <td>{{ rel.irr }}</td> }
                 </tr>
               }
             </tbody>
@@ -143,19 +172,19 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>Display Name</th>
-                <th>Asset Type</th>
-                <th>Fund Type</th>
-                <th>Benchmark</th>
+                @if (isColumnVisible('funds_classifications', 'display_name')) { <th>Display Name</th> }
+                @if (isColumnVisible('funds_classifications', 'lote45_asset_type')) { <th>Asset Type</th> }
+                @if (isColumnVisible('funds_classifications', 'milestones_fund_type')) { <th>Fund Type</th> }
+                @if (isColumnVisible('funds_classifications', 'milestones_benchmark')) { <th>Benchmark</th> }
               </tr>
             </thead>
             <tbody>
               @for (item of filteredClassifications(); track item.id) {
                 <tr>
-                  <td>{{ item.display_name || '-' }}</td>
-                  <td>{{ item.lote45_asset_type || '-' }}</td>
-                  <td>{{ item.milestones_fund_type || '-' }}</td>
-                  <td>{{ item.milestones_benchmark || '-' }}</td>
+                  @if (isColumnVisible('funds_classifications', 'display_name')) { <td>{{ item.display_name || '-' }}</td> }
+                  @if (isColumnVisible('funds_classifications', 'lote45_asset_type')) { <td>{{ item.lote45_asset_type || '-' }}</td> }
+                  @if (isColumnVisible('funds_classifications', 'milestones_fund_type')) { <td>{{ item.milestones_fund_type || '-' }}</td> }
+                  @if (isColumnVisible('funds_classifications', 'milestones_benchmark')) { <td>{{ item.milestones_benchmark || '-' }}</td> }
                 </tr>
               }
             </tbody>
@@ -171,23 +200,23 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Fund Manager</th>
-                <th>Asset</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Date</th>
+                @if (isColumnVisible('transactions_ledger', 'id')) { <th>ID</th> }
+                @if (isColumnVisible('transactions_ledger', 'fund_manager_display_name')) { <th>Fund Manager</th> }
+                @if (isColumnVisible('transactions_ledger', 'asset_display_name')) { <th>Asset</th> }
+                @if (isColumnVisible('transactions_ledger', 'transaction_type')) { <th>Type</th> }
+                @if (isColumnVisible('transactions_ledger', 'amount')) { <th>Amount</th> }
+                @if (isColumnVisible('transactions_ledger', 'transaction_date')) { <th>Date</th> }
               </tr>
             </thead>
             <tbody>
               @for (item of filteredTransactions(); track item.id) {
                 <tr>
-                  <td>{{ item.id }}</td>
-                  <td>{{ item.fund_manager_display_name || '-' }}</td>
-                  <td>{{ item.asset_display_name || '-' }}</td>
-                  <td>{{ item.transaction_type || '-' }}</td>
-                  <td>{{ item.amount ?? '-' }}</td>
-                  <td>{{ item.transaction_date || '-' }}</td>
+                  @if (isColumnVisible('transactions_ledger', 'id')) { <td>{{ item.id }}</td> }
+                  @if (isColumnVisible('transactions_ledger', 'fund_manager_display_name')) { <td>{{ item.fund_manager_display_name || '-' }}</td> }
+                  @if (isColumnVisible('transactions_ledger', 'asset_display_name')) { <td>{{ item.asset_display_name || '-' }}</td> }
+                  @if (isColumnVisible('transactions_ledger', 'transaction_type')) { <td>{{ item.transaction_type || '-' }}</td> }
+                  @if (isColumnVisible('transactions_ledger', 'amount')) { <td>{{ item.amount ?? '-' }}</td> }
+                  @if (isColumnVisible('transactions_ledger', 'transaction_date')) { <td>{{ item.transaction_date || '-' }}</td> }
                 </tr>
               }
             </tbody>

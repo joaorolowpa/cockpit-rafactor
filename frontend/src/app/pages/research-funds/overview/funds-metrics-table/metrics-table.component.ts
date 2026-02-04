@@ -14,6 +14,7 @@ interface SeriesRow {
 type GroupingPeriod = 'normal' | 'month' | 'quarter' | 'year';
 type Separator = ',' | '.';
 type DateFormat = 'yyyy-MM-dd' | 'yyyy-MMM-dd' | 'yyyy-QQQ' | 'yyyy-dd-MM';
+type EmptyValueDisplay = '0' | 'N/A' | '-' | '';
 
 interface DateGroup {
   key: string;
@@ -35,13 +36,13 @@ export class MetricsTableComponent {
 
   protected showExpandedView = signal<boolean>(false);
   protected selectedRows = signal<Set<string>>(new Set());
-  protected isAccumulated = signal<boolean>(false);
   protected showSettings = signal<boolean>(false);
 
   protected groupingPeriod = signal<GroupingPeriod>('quarter');
   protected thousandSeparator = signal<Separator>(',');
   protected decimalSeparator = signal<Separator>('.');
   protected dateFormat = signal<DateFormat>('yyyy-QQQ');
+  protected emptyValueDisplay = signal<EmptyValueDisplay>('-');
 
   protected readonly groupingPeriodOptions: { label: string; value: GroupingPeriod }[] = [
     { label: 'Normal', value: 'normal' },
@@ -60,6 +61,13 @@ export class MetricsTableComponent {
     { label: '2024-Dec-31', value: 'yyyy-MMM-dd' },
     { label: '2024-Q4', value: 'yyyy-QQQ' },
     { label: '2024-31-12', value: 'yyyy-dd-MM' }
+  ];
+
+  protected readonly emptyValueDisplayOptions: { label: string; value: EmptyValueDisplay }[] = [
+    { label: '0', value: '0' },
+    { label: 'N/A', value: 'N/A' },
+    { label: '-', value: '-' },
+    { label: '(empty)', value: '' }
   ];
 
   protected tableData = computed(() => {
@@ -128,8 +136,10 @@ export class MetricsTableComponent {
     };
   });
 
-    protected formatValue(value: unknown, type: 'percent' | 'value' = 'value'): string | number {
-    if (value === null || value === undefined) return '-';
+  protected formatValue(value: unknown, type: 'percent' | 'value' = 'value'): string | number {
+    if (value === null || value === undefined || value === '' || value === 0) {
+      return this.emptyValueDisplay();
+    }
 
     if (typeof value === 'number') {
       if (type === 'percent') {
@@ -272,10 +282,6 @@ protected toggleExpandedView(): void {
 
   protected isRowSelected(seriesName: string): boolean {
     return this.selectedRows().has(seriesName);
-  }
-
-  protected toggleAccumulate(): void {
-    this.isAccumulated.set(!this.isAccumulated());
   }
 
   protected toggleSettingsMenu(): void {

@@ -7,6 +7,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Fund, FundClassification, FundTransaction, Relationship } from '../../../models/funds.model';
 import { FundsService } from '../funds.service';
 
+type BackofficeTab = 'fund_managers' | 'fund_relationships' | 'funds_classifications' | 'transactions_ledger';
+
+
 @Component({
   selector: 'app-backoffice',
   standalone: true,
@@ -25,9 +28,10 @@ export class BackofficeComponent {
     { key: 'transactions_ledger', label: 'Transactions Ledger', icon: 'fa-solid fa-file-lines' }
   ] as const;
 
-  protected activeTab = signal<typeof this.tabs[number]['key']>('fund_managers');
+  protected activeTab = signal<BackofficeTab>('fund_managers');
   protected searchTerm = signal<string>('');
   protected compactView = signal<boolean>(false);
+  protected showColumnMenu = signal<boolean>(false);
 
   protected isLoading = signal<boolean>(true);
   protected errorMessage = signal<string | null>(null);
@@ -36,6 +40,75 @@ export class BackofficeComponent {
   protected relationships = signal<Relationship[]>([]);
   protected classifications = signal<FundClassification[]>([]);
   protected transactions = signal<FundTransaction[]>([]);
+
+  private readonly columnConfig: {
+    fund_managers: ColumnDef<Fund>[];
+    fund_relationships: ColumnDef<Relationship>[];
+    funds_classifications: ColumnDef<FundClassification>[];
+    transactions_ledger: ColumnDef<FundTransaction>[];
+  } = {
+    fund_managers: [
+      { key: 'id', label: 'ID', copyable: true, getValue: (item) => item.id },
+      { key: 'display_name', label: 'Display Name', copyable: true, getValue: (item) => item.display_name },
+      { key: 'created_by_name', label: 'Created By', copyable: true, getValue: (item) => item.created_by_name },
+      { key: 'created_at', label: 'Created At', copyable: true, getValue: (item) => item.created_at },
+      { key: 'actions', label: 'Actions', copyable: false, getValue: () => '' }
+    ],
+    fund_relationships: [
+      { key: 'id', label: 'ID', copyable: true, getValue: (item) => item.id },
+      { key: 'fund_manager_display_name', label: 'Fund Manager', copyable: true, getValue: (item) => item.fund_manager_display_name },
+      { key: 'asset_display_name', label: 'Asset', copyable: true, getValue: (item) => item.asset_display_name },
+      { key: 'commitment', label: 'Commitment', copyable: true, getValue: (item) => item.commitment },
+      { key: 'nav', label: 'NAV', copyable: true, getValue: (item) => item.nav },
+      { key: 'irr', label: 'IRR', copyable: true, getValue: (item) => item.irr }
+    ],
+    funds_classifications: [
+      { key: 'display_name', label: 'Display Name', copyable: true, getValue: (item) => item.display_name },
+      { key: 'lote45_asset_type', label: 'Asset Type', copyable: true, getValue: (item) => item.lote45_asset_type },
+      { key: 'milestones_fund_type', label: 'Fund Type', copyable: true, getValue: (item) => item.milestones_fund_type },
+      { key: 'milestones_benchmark', label: 'Benchmark', copyable: true, getValue: (item) => item.milestones_benchmark }
+    ],
+    transactions_ledger: [
+      { key: 'id', label: 'ID', copyable: true, getValue: (item) => item.id },
+      { key: 'fund_manager_display_name', label: 'Fund Manager', copyable: true, getValue: (item) => item.fund_manager_display_name },
+      { key: 'asset_display_name', label: 'Asset', copyable: true, getValue: (item) => item.asset_display_name },
+      { key: 'transaction_type', label: 'Type', copyable: true, getValue: (item) => item.transaction_type },
+      { key: 'amount', label: 'Amount', copyable: true, getValue: (item) => item.amount },
+      { key: 'transaction_date', label: 'Date', copyable: true, getValue: (item) => item.transaction_date }
+    ]
+  };
+
+  protected readonly columnVisibility = signal<Record<string, Record<string, boolean>>>({
+    fund_managers: {
+      id: true,
+      display_name: true,
+      created_by_name: true,
+      created_at: true,
+      actions: true
+    },
+    fund_relationships: {
+      id: true,
+      fund_manager_display_name: true,
+      asset_display_name: true,
+      commitment: true,
+      nav: true,
+      irr: true
+    },
+    funds_classifications: {
+      display_name: true,
+      lote45_asset_type: true,
+      milestones_fund_type: true,
+      milestones_benchmark: true
+    },
+    transactions_ledger: {
+      id: true,
+      fund_manager_display_name: true,
+      asset_display_name: true,
+      transaction_type: true,
+      amount: true,
+      transaction_date: true
+    }
+  });
 
   protected readonly filteredFundManagers = computed(() => {
     const term = this.searchTerm().toLowerCase();
@@ -119,13 +192,83 @@ export class BackofficeComponent {
       });
   }
 
-  protected setTab(tab: typeof this.tabs[number]['key']): void {
+  protected setTab(tab: BackofficeTab): void {
     this.activeTab.set(tab);
     this.searchTerm.set('');
+    this.showColumnMenu.set(false);
   }
 
   protected toggleCompactView(): void {
     this.compactView.set(!this.compactView());
+  }
+
+  protected toggleColumnMenu(): void {
+    this.showColumnMenu.set(!this.showColumnMenu());
+  }
+
+  protected isColumnVisible(tab: BackofficeTab, key: string): boolean {
+    return this.columnVisibility()[tab]?.[key] !== false;
+  }
+
+  protected toggleColumnVisibility(tab: BackofficeTab, key: string): void {
+    const current = this.columnVisibility();
+    const tabConfig = current[tab] || {};
+    this.columnVisibility.set({
+      ...current,
+      [tab]: {
+        ...tabConfig,
+        [key]: !tabConfig[key]
+      }
+    });
+  }
+
+  private getVisibleColumnsForFundManagers(includeNonCopyable: boolean): ColumnDef<Fund>[] {
+    const visibleKeys = this.columnVisibility()['fund_managers'];
+    return this.columnConfig.fund_managers.filter((col) => {
+      if (visibleKeys?.[col.key] === false) return false;
+      if (col.key === 'actions') return includeNonCopyable;
+      return includeNonCopyable ? true : col.copyable;
+    });
+  }
+
+  private getVisibleColumnsForRelationships(includeNonCopyable: boolean): ColumnDef<Relationship>[] {
+    const visibleKeys = this.columnVisibility()['fund_relationships'];
+    return this.columnConfig.fund_relationships.filter((col) => {
+      if (visibleKeys?.[col.key] === false) return false;
+      return includeNonCopyable ? true : col.copyable;
+    });
+  }
+
+  private getVisibleColumnsForClassifications(includeNonCopyable: boolean): ColumnDef<FundClassification>[] {
+    const visibleKeys = this.columnVisibility()['funds_classifications'];
+    return this.columnConfig.funds_classifications.filter((col) => {
+      if (visibleKeys?.[col.key] === false) return false;
+      return includeNonCopyable ? true : col.copyable;
+    });
+  }
+
+  private getVisibleColumnsForTransactions(includeNonCopyable: boolean): ColumnDef<FundTransaction>[] {
+    const visibleKeys = this.columnVisibility()['transactions_ledger'];
+    return this.columnConfig.transactions_ledger.filter((col) => {
+      if (visibleKeys?.[col.key] === false) return false;
+      return includeNonCopyable ? true : col.copyable;
+    });
+  }
+
+  protected getActiveTabColumns() {
+    const tab = this.activeTab();
+    if (tab === 'fund_relationships') return this.getVisibleColumnsForRelationships(true);
+    if (tab === 'funds_classifications') return this.getVisibleColumnsForClassifications(true);
+    if (tab === 'transactions_ledger') return this.getVisibleColumnsForTransactions(true);
+    return this.getVisibleColumnsForFundManagers(true);
+  }
+
+  protected getActiveTabAllColumns() {
+    const tab = this.activeTab();
+    if (tab === 'fund_relationships') return this.columnConfig.fund_relationships;
+    if (tab === 'funds_classifications') return this.columnConfig.funds_classifications;
+    if (tab === 'transactions_ledger') return this.columnConfig.transactions_ledger;
+    return this.columnConfig.fund_managers;
   }
 
   protected copyTable(format: 'us' | 'br'): void {
@@ -160,59 +303,43 @@ export class BackofficeComponent {
     return 'Search for a fund by name';
   }
 
-  private getTabData(tab: typeof this.tabs[number]['key']): { headers: string[]; rows: Array<Array<string | number | null | undefined>> } {
+  private mapColumnValues<T>(columns: ColumnDef<T>[], item: T) {
+    return columns.map((col) => col.getValue(item));
+  }
+
+  private getTabData(tab: BackofficeTab): { headers: string[]; rows: Array<Array<string | number | null | undefined>> } {
     if (tab === 'fund_relationships') {
       const data = this.filteredRelationships();
+      const columns: ColumnDef<Relationship>[] = this.getVisibleColumnsForRelationships(false);
       return {
-        headers: ['ID', 'Fund Manager', 'Asset', 'Commitment', 'NAV', 'IRR'],
-        rows: data.map((item) => [
-          item.id,
-          item.fund_manager_display_name,
-          item.asset_display_name,
-          item.commitment,
-          item.nav,
-          item.irr
-        ])
+        headers: columns.map((col) => col.label),
+        rows: data.map((item) => this.mapColumnValues(columns, item))
       };
     }
 
     if (tab === 'funds_classifications') {
       const data = this.filteredClassifications();
+      const columns: ColumnDef<FundClassification>[] = this.getVisibleColumnsForClassifications(false);
       return {
-        headers: ['Display Name', 'Asset Type', 'Fund Type', 'Benchmark'],
-        rows: data.map((item) => [
-          item.display_name,
-          item.lote45_asset_type,
-          item.milestones_fund_type,
-          item.milestones_benchmark
-        ])
+        headers: columns.map((col) => col.label),
+        rows: data.map((item) => this.mapColumnValues(columns, item))
       };
     }
 
     if (tab === 'transactions_ledger') {
       const data = this.filteredTransactions();
+      const columns: ColumnDef<FundTransaction>[] = this.getVisibleColumnsForTransactions(false);
       return {
-        headers: ['ID', 'Fund Manager', 'Asset', 'Type', 'Amount', 'Date'],
-        rows: data.map((item) => [
-          item.id,
-          item.fund_manager_display_name,
-          item.asset_display_name,
-          item.transaction_type,
-          item.amount,
-          item.transaction_date
-        ])
+        headers: columns.map((col) => col.label),
+        rows: data.map((item) => this.mapColumnValues(columns, item))
       };
     }
 
     const data = this.filteredFundManagers();
+    const columns: ColumnDef<Fund>[] = this.getVisibleColumnsForFundManagers(false);
     return {
-      headers: ['ID', 'Display Name', 'Created By', 'Created At'],
-      rows: data.map((item) => [
-        item.id,
-        item.display_name,
-        item.created_by_name,
-        item.created_at
-      ])
+      headers: columns.map((col) => col.label),
+      rows: data.map((item) => this.mapColumnValues(columns, item))
     };
   }
 
@@ -223,4 +350,11 @@ export class BackofficeComponent {
     }
     return String(value);
   }
+}
+
+interface ColumnDef<T> {
+  key: string;
+  label: string;
+  copyable: boolean;
+  getValue: (item: T) => string | number | null | undefined;
 }
