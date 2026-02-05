@@ -397,13 +397,32 @@ export class CompanyDetailComponent {
           }
         }
       },
+      layout: {
+        padding: {
+          top: 6,
+          right: 8,
+          left: 4,
+          bottom: 0
+        }
+      },
       scales: {
         y: {
-          ticks: { color: this.themeColors.text600 },
+          ticks: {
+            color: this.themeColors.text600,
+            maxTicksLimit: 6,
+            padding: 6
+          },
           grid: { color: this.themeColors.border }
         },
         x: {
-          ticks: { color: this.themeColors.text600 },
+          ticks: {
+            color: this.themeColors.text600,
+            autoSkip: true,
+            maxTicksLimit: 8,
+            minRotation: 0,
+            maxRotation: 45,
+            padding: 6
+          },
           grid: { color: this.themeColors.border }
         }
       }
