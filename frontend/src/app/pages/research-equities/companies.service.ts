@@ -47,4 +47,22 @@ export class CompaniesService {
       headers: this.getHeaders()
     });
   }
+
+  createCompany(payload: { display_name: string; capital_iq_id: number }): Observable<Company> {
+    return this.http.post<Company>(`${this.baseUrl}/companies`, payload, {
+      headers: this.getHeaders()
+    });
+  }
+
+  updateCompany(companyId: number, payload: { display_name: string; capital_iq_id: number }): Observable<Company> {
+    return this.http.put<Company>(`${this.baseUrl}/companies/${companyId}`, payload, {
+      headers: this.getHeaders()
+    });
+  }
+
+  deleteCompany(companyId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/companies/${companyId}`, {
+      headers: this.getHeaders()
+    });
+  }
 }
