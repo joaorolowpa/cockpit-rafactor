@@ -230,6 +230,13 @@ export class CompanyDetailComponent {
   });
 
   protected readonly formatVariation = formatVariation;
+
+  protected getVariationClass(value: number | null): string {
+    if (value === null || value === undefined) return 'variation-neutral';
+    if (value > 0) return 'variation-positive';
+    if (value < 0) return 'variation-negative';
+    return 'variation-neutral';
+  }
   private readonly themeColors = this.resolveThemeColors();
   protected showFinancialsExpanded = signal<boolean>(false);
   protected selectedFinancialRows = signal<Set<string>>(new Set());

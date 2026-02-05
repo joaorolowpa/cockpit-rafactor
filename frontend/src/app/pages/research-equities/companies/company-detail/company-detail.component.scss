@@ -256,6 +256,84 @@
   background: var(--surface-1);
 }
 
+.colmeia-history {
+  padding: 0;
+  overflow: hidden;
+}
+
+.colmeia-history .card-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-200);
+  background: var(--surface-0);
+  margin-bottom: 0;
+}
+
+.colmeia-history .table-wrapper {
+  overflow-x: auto;
+}
+
+.colmeia-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  min-width: 1200px;
+}
+
+.colmeia-history-table thead th {
+  padding: 0.75rem 0.9rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-600);
+  border-bottom: 1px solid var(--border-200);
+  background: var(--surface-0);
+  white-space: nowrap;
+}
+
+.colmeia-history-table tbody td {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--border-200);
+  white-space: nowrap;
+  color: var(--text-900);
+  vertical-align: middle;
+}
+
+.colmeia-history-table tbody tr:hover {
+  background: var(--surface-0);
+}
+
+.colmeia-history-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.score-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.score-main {
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+.score-variation {
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.variation-positive {
+  color: #16a34a;
+}
+
+.variation-negative {
+  color: #dc2626;
+}
+
+.variation-neutral {
+  color: #9ca3af;
+}
+
 .financials-table {
   padding: 0;
   overflow: hidden;

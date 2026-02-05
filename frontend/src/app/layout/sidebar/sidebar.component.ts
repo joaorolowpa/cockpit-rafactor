@@ -67,10 +67,6 @@ export class SidebarComponent implements OnInit {
         {
           label: 'Fund Managers',
           routerLink: '/research-funds/fund-managers'
-        },
-        {
-          label: 'Notes',
-          routerLink: '/research-funds/notes'
         }
       ]
     },

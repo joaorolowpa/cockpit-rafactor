@@ -330,69 +330,125 @@
     </div>
 
     <div class="tab-panel" *ngIf="activeTab() === 'colmeia'">
-      <div class="colmeia-stack">
-        <div class="card colmeia-card">
-          <div class="card-header">
-            <h3>Colmeia Evaluation</h3>
-          </div>
-          <div class="colmeia-score" [ngStyle]="getScoreStyle(colmeiaLatest()?.score_final_geral || 0)">
-            {{ (colmeiaLatest()?.score_final_geral || 0) | number: '1.1-1' }}
-            <span>/5</span>
-          </div>
-          <div class="colmeia-chart" *ngIf="colmeiaCategories().length > 0">
-            <p-chart type="radar" [data]="colmeiaRadarData()" [options]="radarChartOptions"></p-chart>
-          </div>
-          <div class="colmeia-categories">
-            <div class="category-row" *ngFor="let category of colmeiaCategories()">
-              <span>{{ category.label }}</span>
-              <span class="score-chip" [ngStyle]="getScoreStyle(category.score)">
-                {{ category.score | number: '1.1-1' }}
-              </span>
-            </div>
+      <div class="card colmeia-history">
+        <div class="card-header card-header-row">
+          <div>
+            <h3>Colmeia History</h3>
           </div>
         </div>
 
-        <div class="card colmeia-history">
-          <div class="card-header">
-            <h3>History</h3>
-          </div>
+        <div *ngIf="colmeiaLoading()" class="loading-state small">
+          <i class="pi pi-spinner pi-spin"></i>
+          <p>Loading history...</p>
+        </div>
 
-          <div *ngIf="colmeiaLoading()" class="loading-state small">
-            <i class="pi pi-spinner pi-spin"></i>
-            <p>Loading history...</p>
-          </div>
+        <div *ngIf="colmeiaError() && !colmeiaLoading()" class="error-state small">
+          <i class="pi pi-exclamation-circle"></i>
+          <p>{{ colmeiaError() }}</p>
+        </div>
 
-          <div *ngIf="colmeiaError() && !colmeiaLoading()" class="error-state small">
-            <i class="pi pi-exclamation-circle"></i>
-            <p>{{ colmeiaError() }}</p>
+        <div *ngIf="!colmeiaLoading() && !colmeiaError()">
+          <div *ngIf="colmeiaHistoryRows().length === 0" class="empty-state compact">
+            <p>No colmeia history available.</p>
           </div>
-
-          <div *ngIf="!colmeiaLoading() && !colmeiaError()">
-            <div *ngIf="colmeiaHistoryRows().length === 0" class="empty-state compact">
-              <p>No colmeia history available.</p>
-            </div>
-            <div class="table-wrapper" *ngIf="colmeiaHistoryRows().length > 0">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Version</th>
-                    <th>Date</th>
-                    <th>Final Score</th>
-                    <th>Variation</th>
-                    <th>Owner</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let row of colmeiaHistoryRows()">
-                    <td>{{ row.version }}</td>
-                    <td>{{ row.date }}</td>
-                    <td>{{ row.finalScore | number: '1.1-1' }}</td>
-                    <td>{{ formatVariation(row.variation) }}</td>
-                    <td>{{ row.owner }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="table-wrapper" *ngIf="colmeiaHistoryRows().length > 0">
+            <table class="colmeia-history-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Date</th>
+                  <th>Final Score</th>
+                  <th>Governance</th>
+                  <th>People Management</th>
+                  <th>Processes and Operations</th>
+                  <th>Innovation</th>
+                  <th>Environmental Sustainability</th>
+                  <th>Social Responsibility</th>
+                  <th>Financial Transparency</th>
+                  <th>Owner</th>
+                  <th class="actions-col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of colmeiaHistoryRows()">
+                  <td>{{ row.version }}</td>
+                  <td>{{ row.date }}</td>
+                  <td>
+                    <div class="score-cell">
+                      <div class="score-main">{{ row.finalScore.score | number: '1.1-1' }}</div>
+                      <div class="score-variation" [class]="getVariationClass(row.finalScore.variation)">
+                        ({{ formatVariation(row.finalScore.variation) }})
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="score-cell">
+                      <div class="score-main">{{ row.governance.score | number: '1.1-1' }}</div>
+                      <div class="score-variation" [class]="getVariationClass(row.governance.variation)">
+                        ({{ formatVariation(row.governance.variation) }})
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="score-cell">
+                      <div class="score-main">{{ row.peopleManagement.score | number: '1.1-1' }}</div>
+                      <div class="score-variation" [class]="getVariationClass(row.peopleManagement.variation)">
+                        ({{ formatVariation(row.peopleManagement.variation) }})
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="score-cell">
+                      <div class="score-main">{{ row.processesAndOperations.score | number: '1.1-1' }}</div>
+                      <div class="score-variation" [class]="getVariationClass(row.processesAndOperations.variation)">
+                        ({{ formatVariation(row.processesAndOperations.variation) }})
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="score-cell">
+                      <div class="score-main">{{ row.innovation.score | number: '1.1-1' }}</div>
+                      <div class="score-variation" [class]="getVariationClass(row.innovation.variation)">
+                        ({{ formatVariation(row.innovation.variation) }})
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="score-cell">
+                      <div class="score-main">{{ row.environmentalSustainability.score | number: '1.1-1' }}</div>
+                      <div class="score-variation" [class]="getVariationClass(row.environmentalSustainability.variation)">
+                        ({{ formatVariation(row.environmentalSustainability.variation) }})
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="score-cell">
+                      <div class="score-main">{{ row.socialResponsibility.score | number: '1.1-1' }}</div>
+                      <div class="score-variation" [class]="getVariationClass(row.socialResponsibility.variation)">
+                        ({{ formatVariation(row.socialResponsibility.variation) }})
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="score-cell">
+                      <div class="score-main">{{ row.financialTransparency.score | number: '1.1-1' }}</div>
+                      <div class="score-variation" [class]="getVariationClass(row.financialTransparency.variation)">
+                        ({{ formatVariation(row.financialTransparency.variation) }})
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ row.owner }}</td>
+                  <td class="actions-col">
+                    <button class="btn btn-icon btn-text" type="button" disabled>
+                      <i class="pi pi-eye"></i>
+                    </button>
+                    <button class="btn btn-icon btn-text btn-danger" type="button" disabled>
+                      <i class="pi pi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

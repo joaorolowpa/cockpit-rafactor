@@ -26,6 +26,20 @@ export interface ColmeiaHistoryItem {
   created_at?: string;
   score_final_geral?: number;
   variacao_vs_ultima_versao?: number | null;
+  governance_score_avg?: number;
+  variacao_governance_vs_ultima_versao?: number | null;
+  people_management_score_avg?: number;
+  variacao_people_management_vs_ultima_versao?: number | null;
+  processes_and_operations_score_avg?: number;
+  variacao_processes_and_operations_vs_ultima_versao?: number | null;
+  innovation_score_avg?: number;
+  variacao_innovation_vs_ultima_versao?: number | null;
+  environmental_sustainability_score_avg?: number;
+  variacao_environmental_sustainability_vs_ultima_versao?: number | null;
+  social_responsibility_score_avg?: number;
+  variacao_social_responsibility_vs_ultima_versao?: number | null;
+  financial_transparency_score_avg?: number;
+  variacao_financial_transparency_vs_ultima_versao?: number | null;
 }
 
 export interface ColmeiaHistorySummaryResponse {

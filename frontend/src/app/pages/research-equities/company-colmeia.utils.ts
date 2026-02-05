@@ -27,9 +27,20 @@ export interface ColmeiaHistoryRow {
   id: number | null;
   version: string;
   date: string;
-  finalScore: number;
-  variation: number | null;
+  finalScore: ScoreCell;
+  governance: ScoreCell;
+  peopleManagement: ScoreCell;
+  processesAndOperations: ScoreCell;
+  innovation: ScoreCell;
+  environmentalSustainability: ScoreCell;
+  socialResponsibility: ScoreCell;
+  financialTransparency: ScoreCell;
   owner: string;
+}
+
+export interface ScoreCell {
+  score: number;
+  variation: number | null;
 }
 
 const toNumber = (value: unknown, fallback = 0) => {
@@ -70,7 +81,37 @@ export const mapHistoryRows = (items: ColmeiaHistoryItem[]): ColmeiaHistoryRow[]
             : null,
       version: `V${toNumber(item.version)}`,
       date: formatDate(item.created_at as string | undefined),
-      finalScore: toNumber(item.score_final_geral),
-      variation: toNullableNumber(item.variacao_vs_ultima_versao),
+      finalScore: {
+        score: toNumber(item.score_final_geral),
+        variation: toNullableNumber(item.variacao_vs_ultima_versao)
+      },
+      governance: {
+        score: toNumber(item.governance_score_avg),
+        variation: toNullableNumber(item.variacao_governance_vs_ultima_versao)
+      },
+      peopleManagement: {
+        score: toNumber(item.people_management_score_avg),
+        variation: toNullableNumber(item.variacao_people_management_vs_ultima_versao)
+      },
+      processesAndOperations: {
+        score: toNumber(item.processes_and_operations_score_avg),
+        variation: toNullableNumber(item.variacao_processes_and_operations_vs_ultima_versao)
+      },
+      innovation: {
+        score: toNumber(item.innovation_score_avg),
+        variation: toNullableNumber(item.variacao_innovation_vs_ultima_versao)
+      },
+      environmentalSustainability: {
+        score: toNumber(item.environmental_sustainability_score_avg),
+        variation: toNullableNumber(item.variacao_environmental_sustainability_vs_ultima_versao)
+      },
+      socialResponsibility: {
+        score: toNumber(item.social_responsibility_score_avg),
+        variation: toNullableNumber(item.variacao_social_responsibility_vs_ultima_versao)
+      },
+      financialTransparency: {
+        score: toNumber(item.financial_transparency_score_avg),
+        variation: toNullableNumber(item.variacao_financial_transparency_vs_ultima_versao)
+      },
       owner: (item.created_by_name as string | undefined) ?? 'Unknown'
     }));

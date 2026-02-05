@@ -80,11 +80,6 @@ export const routes: Routes = [
             path: 'fund-managers/:id',
             data: { breadcrumb: 'Fund Manager' },
             loadComponent: () => import('./pages/research-funds/fund-managers/fund-manager-detail/fund-manager-detail.component').then(m => m.FundManagerDetailComponent)
-          },
-          {
-            path: 'notes',
-            data: { breadcrumb: 'Notes' },
-            loadComponent: () => import('./pages/research-funds/notes/notes.component').then(m => m.NotesComponent)
           }
         ]
       },
