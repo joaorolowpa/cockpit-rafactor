@@ -68,6 +68,14 @@ export interface FundNote {
   created_by_name?: string;
 }
 
+export interface FundNoteFileType {
+  id: number;
+  name: string;
+  display_name: string;
+  description?: string | null;
+  created_at: string;
+}
+
 export interface FundManagerDocument {
   id: number;
   document_type: string;

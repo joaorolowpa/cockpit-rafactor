@@ -63,7 +63,7 @@
           <tr *ngFor="let company of filteredCompanies(); trackBy: trackById">
             <td>{{ company.id }}</td>
             <td class="name-cell">{{ company.display_name }}</td>
-            <td>{{ company.capital_iq_id ?? '-' }}</td>
+            <td>{{ company.capital_iq_id }}</td>
             <td class="analysts-cell">{{ formatAnalysts(company.analysts) }}</td>
             <td>{{ formatCreatedAt(company.created_at) }}</td>
             <td class="actions-cell">

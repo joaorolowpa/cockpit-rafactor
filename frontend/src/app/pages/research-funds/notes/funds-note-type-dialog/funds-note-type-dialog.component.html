@@ -1,0 +1,74 @@
+<div class="dialog-overlay" (click)="onClose()">
+  <div class="dialog-content" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h2>Add new Fund Note Type</h2>
+      <button
+        type="button"
+        class="btn btn-icon btn-text close-btn"
+        (click)="onClose()"
+      >
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="dialog-body">
+        <div class="form-group">
+          <label for="display_name">Display Name *</label>
+          <input
+            id="display_name"
+            type="text"
+            formControlName="display_name"
+            pInputText
+            placeholder="Fund Summary"
+          />
+          @if (form.controls.display_name.touched && form.controls.display_name.errors?.['required']) {
+            <span class="error-message">Display name is required</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="name">System Name</label>
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            pInputText
+            placeholder="fund_summary_2025"
+          />
+          <span class="helper-text">Optional. We will generate one if empty.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            rows="4"
+            formControlName="description"
+            placeholder="Short description"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="dialog-footer">
+        <button
+          type="button"
+          class="btn btn-ghost"
+          (click)="onClose()"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="form.invalid || isSubmitting()"
+        >
+          <span>Create Type</span>
+          @if (isSubmitting()) {
+            <span class="btn-spinner" aria-hidden="true"></span>
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,27 +1,24 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { differenceInDays, parseISO } from "date-fns";
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { MoreHorizontal, Trash2 } from "lucide-react";
 import { useState } from "react";
 
-import CompanyForm from "@/components/forms/old/CompanyForm";
 import { DataTableColumnHeader } from "@/components/reusable/CockpitLongTable/BuildingBlocks/data-table-column-header";
 import { ConfirmationDialog } from "@/components/reusable/GeneralLayout/ConfirmationDialog";
-import { ReusableSheet } from "@/components/reusable/GeneralLayout/ReusableSheet";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { deleteDataWithToast } from "@/modules/internal-api/deleteDataWithToast";
-import { Company } from "@/services/internal-api/companies/get-companies";
+import { FundNoteFile } from "@/services/internal-api/files/get-funds-notes-files-types";
 import { formatDate } from "@/utils/format-date";
 
-export const columns: ColumnDef<Company>[] = [
+export const columns: ColumnDef<FundNoteFile>[] = [
   {
     id: "id",
     accessorKey: "id",
@@ -30,20 +27,14 @@ export const columns: ColumnDef<Company>[] = [
   {
     id: "display_name",
     accessorKey: "display_name",
-    header: "Display Name",
+    header: "Name",
   },
   {
-    id: "capital_iq_id",
-    accessorKey: "capital_iq_id",
-    header: "Capital IQ ID",
-  },
-  {
-    id: "analysts",
-    accessorKey: "analysts",
-    header: "Analysts",
+    id: "description",
+    accessorKey: "description",
+    header: "Description",
     cell: ({ row }) => {
-      const analysts = row.original.analysts || [];
-      return analysts.length > 0 ? analysts.map(a => a.name).join(", ") : "-";
+      return row.original.description ?? "-";
     },
   },
   {
@@ -55,7 +46,6 @@ export const columns: ColumnDef<Company>[] = [
     cell: ({ row }) => {
       return formatDate({
         date: row.original.created_at as string,
-        includeTime: true,
       });
     },
   },
@@ -64,19 +54,18 @@ export const columns: ColumnDef<Company>[] = [
     accessorKey: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      const company = row.original;
-      const [isSheetOpen, setIsSheetOpen] = useState(false);
+      const fundNoteFile = row.original;
       const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
         useState(false);
 
-      const createdAtDate = parseISO(company.created_at as string);
-      const isDeletable = differenceInDays(new Date(), createdAtDate) < 7;
+      const createdAt = parseISO(fundNoteFile.created_at as string);
+      const isDeletable = differenceInDays(new Date(), createdAt) <= 7;
 
       const handleDelete = async () => {
         try {
           await deleteDataWithToast({
-            endpoint: `/v1/companies/companies/${company.id}`,
-            pathToRevalidate: "/dashboard/research-equities/coverage-list",
+            endpoint: `/v1/funds-notes/files/types/${fundNoteFile.id}`,
+            pathToRevalidate: "/dashboard/research-manager/funds",
             debug: false,
           });
         } catch (error) {
@@ -95,11 +84,6 @@ export const columns: ColumnDef<Company>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => setIsSheetOpen(true)}>
-                <Pencil className="mr-2 h-4 w-4" color="#3182CE" />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => isDeletable && setIsConfirmationDialogOpen(true)}
                 disabled={!isDeletable}
@@ -118,22 +102,6 @@ export const columns: ColumnDef<Company>[] = [
               isOpen={isConfirmationDialogOpen}
               setIsOpen={setIsConfirmationDialogOpen}
             />
-          )}
-          {isSheetOpen && (
-            <ReusableSheet
-              title="Edit Company"
-              description="Edit the company details"
-              isOpen={isSheetOpen}
-              setIsOpen={setIsSheetOpen}
-            >
-              <CompanyForm
-                data={{
-                  ...company,
-                  capital_iq_id: company.capital_iq_id.toString(),
-                }}
-                setIsOpen={setIsSheetOpen}
-              />
-            </ReusableSheet>
           )}
         </>
       );

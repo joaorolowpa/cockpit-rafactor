@@ -122,8 +122,8 @@ export const routes: Routes = [
           },
           {
             path: 'funds',
-            data: { breadcrumb: 'Funds' },
-            loadComponent: () => import('./pages/research-funds/fund-managers/funds.component').then(m => m.FundManagersComponent)
+            data: { breadcrumb: 'Funds Notes Files Types' },
+            loadComponent: () => import('./pages/research-funds/notes/notes.component').then(m => m.NotesComponent)
           }
         ]
       },
