@@ -169,21 +169,7 @@ export class CompanyDetailComponent {
     this.buildLineChartData(prepareGrowthChartData(this.groupedFinancials()))
   );
 
-  protected readonly lineChartOptions: ChartOptions<'line'> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'bottom' }
-    },
-    scales: {
-      y: {
-        ticks: { color: '#64748b' }
-      },
-      x: {
-        ticks: { color: '#94a3b8' }
-      }
-    }
-  };
+  protected lineChartOptions: ChartOptions<'line'>;
 
   protected colmeiaCategories = computed<ColmeiaCategory[]>(() =>
     mapLatestToCategories(this.colmeiaLatest())
@@ -193,26 +179,7 @@ export class CompanyDetailComponent {
     this.buildRadarChartData(this.colmeiaCategories())
   );
 
-  protected readonly radarChartOptions: ChartOptions<'radar'> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      r: {
-        min: 0,
-        max: 5,
-        ticks: {
-          stepSize: 1
-        },
-        pointLabels: {
-          color: '#334155',
-          font: { size: 11 }
-        }
-      }
-    },
-    plugins: {
-      legend: { display: false }
-    }
-  };
+  protected radarChartOptions: ChartOptions<'radar'>;
 
   protected colmeiaHistoryRows = computed<ColmeiaHistoryRow[]>(() => {
     const history = this.colmeiaHistory() as unknown;
@@ -223,8 +190,11 @@ export class CompanyDetailComponent {
   });
 
   protected readonly formatVariation = formatVariation;
+  private readonly themeColors = this.resolveThemeColors();
 
   constructor() {
+    this.lineChartOptions = this.buildLineChartOptions();
+    this.radarChartOptions = this.buildRadarChartOptions();
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       const idParam = params.get('id');
       const id = idParam ? Number(idParam) : null;
@@ -369,6 +339,104 @@ export class CompanyDetailComponent {
     };
   }
 
+  private resolveThemeColors() {
+    if (typeof document === 'undefined') {
+      return {
+        accent: '#b17840',
+        accentStrong: '#9a6a33',
+        text900: '#1f2937',
+        text600: '#5b6570',
+        border: '#e5e7eb'
+      };
+    }
+
+    const styles = getComputedStyle(document.documentElement);
+    return {
+      accent: styles.getPropertyValue('--accent').trim() || '#b17840',
+      accentStrong: styles.getPropertyValue('--accent-strong').trim() || '#9a6a33',
+      text900: styles.getPropertyValue('--text-900').trim() || '#1f2937',
+      text600: styles.getPropertyValue('--text-600').trim() || '#5b6570',
+      border: styles.getPropertyValue('--border-200').trim() || '#e5e7eb'
+    };
+  }
+
+  private toRgba(color: string, alpha: number): string {
+    if (!color) return `rgba(0,0,0,${alpha})`;
+    if (color.startsWith('rgba')) return color;
+    if (color.startsWith('rgb')) {
+      const values = color.replace(/[^\d,]/g, '').split(',').slice(0, 3).map((val) => val.trim());
+      return `rgba(${values.join(',')}, ${alpha})`;
+    }
+    if (color.startsWith('#')) {
+      const hex = color.replace('#', '');
+      const parsed =
+        hex.length === 3
+          ? hex
+              .split('')
+              .map((char) => char + char)
+              .join('')
+          : hex;
+      const bigint = parseInt(parsed, 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+    return color;
+  }
+
+  private buildLineChartOptions(): ChartOptions<'line'> {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: this.themeColors.text600
+          }
+        }
+      },
+      scales: {
+        y: {
+          ticks: { color: this.themeColors.text600 },
+          grid: { color: this.themeColors.border }
+        },
+        x: {
+          ticks: { color: this.themeColors.text600 },
+          grid: { color: this.themeColors.border }
+        }
+      }
+    };
+  }
+
+  private buildRadarChartOptions(): ChartOptions<'radar'> {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          min: 0,
+          max: 5,
+          ticks: {
+            stepSize: 1,
+            color: this.themeColors.text600,
+            backdropColor: 'transparent'
+          },
+          pointLabels: {
+            color: this.themeColors.text600,
+            font: { size: 11 }
+          },
+          grid: { color: this.themeColors.border },
+          angleLines: { color: this.themeColors.border }
+        }
+      },
+      plugins: {
+        legend: { display: false }
+      }
+    };
+  }
+
   private buildLineChartData(
     series: Array<{ label: string; data: Array<{ date_reference: string; value: unknown }> }>
   ): ChartData<'line'> {
@@ -385,7 +453,11 @@ export class CompanyDetailComponent {
       .filter((label) => label)
       .sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
-    const palette = ['#0f766e', '#2563eb', '#f97316'];
+    const palette = [
+      this.themeColors.accent,
+      this.themeColors.accentStrong,
+      this.themeColors.text600
+    ];
 
     const datasets = series.map((item, index) => ({
       label: item.label,
@@ -396,7 +468,9 @@ export class CompanyDetailComponent {
         return Number.isFinite(numeric) ? numeric : null;
       }),
       borderColor: palette[index % palette.length],
-      backgroundColor: palette[index % palette.length],
+      backgroundColor: this.toRgba(palette[index % palette.length], 0.15),
+      pointBackgroundColor: palette[index % palette.length],
+      pointBorderColor: palette[index % palette.length],
       tension: 0.25,
       fill: false
     }));
@@ -405,15 +479,17 @@ export class CompanyDetailComponent {
   }
 
   private buildRadarChartData(categories: ColmeiaCategory[]): ChartData<'radar'> {
+    const accent = this.themeColors.accent;
     return {
       labels: categories.map((category) => category.label),
       datasets: [
         {
           label: 'Score',
           data: categories.map((category) => category.score),
-          backgroundColor: 'rgba(14, 116, 144, 0.2)',
-          borderColor: 'rgba(14, 116, 144, 0.8)',
-          pointBackgroundColor: 'rgba(14, 116, 144, 0.8)'
+          backgroundColor: this.toRgba(accent, 0.18),
+          borderColor: accent,
+          pointBackgroundColor: accent,
+          pointBorderColor: accent
         }
       ]
     };

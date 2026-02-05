@@ -59,30 +59,52 @@
       <div class="financials-stack">
         <div class="financials-top">
           <div class="card colmeia-card">
-            <div class="card-header">
-              <h3>Colmeia Evaluation</h3>
-              <span class="card-subtitle">
-                {{
-                  (colmeiaLatest()?.updated_at || colmeiaLatest()?.created_at)
-                    ? ('Updated ' + formatCreatedAt(colmeiaLatest()?.updated_at || colmeiaLatest()?.created_at))
-                    : 'No updates available'
-                }}
-              </span>
-            </div>
-            <div class="colmeia-score" [ngStyle]="getScoreStyle(colmeiaLatest()?.score_final_geral || 0)">
-              {{ (colmeiaLatest()?.score_final_geral || 0) | number: '1.1-1' }}
-              <span>/5</span>
-            </div>
-            <div class="colmeia-categories">
-              <div class="category-row" *ngFor="let category of colmeiaCategories()">
-                <span>{{ category.label }}</span>
-                <span class="score-chip" [ngStyle]="getScoreStyle(category.score)">
-                  {{ category.score | number: '1.1-1' }}
+            <div class="card-header card-header-row">
+              <div>
+                <h3>Colmeia Evaluation</h3>
+                <span class="card-subtitle">
+                  {{
+                    (colmeiaLatest()?.updated_at || colmeiaLatest()?.created_at)
+                      ? ('Updated ' + formatCreatedAt(colmeiaLatest()?.updated_at || colmeiaLatest()?.created_at))
+                      : 'No updates available'
+                  }}
                 </span>
               </div>
+              <button class="btn btn-outline" type="button" disabled>
+                <i class="pi pi-pencil"></i>
+                <span>Edit Colmeia</span>
+              </button>
             </div>
-            <div class="colmeia-chart" *ngIf="colmeiaCategories().length > 0">
-              <p-chart type="radar" [data]="colmeiaRadarData()" [options]="radarChartOptions"></p-chart>
+
+            <div class="colmeia-grid">
+              <div class="colmeia-left">
+                <div class="score-box">
+                  <div class="score-label">Official Score</div>
+                  <div class="score-value" [ngStyle]="getScoreStyle(colmeiaLatest()?.score_final_geral || 0)">
+                    {{ (colmeiaLatest()?.score_final_geral || 0) | number: '1.1-1' }}
+                    <span>/5</span>
+                  </div>
+                  <div class="score-subtitle">of 5.0</div>
+                </div>
+                <div class="colmeia-chart" *ngIf="colmeiaCategories().length > 0">
+                  <p-chart type="radar" [data]="colmeiaRadarData()" [options]="radarChartOptions"></p-chart>
+                </div>
+              </div>
+
+              <div class="colmeia-right">
+                <div class="list-title">Evaluated Categories</div>
+                <div class="colmeia-categories">
+                  <div class="category-row" *ngFor="let category of colmeiaCategories()">
+                    <span>{{ category.label }}</span>
+                    <span class="score-chip" [ngStyle]="getScoreStyle(category.score)">
+                      {{ category.score | number: '1.1-1' }}
+                    </span>
+                  </div>
+                  <div *ngIf="colmeiaCategories().length === 0" class="empty-state compact">
+                    <p>No categories available.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
