@@ -56,6 +56,7 @@
     </div>
 
     <div class="tab-panel" *ngIf="activeTab() === 'financials'">
+      <div class="expanded-backdrop" *ngIf="showFinancialsExpanded()" (click)="toggleFinancialsExpanded()"></div>
       <div class="financials-stack">
         <div class="financials-top">
           <div class="card colmeia-card">
@@ -135,9 +136,29 @@
           </div>
         </div>
 
-        <div class="card financials-table">
+        <div class="card financials-table" [class.expanded-mode]="showFinancialsExpanded()">
           <div class="card-header">
             <h3>Financial Data</h3>
+          </div>
+
+          <div class="financials-toolbar">
+            <button class="btn toolbar-btn" type="button" (click)="toggleFinancialsExpanded()">
+              <i class="pi pi-expand"></i>
+              <span>{{ showFinancialsExpanded() ? 'Collapse Table' : 'Expand Table' }}</span>
+            </button>
+            <button
+              class="btn toolbar-btn"
+              type="button"
+              (click)="copySelectedFinancialRows()"
+              [disabled]="selectedFinancialRows().size === 0"
+            >
+              <i class="pi pi-copy"></i>
+              <span>Copy Selected Rows</span>
+            </button>
+            <button class="btn toolbar-btn" type="button" (click)="copyFinancialTable()">
+              <i class="pi pi-table"></i>
+              <span>Copy Table</span>
+            </button>
           </div>
 
           <div *ngIf="financialsLoading()" class="loading-state small">
@@ -159,17 +180,26 @@
               <div class="section-header">
                 <h4>{{ section.sectionLabel }}</h4>
               </div>
-              <div class="table-wrapper" *ngIf="section.sectionData.length > 0">
-                <table class="data-table">
+              <div class="financials-table-wrapper" [class.expanded]="showFinancialsExpanded()" *ngIf="section.sectionData.length > 0">
+                <table class="financials-data-table">
                   <thead>
                     <tr>
+                      <th class="checkbox-col"></th>
                       <th>Series</th>
                       <th>Unit</th>
                       <th *ngFor="let date of financialDateColumns()">{{ date }}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let row of section.sectionData">
+                    <tr *ngFor="let row of section.sectionData" [class.selected]="isFinancialRowSelected(row.series_code)">
+                      <td class="checkbox-col">
+                        <input
+                          type="checkbox"
+                          class="row-checkbox"
+                          [checked]="isFinancialRowSelected(row.series_code)"
+                          (change)="toggleFinancialRowSelection(row.series_code)"
+                        />
+                      </td>
                       <td>{{ row.description || row.series_code }}</td>
                       <td>{{ row.unit || '-' }}</td>
                       <td *ngFor="let date of financialDateColumns()">

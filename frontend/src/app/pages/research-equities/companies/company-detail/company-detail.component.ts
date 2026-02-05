@@ -191,6 +191,8 @@ export class CompanyDetailComponent {
 
   protected readonly formatVariation = formatVariation;
   private readonly themeColors = this.resolveThemeColors();
+  protected showFinancialsExpanded = signal<boolean>(false);
+  protected selectedFinancialRows = signal<Set<string>>(new Set());
 
   constructor() {
     this.lineChartOptions = this.buildLineChartOptions();
@@ -304,6 +306,69 @@ export class CompanyDetailComponent {
     const id = this.companyId();
     if (!id) return;
     this.loadDocuments(id);
+  }
+
+  protected toggleFinancialsExpanded(): void {
+    this.showFinancialsExpanded.set(!this.showFinancialsExpanded());
+  }
+
+  protected isFinancialRowSelected(seriesCode: string): boolean {
+    return this.selectedFinancialRows().has(seriesCode);
+  }
+
+  protected toggleFinancialRowSelection(seriesCode: string): void {
+    const next = new Set(this.selectedFinancialRows());
+    if (next.has(seriesCode)) {
+      next.delete(seriesCode);
+    } else {
+      next.add(seriesCode);
+    }
+    this.selectedFinancialRows.set(next);
+  }
+
+  protected copyFinancialTable(): void {
+    const dates = this.financialDateColumns();
+    const header = ['Series', 'Unit', ...dates].join('\t');
+    const rows: string[] = [header];
+
+    this.financialSections().forEach((section) => {
+      if (!section.sectionData.length) return;
+      const sectionLabelRow = [section.sectionLabel, ...Array(dates.length + 1).fill('')].join('\t');
+      rows.push(sectionLabelRow);
+      section.sectionData.forEach((row) => {
+        const values = dates.map((date) => this.formatFinancialValue(this.getSeriesValue(row, date)));
+        rows.push([row.description || row.series_code, row.unit || '-', ...values].join('\t'));
+      });
+    });
+
+    navigator.clipboard.writeText(rows.join('\n'));
+    alert('Table copied to clipboard');
+  }
+
+  protected copySelectedFinancialRows(): void {
+    const selected = this.selectedFinancialRows();
+    if (selected.size === 0) {
+      alert('No rows selected');
+      return;
+    }
+
+    const dates = this.financialDateColumns();
+    const header = ['Series', 'Unit', ...dates].join('\t');
+    const rows: string[] = [header];
+
+    this.financialSections().forEach((section) => {
+      const sectionRows = section.sectionData.filter((row) => selected.has(row.series_code));
+      if (!sectionRows.length) return;
+      const sectionLabelRow = [section.sectionLabel, ...Array(dates.length + 1).fill('')].join('\t');
+      rows.push(sectionLabelRow);
+      sectionRows.forEach((row) => {
+        const values = dates.map((date) => this.formatFinancialValue(this.getSeriesValue(row, date)));
+        rows.push([row.description || row.series_code, row.unit || '-', ...values].join('\t'));
+      });
+    });
+
+    navigator.clipboard.writeText(rows.join('\n'));
+    alert('Selected rows copied to clipboard');
   }
 
   protected formatFinancialValue(value: unknown): string {
