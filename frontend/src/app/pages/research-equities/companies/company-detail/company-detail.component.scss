@@ -196,6 +196,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  flex: 1;
 }
 
 .colmeia-right {
@@ -203,6 +204,7 @@
   flex-direction: column;
   gap: 0.75rem;
   width: 100%;
+  height: 100%;
 }
 
 .list-title {
@@ -210,6 +212,7 @@
   font-weight: 700;
   color: var(--text-600);
   text-transform: none;
+  letter-spacing: 0;
 }
 
 .category-row {
@@ -218,18 +221,31 @@
   justify-content: space-between;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-200);
-  padding: 0.55rem 0.85rem;
+  padding: 0.75rem 0.9rem;
+  min-height: 52px;
   font-size: 0.85rem;
   color: var(--text-900);
   background: var(--surface-1);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.category-row span:first-child {
+  font-weight: 500;
+}
+
+.category-row:hover {
+  border-color: #dfe3ea;
+  background: #fbfbfa;
 }
 
 .score-chip {
   border: 1px solid var(--border-200);
   border-radius: 999px;
-  padding: 0.15rem 0.55rem;
+  padding: 0.18rem 0.55rem;
   font-size: 0.75rem;
   font-weight: 600;
+  background: var(--surface-0);
+  color: var(--text-900);
 }
 
 .colmeia-chart {
