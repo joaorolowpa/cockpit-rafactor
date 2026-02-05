@@ -1,0 +1,317 @@
+﻿<div class="page-container">
+  <div class="page-header">
+    <div>
+      <a class="back-link" [routerLink]="['/research-equities/companies']">
+        <i class="pi pi-arrow-left"></i>
+        Back to Companies
+      </a>
+      <h1 class="page-title">{{ companyName() }}</h1>
+      <p class="page-subtitle">Company details and research materials</p>
+    </div>
+  </div>
+
+  <div *ngIf="companyLoading()" class="loading-state">
+    <i class="pi pi-spinner pi-spin"></i>
+    <p>Loading company...</p>
+  </div>
+
+  <div *ngIf="companyError() && !companyLoading()" class="error-state">
+    <i class="pi pi-exclamation-circle"></i>
+    <p>{{ companyError() }}</p>
+    <button type="button" class="btn btn-secondary" (click)="retryCompany()">
+      <i class="pi pi-refresh"></i>
+      <span>Retry</span>
+    </button>
+  </div>
+
+  <div *ngIf="!companyLoading() && !companyError()" class="detail-content">
+    <div class="tabs">
+      <button
+        class="tab-btn"
+        type="button"
+        [class.active]="activeTab() === 'financials'"
+        (click)="setTab('financials')"
+      >
+        <i class="pi pi-chart-bar"></i>
+        Financials
+      </button>
+      <button
+        class="tab-btn"
+        type="button"
+        [class.active]="activeTab() === 'documents'"
+        (click)="setTab('documents')"
+      >
+        <i class="pi pi-folder-open"></i>
+        Documents
+      </button>
+      <button
+        class="tab-btn"
+        type="button"
+        [class.active]="activeTab() === 'colmeia'"
+        (click)="setTab('colmeia')"
+      >
+        <i class="pi pi-chart-pie"></i>
+        Colmeia
+      </button>
+    </div>
+
+    <div class="tab-panel" *ngIf="activeTab() === 'financials'">
+      <div class="financials-stack">
+        <div class="financials-top">
+          <div class="card colmeia-card">
+            <div class="card-header">
+              <h3>Colmeia Evaluation</h3>
+              <span class="card-subtitle">
+                {{
+                  (colmeiaLatest()?.updated_at || colmeiaLatest()?.created_at)
+                    ? ('Updated ' + formatCreatedAt(colmeiaLatest()?.updated_at || colmeiaLatest()?.created_at))
+                    : 'No updates available'
+                }}
+              </span>
+            </div>
+            <div class="colmeia-score" [ngStyle]="getScoreStyle(colmeiaLatest()?.score_final_geral || 0)">
+              {{ (colmeiaLatest()?.score_final_geral || 0) | number: '1.1-1' }}
+              <span>/5</span>
+            </div>
+            <div class="colmeia-categories">
+              <div class="category-row" *ngFor="let category of colmeiaCategories()">
+                <span>{{ category.label }}</span>
+                <span class="score-chip" [ngStyle]="getScoreStyle(category.score)">
+                  {{ category.score | number: '1.1-1' }}
+                </span>
+              </div>
+            </div>
+            <div class="colmeia-chart" *ngIf="colmeiaCategories().length > 0">
+              <p-chart type="radar" [data]="colmeiaRadarData()" [options]="radarChartOptions"></p-chart>
+            </div>
+          </div>
+
+          <div class="charts-grid">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h3>Margins</h3>
+              </div>
+              <div class="chart-body" *ngIf="(marginsChartData().labels?.length || 0) > 0; else noMargins">
+                <p-chart type="line" [data]="marginsChartData()" [options]="lineChartOptions"></p-chart>
+              </div>
+              <ng-template #noMargins>
+                <p class="empty-state compact">No margins data available.</p>
+              </ng-template>
+            </div>
+
+            <div class="card chart-card">
+              <div class="card-header">
+                <h3>Growth</h3>
+              </div>
+              <div class="chart-body" *ngIf="(growthChartData().labels?.length || 0) > 0; else noGrowth">
+                <p-chart type="line" [data]="growthChartData()" [options]="lineChartOptions"></p-chart>
+              </div>
+              <ng-template #noGrowth>
+                <p class="empty-state compact">No growth data available.</p>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+
+        <div class="card financials-table">
+          <div class="card-header">
+            <h3>Financial Data</h3>
+          </div>
+
+          <div *ngIf="financialsLoading()" class="loading-state small">
+            <i class="pi pi-spinner pi-spin"></i>
+            <p>Loading financials...</p>
+          </div>
+
+          <div *ngIf="financialsError() && !financialsLoading()" class="error-state small">
+            <i class="pi pi-exclamation-circle"></i>
+            <p>{{ financialsError() }}</p>
+          </div>
+
+          <div *ngIf="!financialsLoading() && !financialsError()">
+            <div *ngIf="financialSections().length === 0" class="empty-state compact">
+              <p>No financial data available.</p>
+            </div>
+
+            <div *ngFor="let section of financialSections()" class="financial-section">
+              <div class="section-header">
+                <h4>{{ section.sectionLabel }}</h4>
+              </div>
+              <div class="table-wrapper" *ngIf="section.sectionData.length > 0">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Series</th>
+                      <th>Unit</th>
+                      <th *ngFor="let date of financialDateColumns()">{{ date }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of section.sectionData">
+                      <td>{{ row.description || row.series_code }}</td>
+                      <td>{{ row.unit || '-' }}</td>
+                      <td *ngFor="let date of financialDateColumns()">
+                        {{ formatFinancialValue(getSeriesValue(row, date)) }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div *ngIf="section.sectionData.length === 0" class="empty-state compact">
+                <p>No data for {{ section.sectionLabel }}.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" *ngIf="activeTab() === 'documents'">
+      <div *ngIf="documentsLoading()" class="loading-state small">
+        <i class="pi pi-spinner pi-spin"></i>
+        <p>Loading documents...</p>
+      </div>
+
+      <div *ngIf="documentsError() && !documentsLoading()" class="error-state small">
+        <i class="pi pi-exclamation-circle"></i>
+        <p>{{ documentsError() }}</p>
+        <button type="button" class="btn btn-secondary btn-compact" (click)="retryDocuments()">
+          <i class="pi pi-refresh"></i>
+          <span>Retry</span>
+        </button>
+      </div>
+
+      <div *ngIf="!documentsLoading() && !documentsError()" class="documents-stack">
+        <div class="documents-toolbar">
+          <button class="btn btn-secondary" type="button" disabled>
+            <i class="pi pi-plus"></i>
+            <span>Financial Models</span>
+          </button>
+          <button class="btn btn-secondary" type="button" disabled>
+            <i class="pi pi-plus"></i>
+            <span>Cases & Other</span>
+          </button>
+          <button class="btn btn-secondary" type="button" disabled>
+            <i class="pi pi-plus"></i>
+            <span>Investment Thesis</span>
+          </button>
+          <span class="hint-text">Upload flows are not wired in Angular yet.</span>
+        </div>
+
+        <div class="document-section">
+          <div class="section-header">
+            <h3>Documents ({{ orderedDocuments().length }})</h3>
+          </div>
+          <div class="section-body">
+            <div *ngIf="orderedDocuments().length === 0" class="empty-state compact">
+              <p>No documents available.</p>
+            </div>
+            <div class="table-wrapper" *ngIf="orderedDocuments().length > 0">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Reference Date</th>
+                    <th>Type</th>
+                    <th>Created At</th>
+                    <th>Created By</th>
+                    <th class="actions-col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let doc of orderedDocuments()">
+                    <td>{{ getReferenceDateLabel(doc) }}</td>
+                    <td>{{ doc.type }}</td>
+                    <td>{{ formatCreatedAt(doc.created_at) }}</td>
+                    <td>
+                      {{ doc.user_name || 'Unknown' }}
+                      <span *ngIf="doc.user_email">• {{ doc.user_email }}</span>
+                    </td>
+                    <td class="actions-col">
+                      <button class="btn btn-text" type="button" (click)="downloadDocument(doc.filePath)">
+                        <i class="pi pi-download"></i>
+                        <span>Download</span>
+                      </button>
+                      <button class="btn btn-text btn-danger" type="button" (click)="deleteCompanyDocument(doc)">
+                        <i class="pi pi-trash"></i>
+                        <span>Delete</span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" *ngIf="activeTab() === 'colmeia'">
+      <div class="colmeia-stack">
+        <div class="card colmeia-card">
+          <div class="card-header">
+            <h3>Colmeia Evaluation</h3>
+          </div>
+          <div class="colmeia-score" [ngStyle]="getScoreStyle(colmeiaLatest()?.score_final_geral || 0)">
+            {{ (colmeiaLatest()?.score_final_geral || 0) | number: '1.1-1' }}
+            <span>/5</span>
+          </div>
+          <div class="colmeia-chart" *ngIf="colmeiaCategories().length > 0">
+            <p-chart type="radar" [data]="colmeiaRadarData()" [options]="radarChartOptions"></p-chart>
+          </div>
+          <div class="colmeia-categories">
+            <div class="category-row" *ngFor="let category of colmeiaCategories()">
+              <span>{{ category.label }}</span>
+              <span class="score-chip" [ngStyle]="getScoreStyle(category.score)">
+                {{ category.score | number: '1.1-1' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card colmeia-history">
+          <div class="card-header">
+            <h3>History</h3>
+          </div>
+
+          <div *ngIf="colmeiaLoading()" class="loading-state small">
+            <i class="pi pi-spinner pi-spin"></i>
+            <p>Loading history...</p>
+          </div>
+
+          <div *ngIf="colmeiaError() && !colmeiaLoading()" class="error-state small">
+            <i class="pi pi-exclamation-circle"></i>
+            <p>{{ colmeiaError() }}</p>
+          </div>
+
+          <div *ngIf="!colmeiaLoading() && !colmeiaError()">
+            <div *ngIf="colmeiaHistoryRows().length === 0" class="empty-state compact">
+              <p>No colmeia history available.</p>
+            </div>
+            <div class="table-wrapper" *ngIf="colmeiaHistoryRows().length > 0">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Version</th>
+                    <th>Date</th>
+                    <th>Final Score</th>
+                    <th>Variation</th>
+                    <th>Owner</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of colmeiaHistoryRows()">
+                    <td>{{ row.version }}</td>
+                    <td>{{ row.date }}</td>
+                    <td>{{ row.finalScore | number: '1.1-1' }}</td>
+                    <td>{{ formatVariation(row.variation) }}</td>
+                    <td>{{ row.owner }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

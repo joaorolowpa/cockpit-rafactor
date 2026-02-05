@@ -45,16 +45,21 @@
     </button>
   </div>
 
-  <div *ngIf="!loading() && !error()" class="funds-grid">
-    <div *ngFor="let company of filteredCompanies()" class="fund-card">
-      <div class="fund-initial">
-        {{ company.display_name.charAt(0) }}
-      </div>
-      <div class="fund-info">
-        <span class="fund-name">{{ company.display_name }}</span>
-      </div>
-    </div>
-  </div>
+  <ul *ngIf="!loading() && !error()" role="list" class="companies-grid">
+    <li *ngFor="let company of filteredCompanies()" class="companies-item">
+      <a
+        class="company-card"
+        [routerLink]="['/research-equities/companies', company.id]"
+      >
+        <div class="company-initial">
+          {{ company.display_name.charAt(0) }}
+        </div>
+        <div class="company-info">
+          <span class="company-name">{{ company.display_name }}</span>
+        </div>
+      </a>
+    </li>
+  </ul>
 
   <div *ngIf="!loading() && !error() && filteredCompanies().length === 0" class="empty-state">
     <i class="pi pi-search"></i>

@@ -2,13 +2,14 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { RouterLink } from '@angular/router';
 import { Company } from '../../../models/companies.model';
 import { CompaniesService } from '../companies.service';
 
 @Component({
   selector: 'app-companies',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputTextModule],
+  imports: [CommonModule, FormsModule, InputTextModule, RouterLink],
   templateUrl: './companies.component.html',
   styleUrl: './companies.component.scss'
 })

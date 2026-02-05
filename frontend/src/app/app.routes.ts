@@ -98,6 +98,13 @@ export const routes: Routes = [
             pathMatch: 'full'
           },
           {
+            path: 'companies/:id',
+            data: { breadcrumb: 'Company Details' },
+            loadComponent: () =>
+              import('./pages/research-equities/companies/company-detail/company-detail.component')
+                .then(m => m.CompanyDetailComponent)
+          },
+          {
             path: 'companies',
             data: { breadcrumb: 'Companies' },
             loadComponent: () => import('./pages/research-equities/companies/companies.component').then(m => m.CompaniesComponent)

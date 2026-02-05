@@ -1,51 +1,62 @@
-// ========== FUNDS GRID ==========
-.funds-grid {
+// ========== COMPANIES GRID ==========
+.companies-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.25rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.fund-card {
+.companies-item {
+  margin: 0;
+}
+
+.company-card {
   display: flex;
+  align-items: stretch;
+  width: 100%;
   height: 4rem;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  background: white;
+  background: #ffffff;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   transition: all 0.2s ease;
   text-decoration: none;
   color: inherit;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-color: #B17840;
-  }
+  padding: 0;
 }
 
-.fund-initial {
+.company-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #b17840;
+}
+
+.company-initial {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 4rem;
   flex-shrink: 0;
   background: #2c3e50;
-  color: white;
+  color: #ffffff;
   font-size: 1.125rem;
   font-weight: 600;
 }
 
-.fund-info {
+.company-info {
   flex: 1;
   display: flex;
   align-items: center;
   padding: 0 1rem;
   overflow: hidden;
+  border-left: 1px solid #e5e7eb;
 }
 
-.fund-name {
+.company-name {
   font-size: 0.9375rem;
   font-weight: 500;
   color: #2c3e50;
@@ -53,41 +64,41 @@
   overflow: hidden;
   text-overflow: ellipsis;
   transition: color 0.2s ease;
+}
 
-  .fund-card:hover & {
-    color: #B17840;
-  }
+.company-card:hover .company-name {
+  color: #b17840;
 }
 
 // ========== RESPONSIVE ==========
 @media (max-width: 1024px) {
-  .funds-grid {
+  .companies-grid {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
 }
 
 @media (max-width: 768px) {
-  .funds-grid {
+  .companies-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1rem;
   }
 
-  .fund-card {
+  .company-card {
     height: 3.5rem;
   }
 
-  .fund-initial {
+  .company-initial {
     width: 3.5rem;
     font-size: 1rem;
   }
 
-  .fund-name {
+  .company-name {
     font-size: 0.875rem;
   }
 }
 
 @media (max-width: 480px) {
-  .funds-grid {
+  .companies-grid {
     grid-template-columns: 1fr;
   }
 }
