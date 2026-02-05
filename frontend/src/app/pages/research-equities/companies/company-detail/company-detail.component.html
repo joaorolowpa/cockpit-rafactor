@@ -235,20 +235,52 @@
 
       <div *ngIf="!documentsLoading() && !documentsError()" class="documents-stack">
         <div class="documents-toolbar">
-          <button class="btn btn-secondary" type="button" disabled>
-            <i class="pi pi-plus"></i>
-            <span>Financial Models</span>
-          </button>
-          <button class="btn btn-secondary" type="button" disabled>
-            <i class="pi pi-plus"></i>
-            <span>Cases & Other</span>
-          </button>
-          <button class="btn btn-secondary" type="button" disabled>
-            <i class="pi pi-plus"></i>
-            <span>Investment Thesis</span>
-          </button>
-          <span class="hint-text">Upload flows are not wired in Angular yet.</span>
+          <div class="documents-actions">
+            <button
+              class="btn btn-ghost"
+              type="button"
+              [disabled]="!latestThesis()"
+              (click)="downloadLatest('thesis')"
+            >
+              <i class="pi pi-file"></i>
+              <span>Thesis</span>
+            </button>
+            <button
+              class="btn btn-ghost"
+              type="button"
+              [disabled]="!latestExcel()"
+              (click)="downloadLatest('excel')"
+            >
+              <i class="pi pi-download"></i>
+              <span>Models</span>
+            </button>
+            <button
+              class="btn btn-ghost"
+              type="button"
+              [disabled]="!latestDocument()"
+              (click)="downloadLatest('document')"
+            >
+              <i class="pi pi-file-pdf"></i>
+              <span>Cases</span>
+            </button>
+          </div>
+
+          <div class="documents-actions">
+            <button class="btn btn-secondary" type="button" disabled>
+              <i class="pi pi-plus"></i>
+              <span>Financial Models</span>
+            </button>
+            <button class="btn btn-secondary" type="button" disabled>
+              <i class="pi pi-plus"></i>
+              <span>Cases & Other</span>
+            </button>
+            <button class="btn btn-secondary" type="button" disabled>
+              <i class="pi pi-plus"></i>
+              <span>Investment Thesis</span>
+            </button>
+          </div>
         </div>
+        <span class="hint-text">Upload flows are not wired in Angular yet.</span>
 
         <div class="document-section">
           <div class="section-header">

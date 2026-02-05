@@ -100,7 +100,17 @@ export class CompanyDetailComponent {
   );
 
   protected orderedDocuments = computed<CompanyDocumentRow[]>(() => {
-    const excelRows = this.excels().map((excel) => ({
+    const sortedExcels = [...this.excels()].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+    const sortedThesis = [...this.thesisDocuments()].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+    const sortedOthers = [...this.otherDocuments()].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    const excelRows = sortedExcels.map((excel) => ({
       id: excel.id,
       type: 'Financial Models' as const,
       created_at: excel.created_at,
@@ -110,7 +120,7 @@ export class CompanyDetailComponent {
       filePath: excel.datalake_filepath ?? null
     }));
 
-    const thesisRows = this.thesisDocuments().map((doc) => ({
+    const thesisRows = sortedThesis.map((doc) => ({
       id: doc.id,
       type: 'Investment Thesis' as const,
       created_at: doc.created_at,
@@ -120,7 +130,7 @@ export class CompanyDetailComponent {
       filePath: doc.file_path ?? null
     }));
 
-    const otherRows = this.otherDocuments().map((doc) => ({
+    const otherRows = sortedOthers.map((doc) => ({
       id: doc.id,
       type: 'Cases & Other' as const,
       created_at: doc.created_at,
@@ -130,9 +140,39 @@ export class CompanyDetailComponent {
       filePath: doc.file_path ?? null
     }));
 
-    return [...excelRows, ...otherRows, ...thesisRows].sort(
+    const firsts: CompanyDocumentRow[] = [];
+    if (excelRows[0]) firsts.push(excelRows[0]);
+    if (otherRows[0]) firsts.push(otherRows[0]);
+    if (thesisRows[0]) firsts.push(thesisRows[0]);
+
+    const remaining = [
+      ...excelRows.slice(1),
+      ...otherRows.slice(1),
+      ...thesisRows.slice(1)
+    ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+    return [...firsts, ...remaining];
+  });
+
+  protected latestThesis = computed(() => {
+    const sorted = [...this.thesisDocuments()].sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
+    return sorted[0] ?? null;
+  });
+
+  protected latestExcel = computed(() => {
+    const sorted = [...this.excels()].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+    return sorted[0] ?? null;
+  });
+
+  protected latestDocument = computed(() => {
+    const sorted = [...this.otherDocuments()].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+    return sorted[0] ?? null;
   });
 
   protected groupedFinancials = computed<GroupedSeries[]>(() => {
@@ -294,6 +334,18 @@ export class CompanyDetailComponent {
         console.error('Failed to delete document:', err);
       }
     });
+  }
+
+  protected downloadLatest(kind: 'thesis' | 'excel' | 'document'): void {
+    if (kind === 'thesis') {
+      this.downloadDocument(this.latestThesis()?.file_path ?? null);
+      return;
+    }
+    if (kind === 'excel') {
+      this.downloadDocument(this.latestExcel()?.datalake_filepath ?? null);
+      return;
+    }
+    this.downloadDocument(this.latestDocument()?.file_path ?? null);
   }
 
   protected retryCompany(): void {
