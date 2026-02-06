@@ -460,24 +460,24 @@ export class NavComponent {
       padding: {
         top: 6,
         right: 6,
-        bottom: 6,
+        bottom: 28,
         left: 6
       },
       seriesArea: {
         padding: {
           top: 4,
           right: 4,
-          bottom: 4,
+          bottom: 10,
           left: 4
         }
       },
       series: [series],
       gradientLegend: {
         position: 'bottom',
-        spacing: 12,
+        spacing: 16,
         gradient: {
-          thickness: 14,
-          preferredLength: 280
+          thickness: 12,
+          preferredLength: 260
         },
         scale: {
           label: {
