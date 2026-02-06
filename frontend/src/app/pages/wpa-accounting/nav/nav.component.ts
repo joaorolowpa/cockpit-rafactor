@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AgChartOptions } from 'ag-charts-community';
+import type { AgChartOptions, AgHierarchyChartOptions, AgTreemapSeriesOptions } from 'ag-charts-types';
 import { AgChartsModule } from 'ag-charts-angular';
 import 'ag-charts-enterprise';
 import { forkJoin, of } from 'rxjs';
@@ -28,19 +28,6 @@ type TreemapNode = {
   name: string;
   children: TreemapChild[];
 };
-
-const COLOR_PALETTE = [
-  '#7f470a',
-  '#8a571e',
-  '#aa8666',
-  '#b4967c',
-  '#bfa594',
-  '#a7958b',
-  '#8d8280',
-  '#767177',
-  '#5d5f6c',
-  '#2c3b5a'
-];
 
 const CATEGORY_LABELS: Record<string, string> = {
   gestao: 'Gestão',
@@ -123,20 +110,17 @@ export class NavComponent {
     {
       key: 'tables_illiquid' as const,
       label: 'Tables - Illiquid',
-      icon: 'fa-solid fa-table',
-      color: '#217346'
+      icon: 'fa-solid fa-table'
     },
     {
       key: 'chart_liquid' as const,
       label: 'Charts - Liquid Assets',
-      icon: 'fa-solid fa-chart-column',
-      color: '#D17C19'
+      icon: 'fa-solid fa-chart-column'
     },
     {
       key: 'tables_liquid' as const,
       label: 'Tables - Liquid Assets',
-      icon: 'fa-solid fa-table',
-      color: '#2A579A'
+      icon: 'fa-solid fa-table'
     }
   ];
 
@@ -375,47 +359,152 @@ export class NavComponent {
   }
 
   private buildTreemapOptions(data: TreemapNode[]): AgChartOptions {
-    return {
-      data,
-      series: [
-        {
-          type: 'treemap',
-          labelKey: 'name',
-          secondaryLabelKey: 'percentage',
-          sizeKey: 'value',
-          colorKey: 'value',
-          colorRange: COLOR_PALETTE,
-          group: {
-            padding: 12,
-            gap: 5
-          },
-          tile: {
-            padding: 8,
-            gap: 2
-          },
-          tooltip: {
-            renderer: (params: { datum: { name?: string; value?: number } }) => {
-              if (params.datum.value === undefined) {
-                return { content: `${params.datum.name}: N/A` };
-              }
+    const accent = this.getCssVar('--accent', '#b17840');
+    const accentStrong = this.getCssVar('--accent-strong', '#9a6a33');
+    const surface0 = this.getCssVar('--surface-0', '#f6f6f4');
+    const surface1 = this.getCssVar('--surface-1', '#ffffff');
+    const text900 = this.getCssVar('--text-900', '#1f2937');
+    const text600 = this.getCssVar('--text-600', '#5b6570');
+    const border200 = this.getCssVar('--border-200', '#e5e7eb');
 
-              return {
-                content: `${params.datum.name}: ${params.datum?.value?.toLocaleString('en-US', {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0
-                })}`
-              };
-            }
+    const fontFamily = "'Roboto', 'Segoe UI', sans-serif";
+    const series: AgTreemapSeriesOptions<TreemapNode> = {
+      type: 'treemap',
+      labelKey: 'name',
+      secondaryLabelKey: 'percentage',
+      sizeKey: 'value',
+      colorKey: 'value',
+      colorRange: [surface0, accent, accentStrong],
+      group: {
+        padding: 12,
+        gap: 6,
+        cornerRadius: 10,
+        stroke: border200,
+        strokeWidth: 1,
+        label: {
+          color: text900,
+          fontWeight: 600,
+          fontSize: 13,
+          fontFamily,
+          spacing: 6
+        }
+      },
+      tile: {
+        padding: 6,
+        gap: 2,
+        cornerRadius: 6,
+        stroke: surface1,
+        strokeWidth: 1,
+        label: {
+          color: text900,
+          fontSize: 12,
+          fontWeight: 600,
+          fontFamily,
+          minimumFontSize: 10,
+          wrapping: 'on-space'
+        },
+        secondaryLabel: {
+          color: '#ffffff',
+          fontSize: 11,
+          fontWeight: 500,
+          fontFamily,
+          minimumFontSize: 9,
+          wrapping: 'on-space'
+        }
+      },
+      highlightStyle: {
+        group: {
+          stroke: accentStrong,
+          strokeWidth: 2,
+          label: {
+            color: accentStrong
+          }
+        },
+        tile: {
+          stroke: accent,
+          strokeWidth: 2,
+          label: {
+            color: text900
+          },
+          secondaryLabel: {
+            color: text600
           }
         }
-      ],
-      gradientLegend: {
-        gradient: {
-          thickness: 20,
-          preferredLength: 400
+      },
+      tooltip: {
+        renderer: (params: { datum: { name?: string; value?: number; percentage?: string } }) => {
+          const value = params.datum?.value ?? 0;
+          const formattedValue = `${value.toLocaleString('en-US', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+          })}M`;
+          const percentage = params.datum?.percentage ? ` (${params.datum.percentage})` : '';
+
+          if (params.datum.value === undefined) {
+            return { content: `${params.datum.name}: N/A` };
+          }
+
+          return {
+            content: `${params.datum.name}: ${formattedValue}${percentage}`
+          };
         }
       }
     };
+
+    const options: AgHierarchyChartOptions = {
+      data,
+      background: {
+        visible: true,
+        fill: surface1
+      },
+      padding: {
+        top: 6,
+        right: 6,
+        bottom: 6,
+        left: 6
+      },
+      seriesArea: {
+        padding: {
+          top: 4,
+          right: 4,
+          bottom: 4,
+          left: 4
+        }
+      },
+      series: [series],
+      gradientLegend: {
+        position: 'bottom',
+        spacing: 12,
+        gradient: {
+          thickness: 14,
+          preferredLength: 280
+        },
+        scale: {
+          label: {
+            color: text600,
+            fontFamily,
+            fontSize: 11,
+            fontWeight: 500
+          }
+        }
+      },
+      theme: {
+        baseTheme: 'ag-sheets',
+        overrides: {
+          common: {
+            background: { fill: surface1 }
+          },
+          treemap: {
+            series: {
+              fills: [surface0, accent, accentStrong],
+              strokes: [surface1]
+            }
+          }
+        }
+      }
+    };
+
+    return options;
   }
 
   private getTodayDateString(): string {
@@ -424,5 +513,11 @@ export class NavComponent {
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  private getCssVar(name: string, fallback: string): string {
+    if (typeof window === 'undefined') return fallback;
+    const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return value || fallback;
   }
 }

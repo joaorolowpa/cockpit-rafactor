@@ -2,19 +2,20 @@
   display: inline-flex;
   gap: 0.5rem;
   padding: 0.35rem;
-  background: #f3f4f6;
-  border-radius: 12px;
+  background: var(--surface-0);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-200);
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
 }
 
 .tab-btn {
-  border: none;
+  border: 1px solid transparent;
   background: transparent;
   padding: 0.6rem 1rem;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-size: 0.95rem;
-  color: #6b7280;
+  color: var(--text-600);
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
@@ -23,13 +24,24 @@
 
   i {
     font-size: 1rem;
+    color: var(--accent-strong);
+  }
+
+  &:hover {
+    background: rgba(177, 120, 64, 0.08);
+    color: var(--text-900);
   }
 
   &.active {
-    background: #ffffff;
-    color: #111827;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    background: var(--surface-1);
+    color: var(--text-900);
+    border-color: rgba(177, 120, 64, 0.35);
+    box-shadow: var(--shadow-sm);
     font-weight: 600;
+  }
+
+  &.active i {
+    color: var(--accent);
   }
 }
 
@@ -46,18 +58,18 @@
   flex-direction: column;
   gap: 0.35rem;
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--text-600);
 }
 
 .date-input,
 .select-input {
   min-width: 220px;
   padding: 0.6rem 0.85rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border: 1px solid var(--border-200);
+  border-radius: var(--radius-sm);
   font-size: 0.9rem;
-  color: #111827;
-  background: #ffffff;
+  color: var(--text-900);
+  background: var(--surface-1);
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -74,23 +86,23 @@
 }
 
 .table-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-200);
+  border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
 }
 
 .table-card-header {
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
-  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+  border-bottom: 1px solid var(--border-200);
+  background: linear-gradient(180deg, var(--surface-0) 0%, var(--surface-1) 100%);
 
   h3 {
     margin: 0;
     font-size: 1rem;
     font-weight: 600;
-    color: #111827;
+    color: var(--text-900);
   }
 }
 
@@ -117,13 +129,13 @@
 
   i {
     font-size: 3rem;
-    color: #B17840;
+    color: var(--accent);
     margin-bottom: 1rem;
   }
 
   p {
     font-size: 1rem;
-    color: #64748b;
+    color: var(--text-600);
     margin: 0;
   }
 }
@@ -135,7 +147,7 @@
 .loading-inline,
 .error-inline {
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--text-600);
 }
 
 .error-inline {
@@ -143,19 +155,23 @@
 }
 
 .chart-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-200);
+  border-radius: var(--radius-md);
   padding: 1rem;
   box-shadow: var(--shadow-sm);
-  min-height: 520px;
-  height: 70vh;
+  min-height: 600px;
+  height: 75vh;
 }
 
 .chart-container {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+:host ::ng-deep .ag-charts-series-area {
+  min-height: 420px;
 }
 
 @media (max-width: 900px) {

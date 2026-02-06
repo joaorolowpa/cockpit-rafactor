@@ -14,7 +14,7 @@
         [class.active]="activeTab() === tab.key"
         (click)="setTab(tab.key)"
       >
-        <i [class]="tab.icon" [style.color]="tab.color"></i>
+        <i [class]="tab.icon"></i>
         <span>{{ tab.label }}</span>
       </button>
     }
