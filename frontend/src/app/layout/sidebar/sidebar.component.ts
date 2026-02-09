@@ -123,7 +123,28 @@ export class SidebarComponent implements OnInit {
     {
       label: 'Backoffice',
       icon: 'fa-solid fa-folder',
-      routerLink: '/backoffice'
+      items: [
+        {
+          label: 'Files',
+          routerLink: '/backoffice/files'
+        },
+        {
+          label: 'Assets',
+          routerLink: '/backoffice/assets'
+        },
+        {
+          label: 'Quotas (WPA Quantity)',
+          routerLink: '/backoffice/quotas-wpa-quantity'
+        },
+        {
+          label: 'Quotas (Prices)',
+          routerLink: '/backoffice/quotas-prices'
+        },
+        {
+          label: 'NAV (WPA)',
+          routerLink: '/backoffice/nav-wpa'
+        }
+      ]
     }
   ];
 

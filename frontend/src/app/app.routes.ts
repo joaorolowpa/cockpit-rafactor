@@ -166,7 +166,42 @@ export const routes: Routes = [
       {
         path: 'backoffice',
         data: { breadcrumb: 'Backoffice' },
-        loadComponent: () => import('./pages/backoffice/backoffice.component').then(m => m.BackofficeComponent)
+        children: [
+          {
+            path: '',
+            redirectTo: 'files',
+            pathMatch: 'full'
+          },
+          {
+            path: 'files',
+            data: { breadcrumb: 'Files' },
+            loadComponent: () => import('./pages/backoffice/files/files.component').then(m => m.BackofficeFilesComponent)
+          },
+          {
+            path: 'assets',
+            data: { breadcrumb: 'Assets' },
+            loadComponent: () => import('./pages/backoffice/assets/assets.component').then(m => m.BackofficeAssetsComponent)
+          },
+          {
+            path: 'quotas-wpa-quantity',
+            data: { breadcrumb: 'Quotas (WPA Quantity)' },
+            loadComponent: () =>
+              import('./pages/backoffice/quotas-wpa-quantity/quotas-wpa-quantity.component')
+                .then(m => m.BackofficeQuotasWpaQuantityComponent)
+          },
+          {
+            path: 'quotas-prices',
+            data: { breadcrumb: 'Quotas (Prices)' },
+            loadComponent: () =>
+              import('./pages/backoffice/quotas-prices/quotas-prices.component')
+                .then(m => m.BackofficeQuotasPricesComponent)
+          },
+          {
+            path: 'nav-wpa',
+            data: { breadcrumb: 'NAV (WPA)' },
+            loadComponent: () => import('./pages/backoffice/nav-wpa/nav-wpa.component').then(m => m.BackofficeNavWpaComponent)
+          }
+        ]
       }
     ]
   }
