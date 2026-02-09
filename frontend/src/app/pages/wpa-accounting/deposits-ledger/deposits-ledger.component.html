@@ -2,6 +2,187 @@
   <div class="page-header">
     <div>
       <h1 class="page-title">Deposits Ledger</h1>
+      <p class="page-subtitle">Manage asset transactions, selecting transaction types from deposit-ledger-types</p>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-primary" type="button" (click)="openCreateDialog()">
+        Add Transaction
+      </button>
     </div>
   </div>
+
+  <div class="table-container">
+    <div class="filters-bar">
+      <div class="search-box">
+        <i class="pi pi-search"></i>
+        <input
+          type="text"
+          placeholder="Filter by Asset Name"
+          [value]="searchTerm()"
+          (input)="searchTerm.set($any($event.target).value)"
+          [disabled]="loading()"
+        />
+        <button
+          *ngIf="searchTerm()"
+          type="button"
+          class="clear-btn"
+          (click)="searchTerm.set('')"
+        >
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <select
+        class="type-filter"
+        [value]="selectedDepositType()"
+        (change)="selectedDepositType.set($any($event.target).value)"
+        [disabled]="loading()"
+      >
+        <option value="">Deposit Type</option>
+        <option *ngFor="let type of depositTypeOptions()" [value]="type">
+          {{ type }}
+        </option>
+      </select>
+
+      <select
+        class="asset-filter"
+        [value]="selectedAssetName()"
+        (change)="selectedAssetName.set($any($event.target).value)"
+        [disabled]="loading()"
+      >
+        <option value="">Asset Name</option>
+        <option *ngFor="let name of assetNameOptions()" [value]="name">
+          {{ name }}
+        </option>
+      </select>
+
+      <select
+        class="asset-type-filter"
+        [value]="selectedAssetType()"
+        (change)="selectedAssetType.set($any($event.target).value)"
+        [disabled]="loading()"
+      >
+        <option value="">Asset Type</option>
+        <option *ngFor="let type of assetTypeOptions()" [value]="type">
+          {{ type }}
+        </option>
+      </select>
+
+      <button
+        *ngIf="searchTerm() || selectedDepositType() || selectedAssetName() || selectedAssetType()"
+        type="button"
+        class="btn btn-ghost clear-filters-btn"
+        (click)="clearFilters()"
+      >
+        Clear Filters
+      </button>
+    </div>
+
+    <div *ngIf="loading()" class="loading-state">
+      <i class="pi pi-spinner pi-spin"></i>
+      <p>Loading deposits ledger...</p>
+    </div>
+
+    <div *ngIf="error() && !loading()" class="error-state">
+      <i class="pi pi-exclamation-circle"></i>
+      <p>{{ error() }}</p>
+      <button type="button" class="btn btn-secondary" (click)="loadDeposits()">
+        <i class="pi pi-refresh"></i>
+        <span>Retry</span>
+      </button>
+    </div>
+
+    <div *ngIf="!loading() && !error()" class="table-wrapper">
+      <table class="data-table deposits-table">
+        <thead>
+          <tr>
+            <th>Deposit ID</th>
+            <th>Asset ID</th>
+            <th>Deposit Type</th>
+            <th>Deposit Value (BRL)</th>
+            <th>Deposit Value (USD)</th>
+            <th>Deposit Date Reference</th>
+            <th>Deposit Created At</th>
+            <th>Asset Name</th>
+            <th>Asset Description</th>
+            <th>Asset Created At</th>
+            <th>Asset Is Active</th>
+            <th>Asset Type ID</th>
+            <th>Asset Type Name</th>
+            <th>Asset Type Description</th>
+            <th>Deposit Created By (Name)</th>
+            <th>Deposit Created By (Email)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let deposit of filteredDeposits(); trackBy: trackByDepositId">
+            <td>{{ deposit.deposit_id }}</td>
+            <td>{{ deposit.asset_id ?? '-' }}</td>
+            <td>{{ deposit.deposit_type || '-' }}</td>
+            <td>
+              <span
+                [class.value-negative]="isNegative(deposit.deposit_value_in_brl)"
+                [class.value-positive]="isPositive(deposit.deposit_value_in_brl)"
+              >
+                {{ formatBrl(deposit.deposit_value_in_brl) }}
+              </span>
+            </td>
+            <td>
+              <span
+                [class.value-negative]="isNegative(deposit.deposit_value_in_usd)"
+                [class.value-positive]="isPositive(deposit.deposit_value_in_usd)"
+              >
+                {{ formatUsd(deposit.deposit_value_in_usd) }}
+              </span>
+            </td>
+            <td>{{ formatDateReference(deposit.deposit_date_reference) }}</td>
+            <td>{{ formatCreatedAt(deposit.deposit_created_at) }}</td>
+            <td class="name-cell">{{ deposit.asset_name || '-' }}</td>
+            <td class="description-cell">{{ deposit.asset_description || '-' }}</td>
+            <td>{{ formatCreatedAt(deposit.asset_created_at) }}</td>
+            <td>{{ deposit.asset_is_active ? 'Yes' : 'No' }}</td>
+            <td>{{ deposit.asset_type_id ?? '-' }}</td>
+            <td>{{ deposit.asset_type_name || '-' }}</td>
+            <td>{{ deposit.asset_type_description || '-' }}</td>
+            <td>{{ formatCreatedBy(deposit) }}</td>
+            <td>{{ deposit.deposit_created_by_email || '-' }}</td>
+            <td class="actions-cell">
+              <div class="actions-inline">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-text action-icon-btn delete-btn"
+                  (click)="deleteDeposit(deposit)"
+                  [disabled]="!isDeletable(deposit)"
+                  [title]="isDeletable(deposit) ? 'Delete item' : 'Delete item disabled (older than 7 days)'"
+                >
+                  <i class="pi pi-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="filteredDeposits().length === 0">
+            <td colspan="17" class="empty-state">
+              <i class="pi pi-info-circle"></i>
+              <p>No deposits found</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div *ngIf="!loading() && !error()" class="table-footer">
+    <span class="results-count">
+      Showing {{ filteredDeposits().length }} of {{ deposits().length }} records
+    </span>
+  </div>
 </div>
+
+<app-deposit-ledger-form-dialog
+  *ngIf="showDialog()"
+  [assets]="availableAssets()"
+  [depositTypes]="depositTypeOptions()"
+  (close)="closeDialog()"
+  (saved)="onDepositSaved()"
+></app-deposit-ledger-form-dialog>

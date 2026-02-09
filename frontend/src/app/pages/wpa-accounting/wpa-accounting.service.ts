@@ -83,6 +83,34 @@ export interface CreateAssetValuePayload {
   comment?: string | null;
 }
 
+export interface WpaDepositLedger {
+  deposit_id: number;
+  asset_id?: number | null;
+  deposit_type?: string | null;
+  deposit_value_in_brl?: number | null;
+  deposit_value_in_usd?: number | null;
+  deposit_date_reference?: string | null;
+  deposit_created_at?: string | null;
+  deposit_updated_at?: string | null;
+  deposit_created_by_email?: string | null;
+  deposit_created_by_name?: string | null;
+  asset_name?: string | null;
+  asset_description?: string | null;
+  asset_created_at?: string | null;
+  asset_is_active?: boolean | null;
+  asset_type_id?: number | null;
+  asset_type_name?: string | null;
+  asset_type_description?: string | null;
+}
+
+export interface CreateDepositLedgerPayload {
+  asset_id: number;
+  deposit_type: string;
+  deposit_value_in_brl: number | null;
+  deposit_value_in_usd?: number | null;
+  deposit_date_reference: string | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -156,6 +184,12 @@ export class WpaAccountingService {
     });
   }
 
+  getDepositsLedger(): Observable<WpaDepositLedger[]> {
+    return this.http.get<WpaDepositLedger[]>(`${this.apiBaseUrl}/wpa/deposits-ledger`, {
+      headers: this.getHeaders()
+    });
+  }
+
   createAsset(payload: CreateAssetPayload): Observable<WpaAsset> {
     return this.http.post<WpaAsset>(`${this.apiBaseUrl}/wpa/assets`, payload, {
       headers: this.getHeaders()
@@ -168,6 +202,12 @@ export class WpaAccountingService {
     });
   }
 
+  createDepositLedger(payload: CreateDepositLedgerPayload): Observable<WpaDepositLedger> {
+    return this.http.post<WpaDepositLedger>(`${this.apiBaseUrl}/wpa/deposits-ledger`, payload, {
+      headers: this.getHeaders()
+    });
+  }
+
   deleteAsset(assetId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiBaseUrl}/wpa/assets/${assetId}`, {
       headers: this.getHeaders()
@@ -176,6 +216,12 @@ export class WpaAccountingService {
 
   deleteAssetValue(assetValueId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiBaseUrl}/wpa/assets-values/${assetValueId}`, {
+      headers: this.getHeaders()
+    });
+  }
+
+  deleteDepositLedger(depositId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiBaseUrl}/wpa/deposits-ledger/${depositId}`, {
       headers: this.getHeaders()
     });
   }
