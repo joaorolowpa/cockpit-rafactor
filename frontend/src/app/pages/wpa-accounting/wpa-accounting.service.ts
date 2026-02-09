@@ -53,6 +53,36 @@ export interface CreateAssetPayload {
   asset_description?: string | null;
 }
 
+export interface WpaAssetValue {
+  asset_value_id: number;
+  asset_id?: number | null;
+  asset_type_name?: string | null;
+  asset_name?: string | null;
+  asset_created_at?: string | null;
+  asset_created_by?: number | null;
+  asset_created_by_email?: string | null;
+  asset_created_by_name?: string | null;
+  asset_is_active?: boolean | null;
+  asset_type_id?: number | null;
+  asset_type_description?: string | null;
+  asset_type_created_by?: number | null;
+  total_value_in_brl?: number | null;
+  wpa_value_in_brl?: number | null;
+  date_reference?: string | null;
+  asset_value_created_by_email?: string | null;
+  asset_value_created_by_name?: string | null;
+  comment?: string | null;
+  value_created_at?: string | null;
+}
+
+export interface CreateAssetValuePayload {
+  asset_id: number;
+  total_value_in_brl: number | null;
+  wpa_value_in_brl: number | null;
+  date_reference: string | null;
+  comment?: string | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -120,14 +150,32 @@ export class WpaAccountingService {
     });
   }
 
+  getAssetsValues(): Observable<WpaAssetValue[]> {
+    return this.http.get<WpaAssetValue[]>(`${this.apiBaseUrl}/wpa/assets-values`, {
+      headers: this.getHeaders()
+    });
+  }
+
   createAsset(payload: CreateAssetPayload): Observable<WpaAsset> {
     return this.http.post<WpaAsset>(`${this.apiBaseUrl}/wpa/assets`, payload, {
       headers: this.getHeaders()
     });
   }
 
+  createAssetValue(payload: CreateAssetValuePayload): Observable<WpaAssetValue> {
+    return this.http.post<WpaAssetValue>(`${this.apiBaseUrl}/wpa/assets-values`, payload, {
+      headers: this.getHeaders()
+    });
+  }
+
   deleteAsset(assetId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiBaseUrl}/wpa/assets/${assetId}`, {
+      headers: this.getHeaders()
+    });
+  }
+
+  deleteAssetValue(assetValueId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiBaseUrl}/wpa/assets-values/${assetValueId}`, {
       headers: this.getHeaders()
     });
   }
