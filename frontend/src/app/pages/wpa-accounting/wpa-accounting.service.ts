@@ -111,6 +111,11 @@ export interface CreateDepositLedgerPayload {
   deposit_date_reference: string | null;
 }
 
+export type NavMissingEntry = {
+  month: string;
+  [key: string]: number | string | null;
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -186,6 +191,12 @@ export class WpaAccountingService {
 
   getDepositsLedger(): Observable<WpaDepositLedger[]> {
     return this.http.get<WpaDepositLedger[]>(`${this.apiBaseUrl}/wpa/deposits-ledger`, {
+      headers: this.getHeaders()
+    });
+  }
+
+  getNavMissingEntries(): Observable<NavMissingEntry[]> {
+    return this.http.get<NavMissingEntry[]>(`${this.apiBaseUrl}/nav/controls/count-of-saldos-per-month`, {
       headers: this.getHeaders()
     });
   }

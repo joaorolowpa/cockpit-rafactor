@@ -1,7 +1,55 @@
 <div class="page-container">
   <div class="page-header">
     <div>
-      <h1 class="page-title">Controls</h1>
+      <h1 class="page-title">Nav Missing Entries</h1>
+      <p class="page-subtitle">Monthly NAV control checklist for missing entries</p>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div *ngIf="loading()" class="loading-state">
+      <i class="pi pi-spinner pi-spin"></i>
+      <p>Loading entries...</p>
+    </div>
+
+    <div *ngIf="error() && !loading()" class="error-state">
+      <i class="pi pi-exclamation-circle"></i>
+      <p>{{ error() }}</p>
+      <button type="button" class="btn btn-secondary" (click)="loadEntries()">
+        <i class="pi pi-refresh"></i>
+        <span>Retry</span>
+      </button>
+    </div>
+
+    <div *ngIf="!loading() && !error()" class="table-wrapper">
+      <table class="data-table controls-table">
+        <thead>
+          <tr>
+            <th class="sticky-col">Month</th>
+            <th *ngFor="let portfolio of portfolioNames(); trackBy: trackByPortfolio">
+              {{ formatPortfolioName(portfolio) }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of sortedEntries(); trackBy: trackByMonth">
+            <td class="sticky-col month-cell">{{ formatMonth(row.month) }}</td>
+            <td
+              *ngFor="let portfolio of portfolioNames(); trackBy: trackByPortfolio"
+              class="status-cell"
+              [class.missing]="isMissing(row, portfolio)"
+            >
+              {{ formatCell(row, portfolio) }}
+            </td>
+          </tr>
+          <tr *ngIf="sortedEntries().length === 0">
+            <td [attr.colspan]="portfolioNames().length + 1" class="empty-state">
+              <i class="pi pi-info-circle"></i>
+              <p>No entries found</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
