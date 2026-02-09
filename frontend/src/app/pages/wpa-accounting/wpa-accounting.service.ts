@@ -37,6 +37,22 @@ export interface AssetValue {
   net_wpa_stake: number | null;
 }
 
+export interface WpaAsset {
+  asset_id: number;
+  asset_name: string;
+  asset_description?: string | null;
+  asset_created_at?: string | null;
+  asset_type_description?: string | null;
+  asset_created_by_name?: string | null;
+  asset_created_by_email?: string | null;
+}
+
+export interface CreateAssetPayload {
+  asset_name: string;
+  asset_type_description: string;
+  asset_description?: string | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -94,6 +110,24 @@ export class WpaAccountingService {
   getWpaWeights(dateReference?: string): Observable<WpaWeightsResponse> {
     return this.http.get<WpaWeightsResponse>(`${this.apiBaseUrl}/nav/exposure/wpa-weights`, {
       params: this.buildDateParams(dateReference),
+      headers: this.getHeaders()
+    });
+  }
+
+  getAssets(): Observable<WpaAsset[]> {
+    return this.http.get<WpaAsset[]>(`${this.apiBaseUrl}/wpa/assets`, {
+      headers: this.getHeaders()
+    });
+  }
+
+  createAsset(payload: CreateAssetPayload): Observable<WpaAsset> {
+    return this.http.post<WpaAsset>(`${this.apiBaseUrl}/wpa/assets`, payload, {
+      headers: this.getHeaders()
+    });
+  }
+
+  deleteAsset(assetId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiBaseUrl}/wpa/assets/${assetId}`, {
       headers: this.getHeaders()
     });
   }

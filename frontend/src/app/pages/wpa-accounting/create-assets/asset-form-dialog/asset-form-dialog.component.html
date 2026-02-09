@@ -1,0 +1,82 @@
+<div class="dialog-overlay" (click)="onClose()">
+  <div class="dialog-content" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h2>Add New Asset</h2>
+      <button
+        type="button"
+        class="btn btn-icon btn-text close-btn"
+        (click)="onClose()"
+      >
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="dialog-body">
+        <div class="form-group">
+          <label for="asset_name">Asset Name *</label>
+          <input
+            id="asset_name"
+            type="text"
+            formControlName="asset_name"
+            pInputText
+            placeholder="Asset name"
+          />
+          @if (form.controls.asset_name.touched && form.controls.asset_name.errors?.['required']) {
+            <span class="error-message">Asset name is required</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="asset_type_description">Asset Type *</label>
+          <input
+            id="asset_type_description"
+            type="text"
+            formControlName="asset_type_description"
+            pInputText
+            placeholder="Asset type"
+            list="asset-type-options"
+          />
+          <datalist id="asset-type-options">
+            @for (type of assetTypes; track type) {
+              <option [value]="type"></option>
+            }
+          </datalist>
+          @if (form.controls.asset_type_description.touched && form.controls.asset_type_description.errors?.['required']) {
+            <span class="error-message">Asset type is required</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="asset_description">Description</label>
+          <textarea
+            id="asset_description"
+            rows="4"
+            formControlName="asset_description"
+            placeholder="Short description"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="dialog-footer">
+        <button
+          type="button"
+          class="btn btn-ghost"
+          (click)="onClose()"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="form.invalid || isSubmitting()"
+        >
+          <span>Add Asset</span>
+          @if (isSubmitting()) {
+            <span class="btn-spinner" aria-hidden="true"></span>
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
