@@ -4,17 +4,16 @@ import { submitFormWithToast } from "@/modules/internal-api/submitFormWithToast"
 // FUNCTION TO FETCH DATA
 
 export interface QuotaPrice {
-  quota_acquisition_id: number;
-  wpa_asset_id: number;
-  asset_name: string;
+  id: number;
+  portfolio_id: number;
+  milestones_name: string;
   date_reference: string;
-  // Optional because different endpoints may name the numeric value differently.
-  // For this example-page, we'll pivot by asset and place this value in the table.
-  quota?: number;
+  price_quota: number;
+  active: boolean | null;
 }
 
 export async function fetchQuotaPrices(debug?: boolean): Promise<QuotaPrice[]> {
-  const endpoint = "/v1/quotas/prices/wpa";
+  const endpoint = "/v1/portfolios-quotas-prices/prices";
   const cacheDurationInSeconds = 60; // Cache for 1 minute
   const data = await fetchDataFromInternalAPI(
     endpoint,
@@ -71,7 +70,7 @@ export function transformQuotaPrices(
   const dateToRowMap = new Map<string, TransformedQuotaRowWithStyles>();
 
   for (const item of data) {
-    if (item.asset_name) assetNamesSet.add(item.asset_name);
+    if (item.milestones_name) assetNamesSet.add(item.milestones_name);
     if (!dateToRowMap.has(item.date_reference)) {
       const newRow: TransformedQuotaRowWithStyles = {
         date_reference: item.date_reference,
@@ -101,13 +100,14 @@ export function transformQuotaPrices(
   for (const item of data) {
     const row = dateToRowMap.get(item.date_reference);
     if (!row) continue;
-    const value = typeof item.quota === "number" ? item.quota : null;
-    row[item.asset_name] = value;
+    const value =
+      typeof item.price_quota === "number" ? item.price_quota : null;
+    row[item.milestones_name] = value;
 
     // Track first non-null value for each asset
-    if (value !== null && !firstNonNullFound.has(item.asset_name)) {
-      firstNonNullFound.add(item.asset_name);
-      row._cellStyles[item.asset_name].isFirstNonNull = true;
+    if (value !== null && !firstNonNullFound.has(item.milestones_name)) {
+      firstNonNullFound.add(item.milestones_name);
+      row._cellStyles[item.milestones_name].isFirstNonNull = true;
     }
   }
 
@@ -139,11 +139,11 @@ export interface UploadQuotaPricesOptions {
 
 export async function uploadQuotaPrices({
   formData,
-  pathToRevalidate = "/dashboard/backoffice/files",
+  pathToRevalidate = "/dashboard/backoffice/quotas-prices",
   debug = false,
 }: UploadQuotaPricesOptions): Promise<void> {
   await submitFormWithToast({
-    endpoint: "/v1/quotas/prices/wpa/upload",
+    endpoint: "/v1/portfolios-quotas-prices/upload-xlsx",
     formData,
     pathToRevalidate,
     debug,

@@ -1,7 +1,143 @@
 <div class="page-container">
   <div class="page-header">
     <div>
-      <h1 class="page-title">Quotas (Prices)</h1>
+      <h1 class="page-title">Quota Prices</h1>
+      <p class="page-subtitle">Upload and manage quota prices data</p>
+    </div>
+    <div class="page-actions">
+      <button
+        class="btn btn-primary"
+        type="button"
+        (click)="handleUpload()"
+        [disabled]="!canUpload()"
+      >
+        <i *ngIf="isProcessing()" class="pi pi-spinner pi-spin"></i>
+        <span>{{ isProcessing() ? 'Uploading...' : 'Upload' }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-header">
+        <h3>Upload Quota Prices</h3>
+      </div>
+      <div class="card-body">
+        <div
+          class="upload-drop"
+          [class.dragging]="isDragging()"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+        >
+          <input
+            type="file"
+            id="quotaFileInput"
+            class="upload-input"
+            accept=".xlsx,.xls"
+            (change)="onFileInputChange($event)"
+            [disabled]="isProcessing()"
+          />
+          <label for="quotaFileInput" class="upload-label">
+            <span class="upload-title">Drop the Excel file here or click to browse</span>
+            <span class="upload-subtitle">Accepted formats: .xlsx, .xls</span>
+          </label>
+        </div>
+
+        <div *ngIf="uploadStatus()" class="status-message" [class.error]="uploadStatus()?.type === 'error'">
+          {{ uploadStatus()?.message }}
+        </div>
+
+        <div *ngIf="uploadedFiles().length > 0" class="file-list">
+          <div class="file-row">
+            <div class="file-info">
+              <span class="file-name" [class.invalid]="!uploadedFiles()[0].isValid">
+                {{ uploadedFiles()[0].name }}
+              </span>
+              <span class="file-size">{{ uploadedFiles()[0].size | number }} bytes</span>
+              <span *ngIf="!uploadedFiles()[0].isValid" class="file-error">
+                {{ uploadedFiles()[0].error }}
+              </span>
+            </div>
+            <button
+              type="button"
+              class="btn btn-icon btn-text remove-btn"
+              (click)="removeFile()"
+              [disabled]="isProcessing()"
+            >
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header table-header">
+        <div>
+          <h3>Quota Prices Data</h3>
+          <p class="card-subtitle">Values formatted with 8 decimal places</p>
+        </div>
+        <div class="table-actions">
+          <button class="btn btn-ghost" type="button" (click)="copyTable()">
+            <i class="fa-regular fa-copy"></i>
+            Copy Table
+          </button>
+          <button class="btn btn-ghost" type="button" (click)="exportCsv('USA')">
+            <i class="fa-solid fa-download"></i>
+            Export CSV USA
+          </button>
+          <button class="btn btn-ghost" type="button" (click)="exportCsv('BR')">
+            <i class="fa-solid fa-download"></i>
+            Export CSV BR
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div *ngIf="isLoading()" class="loading-state">
+          <i class="pi pi-spinner pi-spin"></i>
+          <p>Loading quota prices...</p>
+        </div>
+
+        <div *ngIf="error() && !isLoading()" class="error-state">
+          <i class="pi pi-exclamation-circle"></i>
+          <p>{{ error() }}</p>
+          <button type="button" class="btn btn-secondary" (click)="loadQuotaPrices()">
+            <i class="pi pi-refresh"></i>
+            <span>Retry</span>
+          </button>
+        </div>
+
+        <div *ngIf="!isLoading() && !error()" class="table-wrapper">
+          <table class="data-table quota-table">
+            <thead>
+              <tr>
+                <th *ngFor="let col of columns(); trackBy: trackByColumn" [class.text-right]="col !== 'date_reference'">
+                  {{ col === 'date_reference' ? 'Date Reference' : col }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of rows(); trackBy: trackByRow">
+                <td
+                  *ngFor="let col of columns(); trackBy: trackByColumn"
+                  [class.text-right]="col !== 'date_reference'"
+                  [class.missing]="getCellStyle(row, col).isMissing"
+                  [class.first]="getCellStyle(row, col).isFirstNonNull"
+                >
+                  {{ col === 'date_reference' ? formatDateReference(row['date_reference']) : formatNumber(row[col]) }}
+                </td>
+              </tr>
+              <tr *ngIf="rows().length === 0">
+                <td [attr.colspan]="columns().length" class="empty-state">
+                  <i class="pi pi-info-circle"></i>
+                  <p>No quota prices found</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </div>
