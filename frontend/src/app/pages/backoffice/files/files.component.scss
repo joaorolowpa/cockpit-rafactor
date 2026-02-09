@@ -1,1 +1,231 @@
+.tabs {
+  display: inline-flex;
+  gap: 0.5rem;
+  padding: 0.35rem;
+  background: var(--surface-0);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-200);
+  margin-bottom: 1.5rem;
+  flex-wrap: nowrap;
+  overflow: visible;
+  white-space: nowrap;
+  width: 100%;
+}
 
+.tab-btn {
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  color: var(--text-600);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  max-width: 190px;
+  position: relative;
+
+  i {
+    font-size: 0.95rem;
+    color: var(--accent-strong);
+  }
+
+  &:hover {
+    background: rgba(177, 120, 64, 0.08);
+    color: var(--text-900);
+  }
+
+  &.active {
+    background: var(--surface-1);
+    color: var(--text-900);
+    border-color: rgba(177, 120, 64, 0.35);
+    box-shadow: var(--shadow-sm);
+    font-weight: 600;
+  }
+
+  &.active i {
+    color: var(--accent);
+  }
+
+  &::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 12px);
+    transform: translate(-50%, 6px);
+    opacity: 0;
+    pointer-events: none;
+    background: #111827;
+    color: #f8fafc;
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 20;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 6px);
+    transform: translateX(-50%) scale(0.9);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #111827;
+    opacity: 0;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 19;
+  }
+
+  &:hover::after,
+  &:focus-visible::after,
+  &:hover::before,
+  &:focus-visible::before {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.tab-label {
+  max-width: 135px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-200);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.upload-drop {
+  border: 2px dashed #d7dde3;
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  text-align: center;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  background: #fbfcfd;
+}
+
+.upload-drop.dragging {
+  border-color: var(--accent);
+  background: rgba(177, 120, 64, 0.08);
+}
+
+.upload-input {
+  display: none;
+}
+
+.upload-label {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  cursor: pointer;
+}
+
+.upload-title {
+  font-weight: 600;
+  color: var(--text-900);
+  font-size: 1rem;
+}
+
+.upload-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-600);
+}
+
+.upload-hint {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-600);
+}
+
+.status-message {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  background: #ecfdf3;
+  color: #166534;
+  font-size: 0.9rem;
+  border: 1px solid #bbf7d0;
+}
+
+.status-message.error {
+  background: #fef2f2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+
+.file-list {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.file-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border-radius: var(--radius-sm);
+  border: 1px solid #e2e8f0;
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.file-name {
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+.file-name.invalid {
+  color: #b91c1c;
+}
+
+.file-size {
+  font-size: 0.8rem;
+  color: var(--text-600);
+}
+
+.file-error {
+  font-size: 0.8rem;
+  color: #b91c1c;
+}
+
+.remove-btn {
+  color: #64748b;
+}
+
+.remove-btn:hover:not(:disabled) {
+  background: #e2e8f0;
+  color: #1f2937;
+}
+
+@media (max-width: 900px) {
+  .tabs {
+    width: 100%;
+  }
+
+  .file-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
