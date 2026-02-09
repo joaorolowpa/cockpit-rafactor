@@ -97,6 +97,11 @@
   padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border-200);
   background: linear-gradient(180deg, var(--surface-0) 0%, var(--surface-1) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
 
   h3 {
     margin: 0;
@@ -104,6 +109,37 @@
     font-weight: 600;
     color: var(--text-900);
   }
+}
+
+.table-card-subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: var(--text-600);
+}
+
+.table-card-meta {
+  font-size: 0.8rem;
+  color: var(--text-600);
+  background: var(--surface-0);
+  border: 1px solid var(--border-200);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  white-space: nowrap;
+}
+
+.liquid-table .data-table th.numeric,
+.liquid-table .data-table td.numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.liquid-table .data-table td.mono,
+.liquid-table .data-table th.mono {
+  font-variant-numeric: tabular-nums;
+}
+
+.liquid-table .data-table tbody tr:nth-child(even) {
+  background: rgba(15, 23, 42, 0.02);
 }
 
 .value {

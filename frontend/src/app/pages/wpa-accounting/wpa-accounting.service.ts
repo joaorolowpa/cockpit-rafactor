@@ -1,6 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+
+import { API_BASE_URL, API_KEY } from '../../config/api.config';
 
 export type WpaWeightsResponse = Record<string, Record<string, number>>;
 
@@ -39,8 +42,8 @@ export interface AssetValue {
 })
 export class WpaAccountingService {
   private readonly http = inject(HttpClient);
-  private readonly apiBaseUrl = 'http://127.0.0.1:8000/v1';
-  private readonly apiKey = '';
+  private readonly apiBaseUrl = `${API_BASE_URL}/v1`;
+  private readonly apiKey = API_KEY;
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
@@ -70,10 +73,22 @@ export class WpaAccountingService {
   }
 
   getAssetsValuesFundsConsolidated(dateReference?: string): Observable<AssetValue[]> {
-    return this.http.get<AssetValue[]>(`${this.apiBaseUrl}/wpa/assets-values/funds-consolidated`, {
-      params: this.buildDateParams(dateReference),
-      headers: this.getHeaders()
-    });
+    const cacheKey = this.buildCacheKey('assets-values-funds-consolidated', dateReference);
+    return this.http
+      .get<AssetValue[]>(`${this.apiBaseUrl}/wpa/assets-values/funds/consolidated`, {
+        params: this.buildDateParams(dateReference),
+        headers: this.getHeaders()
+      })
+      .pipe(
+        tap((data) => this.setCache(cacheKey, data)),
+        catchError((error) => {
+          const cached = this.getCache<AssetValue[]>(cacheKey);
+          if (cached) {
+            return of(cached);
+          }
+          return throwError(() => error);
+        })
+      );
   }
 
   getWpaWeights(dateReference?: string): Observable<WpaWeightsResponse> {
@@ -86,5 +101,30 @@ export class WpaAccountingService {
   private buildDateParams(dateReference?: string): HttpParams | undefined {
     if (!dateReference) return undefined;
     return new HttpParams().set('date_reference', dateReference);
+  }
+
+  private buildCacheKey(scope: string, dateReference?: string): string {
+    return `wpa:${scope}:${dateReference ?? 'latest'}`;
+  }
+
+  private setCache<T>(key: string, data: T): void {
+    if (typeof window === 'undefined') return;
+    const payload = {
+      savedAt: new Date().toISOString(),
+      data
+    };
+    localStorage.setItem(key, JSON.stringify(payload));
+  }
+
+  private getCache<T>(key: string): T | null {
+    if (typeof window === 'undefined') return null;
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    try {
+      const parsed = JSON.parse(raw) as { data?: T };
+      return parsed?.data ?? null;
+    } catch {
+      return null;
+    }
   }
 }

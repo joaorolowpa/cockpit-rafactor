@@ -208,64 +208,75 @@
         <p>No liquid assets available.</p>
       </div>
     } @else {
-      <div class="table-container">
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Portfolio Name</th>
-                <th>Portfolio ID</th>
-                <th>Date Reference</th>
-                <th>Total Original Position</th>
-                <th>Portfolio Original Currency</th>
-                <th>FX Rate</th>
-                <th>FX Date Reference</th>
-                <th>Portfolio New Currency</th>
-                <th>Portfolio Value in BRL</th>
-                <th>Percentage Ownership</th>
-                <th>WPA Stake Date Reference</th>
-                <th>WPA Stake Comment</th>
-                <th>Net WPA Stake</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (row of liquidValues(); track row.portfolio_id) {
+      <div class="table-card liquid-table">
+        <div class="table-card-header">
+          <div>
+            <h3>
+              Liquid Assets - {{ liquidDate() ? (liquidDate() | date: 'dd-MMM-yyyy') : '-' }}
+            </h3>
+            <p class="table-card-subtitle">Consolidated portfolio exposure and ownership.</p>
+          </div>
+          <div class="table-card-meta">{{ liquidValues().length }} rows</div>
+        </div>
+        <div class="table-container">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
                 <tr>
-                  <td>{{ row.portfolio_name || '-' }}</td>
-                  <td>{{ row.portfolio_id || '-' }}</td>
-                  <td>{{ row.date_reference ? (row.date_reference | date: 'yyyy-MM-dd') : '-' }}</td>
-                  <td>
-                    {{
-                      row.total_original_position
-                        ? row.total_original_position.toLocaleString('pt-BR', { style: 'decimal' })
-                        : '$ 0.00'
-                    }}
-                  </td>
-                  <td>{{ row.portfolio_original_currency || '-' }}</td>
-                  <td>{{ formatFxRate(row.fx_rate) }}</td>
-                  <td>{{ row.fx_date_reference ? (row.fx_date_reference | date: 'yyyy-MM-dd') : '-' }}</td>
-                  <td>{{ row.portfolio_new_currency || '-' }}</td>
-                  <td>{{ formatCurrencyBRL(row.portfolio_value_in_brl) }}</td>
-                  <td>{{ formatPercentage(row.percentage_ownership) }}</td>
-                  <td>
-                    {{
-                      row.wpa_stake_date_reference
-                        ? (row.wpa_stake_date_reference | date: 'yyyy-MM-dd')
-                        : '-'
-                    }}
-                  </td>
-                  <td>{{ row.wpa_stake_comment || '-' }}</td>
-                  <td>
-                    {{
-                      row.net_wpa_stake
-                        ? row.net_wpa_stake.toLocaleString('en-US', { style: 'decimal' })
-                        : '0,00'
-                    }}
-                  </td>
+                  <th>Portfolio Name</th>
+                  <th class="mono">Portfolio ID</th>
+                  <th>Date Reference</th>
+                  <th class="numeric">Total Original Position</th>
+                  <th>Portfolio Original Currency</th>
+                  <th class="numeric">FX Rate</th>
+                  <th>FX Date Reference</th>
+                  <th>Portfolio New Currency</th>
+                  <th class="numeric">Portfolio Value in BRL</th>
+                  <th class="numeric">Percentage Ownership</th>
+                  <th>WPA Stake Date Reference</th>
+                  <th>WPA Stake Comment</th>
+                  <th class="numeric">Net WPA Stake</th>
                 </tr>
-              }
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                @for (row of liquidValues(); track row.portfolio_id) {
+                  <tr>
+                    <td>{{ row.portfolio_name || '-' }}</td>
+                    <td class="mono">{{ row.portfolio_id || '-' }}</td>
+                    <td>{{ row.date_reference ? (row.date_reference | date: 'yyyy-MM-dd') : '-' }}</td>
+                    <td class="numeric">
+                      {{
+                        row.total_original_position
+                          ? row.total_original_position.toLocaleString('pt-BR', { style: 'decimal' })
+                          : '$ 0.00'
+                      }}
+                    </td>
+                    <td>{{ row.portfolio_original_currency || '-' }}</td>
+                    <td class="numeric">{{ formatFxRate(row.fx_rate) }}</td>
+                    <td>{{ row.fx_date_reference ? (row.fx_date_reference | date: 'yyyy-MM-dd') : '-' }}</td>
+                    <td>{{ row.portfolio_new_currency || '-' }}</td>
+                    <td class="numeric">{{ formatCurrencyBRL(row.portfolio_value_in_brl) }}</td>
+                    <td class="numeric">{{ formatPercentage(row.percentage_ownership) }}</td>
+                    <td>
+                      {{
+                        row.wpa_stake_date_reference
+                          ? (row.wpa_stake_date_reference | date: 'yyyy-MM-dd')
+                          : '-'
+                      }}
+                    </td>
+                    <td>{{ row.wpa_stake_comment || '-' }}</td>
+                    <td class="numeric">
+                      {{
+                        row.net_wpa_stake
+                          ? row.net_wpa_stake.toLocaleString('en-US', { style: 'decimal' })
+                          : '0,00'
+                      }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     }
