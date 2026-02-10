@@ -1,35 +1,36 @@
-<div class="page-container">
-  <div class="page-header">
+<div appPageContainer>
+  <div appPageHeader>
     <div>
       <h1 class="page-title">Research - Funds Overview</h1>
       <p class="page-subtitle">Overview of fund metrics and performance data</p>
     </div>
   </div>
 
-  @if (isLoading()) {
-    <div class="loading-state">
-      <i class="pi pi-spinner pi-spin"></i>
-      <p>Loading funds overview...</p>
-    </div>
-  } @else if (error()) {
-    <div class="error-container">
-      <i class="pi pi-exclamation-circle"></i>
-      <p>{{ error() }}</p>
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="loadData()"
-      >
-        <i class="pi pi-replay"></i>
-        <span>Retry</span>
-      </button>
-    </div>
-  } @else if (groupedFunds().length === 0) {
-    <div class="empty-container">
-      <i class="pi pi-folder-open"></i>
-      <p>No funds data available</p>
-    </div>
-  } @else {
-    <app-funds-accordion [groupedFunds]="groupedFunds()" />
-  }
+  <app-state
+    *ngIf="isLoading()"
+    type="loading"
+    icon="pi pi-spinner pi-spin"
+    message="Loading funds overview..."
+  ></app-state>
+
+  <app-state
+    *ngIf="error() && !isLoading()"
+    type="error"
+    icon="pi pi-exclamation-circle"
+    [message]="error() || ''"
+    actionLabel="Retry"
+    (action)="loadData()"
+  ></app-state>
+
+  <app-state
+    *ngIf="!isLoading() && !error() && groupedFunds().length === 0"
+    type="empty"
+    icon="pi pi-folder-open"
+    message="No funds data available"
+  ></app-state>
+
+  <app-funds-accordion
+    *ngIf="!isLoading() && !error() && groupedFunds().length > 0"
+    [groupedFunds]="groupedFunds()"
+  />
 </div>

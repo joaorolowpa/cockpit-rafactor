@@ -1,0 +1,33 @@
+<div class="dialog-overlay" (click)="onOverlayClick()">
+  <div
+    class="dialog-content"
+    [ngClass]="[sizeClass, dialogClass]"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="dialog-header" *ngIf="title || subtitle || showClose">
+      <div class="dialog-heading" *ngIf="title || subtitle">
+        <h2 *ngIf="title">{{ title }}</h2>
+        <p *ngIf="subtitle">{{ subtitle }}</p>
+      </div>
+      <button
+        *ngIf="showClose"
+        type="button"
+        appButton
+        variant="text"
+        [iconOnly]="true"
+        class="close-btn"
+        (click)="close.emit()"
+      >
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    <div class="dialog-body">
+      <ng-content></ng-content>
+    </div>
+
+    <div class="dialog-footer">
+      <ng-content select="[dialog-footer]"></ng-content>
+    </div>
+  </div>
+</div>

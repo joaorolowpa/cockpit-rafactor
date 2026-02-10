@@ -565,6 +565,61 @@
   border-bottom: none;
 }
 
+.financials-data-table.data-table thead th {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--border-200);
+  font-weight: 600;
+  color: var(--text-900);
+  text-align: left;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.financials-data-table.data-table tbody tr.selected {
+  background: #fef3e2;
+}
+
+.financials-data-table.data-table tbody td {
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--border-200);
+  white-space: nowrap;
+  color: var(--text-900);
+}
+
+.financials-data-table.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.colmeia-history-table.data-table thead th {
+  padding: 0.75rem 0.9rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-600);
+  border-bottom: 1px solid var(--border-200);
+  background: var(--surface-0);
+  white-space: nowrap;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.colmeia-history-table.data-table tbody td {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--border-200);
+  white-space: nowrap;
+  color: var(--text-900);
+  vertical-align: middle;
+}
+
+.colmeia-history-table.data-table tbody tr:hover {
+  background: var(--surface-0);
+}
+
+.colmeia-history-table.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
 .section-header {
   padding: 0.85rem 1rem;
   border-bottom: 1px solid var(--border-200);

@@ -8,6 +8,7 @@ import { ChartModule } from 'primeng/chart';
 import { ChartData, ChartOptions } from 'chart.js';
 
 import { Company } from '../../../../models/companies.model';
+import { UI_IMPORTS } from '../../../../ui/ui.imports';
 import { CompaniesService } from '../../companies.service';
 import { CompanyFinancialsService } from '../../company-financials.service';
 import {
@@ -53,7 +54,7 @@ type CompanyDocumentRow = {
 @Component({
   selector: 'app-company-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, ChartModule],
+  imports: [CommonModule, RouterLink, ChartModule, ...UI_IMPORTS],
   templateUrl: './company-detail.component.html',
   styleUrl: './company-detail.component.scss'
 })
@@ -323,12 +324,19 @@ export class CompanyDetailComponent {
     return match ? match[1] : filename;
   }
 
-  protected deleteCompanyDocument(row: CompanyDocumentRow): void {
+  protected confirmDocument = signal<CompanyDocumentRow | null>(null);
+
+  protected requestDeleteCompanyDocument(row: CompanyDocumentRow): void {
     const companyId = this.companyId();
     if (!companyId) return;
+    this.confirmDocument.set(row);
+  }
 
-    const confirmDelete = confirm(`Delete "${this.getFileName(row.filePath)}"?`);
-    if (!confirmDelete) return;
+  protected confirmDeleteCompanyDocument(): void {
+    const row = this.confirmDocument();
+    const companyId = this.companyId();
+    if (!row || !companyId) return;
+    this.confirmDocument.set(null);
 
     const request =
       row.type === 'Financial Models'
@@ -341,6 +349,10 @@ export class CompanyDetailComponent {
         console.error('Failed to delete document:', err);
       }
     });
+  }
+
+  protected cancelDeleteCompanyDocument(): void {
+    this.confirmDocument.set(null);
   }
 
   protected downloadLatest(kind: 'thesis' | 'excel' | 'document'): void {

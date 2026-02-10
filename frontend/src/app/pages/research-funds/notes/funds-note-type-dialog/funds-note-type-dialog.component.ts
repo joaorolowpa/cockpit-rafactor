@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { FundNoteFileType } from '../../../../models/funds.model';
+import { UI_IMPORTS } from '../../../../ui/ui.imports';
 
 @Component({
   selector: 'app-funds-note-type-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputTextModule],
+  imports: [CommonModule, ReactiveFormsModule, InputTextModule, ...UI_IMPORTS],
   templateUrl: './funds-note-type-dialog.component.html',
   styleUrl: './funds-note-type-dialog.component.scss'
 })

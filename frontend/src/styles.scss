@@ -108,6 +108,29 @@ body {
   background: #f1f5f9;
 }
 
+.btn-outline {
+  background: transparent;
+  color: #111827;
+  border-color: var(--border-200);
+}
+
+.btn-outline:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+
+.btn-danger {
+  color: #dc2626;
+}
+
+.btn-text.btn-danger {
+  color: #dc2626;
+}
+
+.btn-text.btn-danger:hover:not(:disabled) {
+  background: rgba(220, 38, 38, 0.08);
+}
+
 .btn-icon {
   width: 32px;
   height: 32px;

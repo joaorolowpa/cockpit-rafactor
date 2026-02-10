@@ -4,11 +4,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { CompaniesService } from '../../companies.service';
 import { Company } from '../../../../models/companies.model';
+import { UI_IMPORTS } from '../../../../ui/ui.imports';
 
 @Component({
   selector: 'app-company-form-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputTextModule],
+  imports: [CommonModule, ReactiveFormsModule, InputTextModule, ...UI_IMPORTS],
   templateUrl: './company-form-dialog.component.html',
   styleUrl: './company-form-dialog.component.scss'
 })

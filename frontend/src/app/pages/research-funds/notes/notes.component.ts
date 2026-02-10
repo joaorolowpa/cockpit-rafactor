@@ -1,14 +1,13 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { InputTextModule } from 'primeng/inputtext';
 import { FundNoteFileType } from '../../../models/funds.model';
 import { FundsNoteTypeDialogComponent } from './funds-note-type-dialog/funds-note-type-dialog.component';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 @Component({
   selector: 'app-notes',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputTextModule, FundsNoteTypeDialogComponent],
+  imports: [CommonModule, FundsNoteTypeDialogComponent, ...UI_IMPORTS],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.scss'
 })
@@ -19,6 +18,7 @@ export class NotesComponent implements OnInit {
   loading = signal<boolean>(true);
   error = signal<string | null>(null);
   showDialog = signal<boolean>(false);
+  confirmTarget = signal<FundNoteFileType | null>(null);
 
   constructor() {}
 
@@ -77,14 +77,22 @@ export class NotesComponent implements OnInit {
     this.closeDialog();
   }
 
-  deleteType(item: FundNoteFileType): void {
+  requestDeleteType(item: FundNoteFileType): void {
     if (!this.isDeletable(item)) return;
+    this.confirmTarget.set(item);
+  }
 
-    const confirmed = confirm(`Delete \"${item.display_name}\"?`);
-    if (!confirmed) return;
+  confirmDeleteType(): void {
+    const item = this.confirmTarget();
+    if (!item) return;
+    this.confirmTarget.set(null);
     const next = this.types().filter(type => type.id !== item.id);
     this.types.set(next);
     this.onSearch();
+  }
+
+  cancelDeleteType(): void {
+    this.confirmTarget.set(null);
   }
 
   isDeletable(item: FundNoteFileType): boolean {

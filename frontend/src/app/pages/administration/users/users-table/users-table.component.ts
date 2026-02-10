@@ -1,15 +1,14 @@
-import { Component, input, output, signal, inject } from '@angular/core';
+import { Component, computed, input, output, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { InputTextModule } from 'primeng/inputtext';
 import { User, UserRole } from '../../../../models/user.model';
 import { UsersService } from '../user.service';
 import { EditRolesDialogComponent } from '../users-edit-role-dialog/edit-roles-dialog.component';
+import { UI_IMPORTS } from '../../../../ui/ui.imports';
 
 @Component({
   selector: 'app-users-table',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputTextModule, EditRolesDialogComponent],
+  imports: [CommonModule, EditRolesDialogComponent, ...UI_IMPORTS],
   templateUrl: './users-table.component.html',
   styleUrl: './users-table.component.scss'
 })
@@ -23,6 +22,12 @@ export class UsersTableComponent {
   protected selectedRole = signal<string>('');
   protected editingUser = signal<User | null>(null);
   protected showActionsMenu = signal<number | null>(null);
+  protected confirmUserAction = signal<{ user: User; action: 'activate' | 'deactivate' } | null>(null);
+  protected readonly confirmMessage = computed(() => {
+    const state = this.confirmUserAction();
+    if (!state) return '';
+    return `Are you sure you want to ${state.action} ${state.user.name}?`;
+  });
 
   protected get filteredUsers(): User[] {
     let filtered = this.users();
@@ -65,11 +70,16 @@ export class UsersTableComponent {
   // ESTE É O MÉTODO CORRETO NO LUGAR CERTO
   protected toggleUserActive(user: User): void {
     this.showActionsMenu.set(null);
-    
     const action = user.user_active ? 'deactivate' : 'activate';
-    const confirmed = confirm(`Are you sure you want to ${action} ${user.name}?`);
-    
-    if (!confirmed) return;
+    this.confirmUserAction.set({ user, action });
+  }
+
+  protected confirmToggleUser(): void {
+    const state = this.confirmUserAction();
+    if (!state) return;
+    this.confirmUserAction.set(null);
+
+    const { user, action } = state;
 
     const updateData = {
       email: user.email,
@@ -88,6 +98,10 @@ export class UsersTableComponent {
         alert(`Failed to ${action} user. Please try again.`);
       }
     });
+  }
+
+  protected cancelToggleUser(): void {
+    this.confirmUserAction.set(null);
   }
 
   protected closeEditDialog(): void {

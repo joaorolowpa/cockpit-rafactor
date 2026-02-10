@@ -1,0 +1,12 @@
+<label class="checkbox-label" [class.disabled]="disabled">
+  <input
+    type="checkbox"
+    [class]="inputClass"
+    [checked]="checked"
+    [disabled]="disabled"
+    (change)="onToggle($event)"
+    (blur)="onBlur()"
+  />
+  <span *ngIf="label">{{ label }}</span>
+  <ng-content></ng-content>
+</label>

@@ -1,16 +1,15 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { InputTextModule } from 'primeng/inputtext';
 
 import { WpaAccountingService, WpaAsset } from '../wpa-accounting.service';
 import { AssetFormDialogComponent } from './asset-form-dialog/asset-form-dialog.component';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 @Component({
   selector: 'app-create-assets',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputTextModule, AssetFormDialogComponent],
+  imports: [CommonModule, AssetFormDialogComponent, ...UI_IMPORTS],
   templateUrl: './create-assets.component.html',
   styleUrl: './create-assets.component.scss'
 })
@@ -24,6 +23,7 @@ export class CreateAssetsComponent implements OnInit {
   protected loading = signal<boolean>(true);
   protected error = signal<string | null>(null);
   protected showDialog = signal<boolean>(false);
+  protected confirmTarget = signal<WpaAsset | null>(null);
 
   protected readonly assetTypeOptions = computed(() => {
     const types = this.assets()
@@ -88,11 +88,15 @@ export class CreateAssetsComponent implements OnInit {
     this.loadAssets();
   }
 
-  protected deleteAsset(asset: WpaAsset): void {
+  protected requestDeleteAsset(asset: WpaAsset): void {
     if (!this.isDeletable(asset)) return;
+    this.confirmTarget.set(asset);
+  }
 
-    const confirmed = confirm(`Delete "${asset.asset_name}"?`);
-    if (!confirmed) return;
+  protected confirmDeleteAsset(): void {
+    const asset = this.confirmTarget();
+    if (!asset) return;
+    this.confirmTarget.set(null);
 
     this.wpaService
       .deleteAsset(asset.asset_id)
@@ -103,6 +107,10 @@ export class CreateAssetsComponent implements OnInit {
           console.error('Failed to delete asset:', error);
         }
       });
+  }
+
+  protected cancelDeleteAsset(): void {
+    this.confirmTarget.set(null);
   }
 
   protected isDeletable(asset: WpaAsset): boolean {

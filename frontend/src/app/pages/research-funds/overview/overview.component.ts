@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { GroupedFund, Fund } from '../../../models/funds.model';
 import { FundsAccordionComponent } from './funds-list.component';
 import { FundsService } from '../funds.service';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [CommonModule, FundsAccordionComponent],
+  imports: [CommonModule, FundsAccordionComponent, ...UI_IMPORTS],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss'
 })

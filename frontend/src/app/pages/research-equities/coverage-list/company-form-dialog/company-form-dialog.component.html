@@ -1,66 +1,54 @@
-<div class="dialog-overlay" (click)="onClose()">
-  <div class="dialog-content" (click)="$event.stopPropagation()">
-    <div class="dialog-header">
-      <h2>{{ company ? 'Edit Company' : 'Add Company' }}</h2>
-      <button
-        type="button"
-        class="btn btn-icon btn-text close-btn"
-        (click)="onClose()"
-      >
-        <i class="pi pi-times"></i>
-      </button>
+<app-dialog
+  [title]="company ? 'Edit Company' : 'Add Company'"
+  (close)="onClose()"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="display_name">Display Name *</label>
+      <input
+        id="display_name"
+        type="text"
+        formControlName="display_name"
+        pInputText
+        placeholder="Company name"
+      />
+      @if (form.controls.display_name.touched && form.controls.display_name.errors?.['required']) {
+        <span class="error-message">Display name is required</span>
+      }
     </div>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div class="dialog-body">
-        <div class="form-group">
-          <label for="display_name">Display Name *</label>
-          <input
-            id="display_name"
-            type="text"
-            formControlName="display_name"
-            pInputText
-            placeholder="Company name"
-          />
-          @if (form.controls.display_name.touched && form.controls.display_name.errors?.['required']) {
-            <span class="error-message">Display name is required</span>
-          }
-        </div>
+    <div class="form-group">
+      <label for="capital_iq_id">Capital IQ ID *</label>
+      <input
+        id="capital_iq_id"
+        type="number"
+        formControlName="capital_iq_id"
+        pInputText
+        placeholder="12345"
+      />
+      @if (form.controls.capital_iq_id.touched && form.controls.capital_iq_id.errors?.['required']) {
+        <span class="error-message">Capital IQ ID is required</span>
+      }
+    </div>
 
-        <div class="form-group">
-          <label for="capital_iq_id">Capital IQ ID *</label>
-          <input
-            id="capital_iq_id"
-            type="number"
-            formControlName="capital_iq_id"
-            pInputText
-            placeholder="12345"
-          />
-          @if (form.controls.capital_iq_id.touched && form.controls.capital_iq_id.errors?.['required']) {
-            <span class="error-message">Capital IQ ID is required</span>
-          }
-        </div>
-      </div>
-
-      <div class="dialog-footer">
-        <button
-          type="button"
-          class="btn btn-ghost"
-          (click)="onClose()"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="form.invalid || isSubmitting()"
-        >
-          <span>{{ company ? 'Save Changes' : 'Add Company' }}</span>
-          @if (isSubmitting()) {
-            <span class="btn-spinner" aria-hidden="true"></span>
-          }
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
+    <div dialog-footer>
+      <button
+        type="button"
+        class="btn btn-ghost"
+        (click)="onClose()"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="form.invalid || isSubmitting()"
+      >
+        <span>{{ company ? 'Save Changes' : 'Add Company' }}</span>
+        @if (isSubmitting()) {
+          <span class="btn-spinner" aria-hidden="true"></span>
+        }
+      </button>
+    </div>
+  </form>
+</app-dialog>

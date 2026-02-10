@@ -1,18 +1,17 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { InputTextModule } from 'primeng/inputtext';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { WpaAccountingService, WpaAsset, WpaAssetValue } from '../wpa-accounting.service';
 import { AssetValueFormDialogComponent } from './asset-value-form-dialog/asset-value-form-dialog.component';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 @Component({
   selector: 'app-assets-values',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputTextModule, AssetValueFormDialogComponent],
+  imports: [CommonModule, AssetValueFormDialogComponent, ...UI_IMPORTS],
   templateUrl: './assets-values.component.html',
   styleUrl: './assets-values.component.scss'
 })
@@ -28,6 +27,7 @@ export class AssetsValuesComponent implements OnInit {
   protected loading = signal<boolean>(true);
   protected error = signal<string | null>(null);
   protected showDialog = signal<boolean>(false);
+  protected confirmTarget = signal<WpaAssetValue | null>(null);
 
   protected readonly assetTypeOptions = computed(() => {
     const types = this.assetValues()
@@ -119,12 +119,16 @@ export class AssetsValuesComponent implements OnInit {
     this.loadAssetValues();
   }
 
-  protected deleteAssetValue(assetValue: WpaAssetValue): void {
+  protected requestDeleteAssetValue(assetValue: WpaAssetValue): void {
     if (!this.isDeletable(assetValue)) return;
     if (!assetValue.asset_value_id) return;
+    this.confirmTarget.set(assetValue);
+  }
 
-    const confirmed = confirm(`Delete "${assetValue.asset_name ?? 'asset value'}"?`);
-    if (!confirmed) return;
+  protected confirmDeleteAssetValue(): void {
+    const assetValue = this.confirmTarget();
+    if (!assetValue?.asset_value_id) return;
+    this.confirmTarget.set(null);
 
     this.wpaService
       .deleteAssetValue(assetValue.asset_value_id)
@@ -135,6 +139,10 @@ export class AssetsValuesComponent implements OnInit {
           console.error('Failed to delete asset value:', error);
         }
       });
+  }
+
+  protected cancelDeleteAssetValue(): void {
+    this.confirmTarget.set(null);
   }
 
   protected isDeletable(assetValue: WpaAssetValue): boolean {

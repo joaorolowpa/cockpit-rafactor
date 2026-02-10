@@ -1,76 +1,58 @@
-<div class="dialog-overlay" (click)="onClose()">
-  <div class="dialog-content" (click)="$event.stopPropagation()">
-    <div class="dialog-header">
-      <h2>Create User</h2>
-      <button
-        type="button"
-        class="btn btn-icon btn-text close-btn"
-        (click)="onClose()"
-      >
-        <i class="pi pi-times"></i>
-      </button>
+<app-dialog title="Create User" (close)="onClose()">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="email">Email *</label>
+      <input
+        id="email"
+        type="email" 
+        formControlName="email"
+        pInputText
+        placeholder="user@example.com"
+      />
+      @if (form.controls.email.touched && form.controls.email.errors?.['required']) {
+        <span class="error-message">Email is required</span>
+      }
+      @if (form.controls.email.touched && form.controls.email.errors?.['email']) {
+        <span class="error-message">Please enter a valid email</span>
+      }
     </div>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div class="dialog-body">
-        <div class="form-group">
-          <label for="email">Email *</label>
-          <input
-            id="email"
-            type="email" 
-            formControlName="email"
-            pInputText
-            placeholder="user@example.com"
-          />
-          @if (form.controls.email.touched && form.controls.email.errors?.['required']) {
-            <span class="error-message">Email is required</span>
-          }
-          @if (form.controls.email.touched && form.controls.email.errors?.['email']) {
-            <span class="error-message">Please enter a valid email</span>
-          }
-        </div>
+    <div class="form-group">
+      <label for="name">Name *</label>
+      <input
+        id="name"
+        type="text" 
+        formControlName="name"
+        pInputText
+        placeholder="John Doe"
+      />
+      @if (form.controls.name.touched && form.controls.name.errors?.['required']) {
+        <span class="error-message">Name is required</span>
+      }
+    </div>
 
-        <div class="form-group">
-          <label for="name">Name *</label>
-          <input
-            id="name"
-            type="text" 
-            formControlName="name"
-            pInputText
-            placeholder="John Doe"
-          />
-          @if (form.controls.name.touched && form.controls.name.errors?.['required']) {
-            <span class="error-message">Name is required</span>
-          }
-        </div>
+    <div class="form-group checkbox-group">
+      <app-checkbox formControlName="user_active" label="Active User"></app-checkbox>
+    </div>
 
-        <div class="form-group checkbox-group">
-          <label class="checkbox-label">
-            <p-checkbox formControlName="user_active" [binary]="true"></p-checkbox>
-            <span>Active User</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="dialog-footer">
-        <button
-          type="button"
-          class="btn btn-ghost cancel-btn"
-          (click)="onClose()"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="form.invalid || isSubmitting()"
-        >
-          <span>Create User</span>
-          @if (isSubmitting()) {
-            <span class="btn-spinner" aria-hidden="true"></span>
-          }
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
+    <div dialog-footer>
+      <button
+        type="button"
+        class="btn btn-ghost cancel-btn"
+        (click)="onClose()"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="form.invalid || isSubmitting()"
+      >
+        <span>Create User</span>
+        @if (isSubmitting()) {
+          <span class="btn-spinner" aria-hidden="true"></span>
+        }
+      </button>
+    </div>
+  </form>
+</app-dialog>

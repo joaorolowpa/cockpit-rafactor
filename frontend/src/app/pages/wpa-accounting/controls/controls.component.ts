@@ -3,11 +3,12 @@ import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angula
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { NavMissingEntry, WpaAccountingService } from '../wpa-accounting.service';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 @Component({
   selector: 'app-controls',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ...UI_IMPORTS],
   templateUrl: './controls.component.html',
   styleUrl: './controls.component.scss'
 })

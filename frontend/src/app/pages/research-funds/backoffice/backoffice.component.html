@@ -1,12 +1,12 @@
-<div class="page-container">
-  <div class="page-header">
+<div appPageContainer>
+  <div appPageHeader>
     <div>
       <h1 class="page-title">Funds Backoffice</h1>
       <p class="page-subtitle">
         Create and manage funds, relationships, transactions and classifications.
       </p>
     </div>
-    <div class="page-actions">
+    <div appPageActions>
       <button class="btn btn-primary" type="button" (click)="onPrimaryAction()">
         {{ topBarConfig().buttonLabel }}
       </button>
@@ -28,16 +28,13 @@
     }
   </div>
 
-  <div class="filters-bar">
-    <div class="search-box">
-      <i class="pi pi-search"></i>
-      <input
-        type="text"
-        [placeholder]="getSearchPlaceholder()"
-        [value]="searchTerm()"
-        (input)="searchTerm.set($any($event.target).value)"
-      />
-    </div>
+  <div appFiltersBar>
+    <app-search-input
+      [placeholder]="getSearchPlaceholder()"
+      [value]="searchTerm()"
+      (valueChange)="searchTerm.set($event)"
+      (cleared)="searchTerm.set('')"
+    ></app-search-input>
     <div class="toolbar-actions">
       <button class="btn btn-ghost" type="button" (click)="copyTable('us')">
         <i class="pi pi-plus-circle"></i>
@@ -59,14 +56,12 @@
             <div class="view-menu-section">
               <label class="view-menu-title">Columns</label>
               @for (column of getActiveTabAllColumns(); track column.key) {
-                <label class="view-menu-item">
-                  <input
-                    type="checkbox"
-                    [checked]="isColumnVisible(activeTab(), column.key)"
-                    (change)="toggleColumnVisibility(activeTab(), column.key)"
-                  />
-                  <span>{{ column.label }}</span>
-                </label>
+                <app-checkbox
+                  class="view-menu-item"
+                  [checked]="isColumnVisible(activeTab(), column.key)"
+                  (checkedChange)="toggleColumnVisibility(activeTab(), column.key)"
+                  [label]="column.label"
+                ></app-checkbox>
               }
             </div>
           </div>
@@ -76,18 +71,20 @@
   </div>
 
   @if (isLoading()) {
-    <div class="loading-state">
-      <i class="pi pi-spinner pi-spin"></i>
-      <p>Loading backoffice data...</p>
-    </div>
+    <app-state
+      type="loading"
+      icon="pi pi-spinner pi-spin"
+      message="Loading backoffice data..."
+    ></app-state>
   } @else if (errorMessage()) {
-    <div class="error-state">
-      <i class="pi pi-exclamation-circle"></i>
-      <p>{{ errorMessage() }}</p>
-    </div>
+    <app-state
+      type="error"
+      icon="pi pi-exclamation-circle"
+      [message]="errorMessage() || ''"
+    ></app-state>
   } @else {
-    <div class="table-container">
-      <div class="table-wrapper" [class.compact]="compactView()">
+    <div appTableContainer>
+      <div appTableWrapper [compact]="compactView()">
       @if (activeTab() === 'fund_managers') {
         @if (filteredFundManagers().length === 0) {
           <div class="empty-state">
@@ -95,7 +92,7 @@
             <p>No fund managers found.</p>
           </div>
         } @else {
-          <table class="data-table">
+          <table appDataTable class="data-table">
             <thead>
               <tr>
                 @if (isColumnVisible('fund_managers', 'id')) { <th>ID</th> }
@@ -137,7 +134,7 @@
             <p>No fund relationships found.</p>
           </div>
         } @else {
-          <table class="data-table">
+          <table appDataTable class="data-table">
             <thead>
               <tr>
                 @if (isColumnVisible('fund_relationships', 'id')) { <th>ID</th> }
@@ -169,7 +166,7 @@
             <p>No classifications found.</p>
           </div>
         } @else {
-          <table class="data-table">
+          <table appDataTable class="data-table">
             <thead>
               <tr>
                 @if (isColumnVisible('funds_classifications', 'display_name')) { <th>Display Name</th> }
@@ -197,7 +194,7 @@
             <p>No transactions found.</p>
           </div>
         } @else {
-          <table class="data-table">
+          <table appDataTable class="data-table">
             <thead>
               <tr>
                 @if (isColumnVisible('transactions_ledger', 'id')) { <th>ID</th> }

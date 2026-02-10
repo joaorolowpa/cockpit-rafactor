@@ -8,11 +8,12 @@ import {
   CreateQuotaAcquisitionPayload,
   WpaAssetWithQuota
 } from '../quotas-wpa-quantity.service';
+import { UI_IMPORTS } from '../../../../ui/ui.imports';
 
 @Component({
   selector: 'app-quota-acquisition-form-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputTextModule],
+  imports: [CommonModule, ReactiveFormsModule, InputTextModule, ...UI_IMPORTS],
   templateUrl: './quota-acquisition-form-dialog.component.html',
   styleUrl: './quota-acquisition-form-dialog.component.scss'
 })

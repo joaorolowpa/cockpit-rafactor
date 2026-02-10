@@ -1,11 +1,12 @@
-<div class="page-container">
-  <div class="page-header">
+<div appPageContainer>
+  <div appPageHeader>
     <div>
       <h1 class="page-title">Quota Prices</h1>
       <p class="page-subtitle">Upload and manage quota prices data</p>
     </div>
-    <div class="page-actions">
+    <div appPageActions>
       <button
+        appButton
         class="btn btn-primary"
         type="button"
         (click)="handleUpload()"
@@ -61,6 +62,7 @@
             </div>
             <button
               type="button"
+              appButton
               class="btn btn-icon btn-text remove-btn"
               (click)="removeFile()"
               [disabled]="isProcessing()"
@@ -79,37 +81,39 @@
           <p class="card-subtitle">Values formatted with 8 decimal places</p>
         </div>
         <div class="table-actions">
-          <button class="btn btn-ghost" type="button" (click)="copyTable()">
+          <button appButton class="btn btn-ghost" type="button" (click)="copyTable()">
             <i class="fa-regular fa-copy"></i>
             Copy Table
           </button>
-          <button class="btn btn-ghost" type="button" (click)="exportCsv('USA')">
+          <button appButton class="btn btn-ghost" type="button" (click)="exportCsv('USA')">
             <i class="fa-solid fa-download"></i>
             Export CSV USA
           </button>
-          <button class="btn btn-ghost" type="button" (click)="exportCsv('BR')">
+          <button appButton class="btn btn-ghost" type="button" (click)="exportCsv('BR')">
             <i class="fa-solid fa-download"></i>
             Export CSV BR
           </button>
         </div>
       </div>
       <div class="card-body">
-        <div *ngIf="isLoading()" class="loading-state">
-          <i class="pi pi-spinner pi-spin"></i>
-          <p>Loading quota prices...</p>
-        </div>
+        <app-state
+          *ngIf="isLoading()"
+          type="loading"
+          icon="pi pi-spinner pi-spin"
+          message="Loading quota prices..."
+        ></app-state>
 
-        <div *ngIf="error() && !isLoading()" class="error-state">
-          <i class="pi pi-exclamation-circle"></i>
-          <p>{{ error() }}</p>
-          <button type="button" class="btn btn-secondary" (click)="loadQuotaPrices()">
-            <i class="pi pi-refresh"></i>
-            <span>Retry</span>
-          </button>
-        </div>
+        <app-state
+          *ngIf="error() && !isLoading()"
+          type="error"
+          icon="pi pi-exclamation-circle"
+          [message]="error() || ''"
+          actionLabel="Retry"
+          (action)="loadQuotaPrices()"
+        ></app-state>
 
-        <div *ngIf="!isLoading() && !error()" class="table-wrapper">
-          <table class="data-table quota-table">
+        <div *ngIf="!isLoading() && !error()" appTableWrapper>
+          <table appDataTable class="quota-table">
             <thead>
               <tr>
                 <th *ngFor="let col of columns(); trackBy: trackByColumn" [class.text-right]="col !== 'date_reference'">
@@ -129,9 +133,8 @@
                 </td>
               </tr>
               <tr *ngIf="rows().length === 0">
-                <td [attr.colspan]="columns().length" class="empty-state">
-                  <i class="pi pi-info-circle"></i>
-                  <p>No quota prices found</p>
+                <td [attr.colspan]="columns().length">
+                  <app-state type="empty" icon="pi pi-info-circle" message="No quota prices found" size="compact"></app-state>
                 </td>
               </tr>
             </tbody>

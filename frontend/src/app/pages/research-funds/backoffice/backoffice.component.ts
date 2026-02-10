@@ -1,11 +1,11 @@
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { forkJoin, of } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Fund, FundClassification, FundTransaction, Relationship } from '../../../models/funds.model';
 import { FundsService } from '../funds.service';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 type BackofficeTab = 'fund_managers' | 'fund_relationships' | 'funds_classifications' | 'transactions_ledger';
 
@@ -13,7 +13,7 @@ type BackofficeTab = 'fund_managers' | 'fund_relationships' | 'funds_classificat
 @Component({
   selector: 'app-backoffice',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ...UI_IMPORTS],
   templateUrl: './backoffice.component.html',
   styleUrl: './backoffice.component.scss'
 })

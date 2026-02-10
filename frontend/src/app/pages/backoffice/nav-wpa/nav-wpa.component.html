@@ -1,5 +1,5 @@
-<div class="page-container">
-  <div class="page-header">
+<div appPageContainer>
+  <div appPageHeader>
     <div>
       <h1 class="page-title">NAV Evolution</h1>
       <p class="page-subtitle">
@@ -10,19 +10,21 @@
     </div>
   </div>
 
-  <div *ngIf="isLoading()" class="loading-state">
-    <i class="pi pi-spinner pi-spin"></i>
-    <p>Loading NAV data...</p>
-  </div>
+  <app-state
+    *ngIf="isLoading()"
+    type="loading"
+    icon="pi pi-spinner pi-spin"
+    message="Loading NAV data..."
+  ></app-state>
 
-  <div *ngIf="error() && !isLoading()" class="error-state">
-    <i class="pi pi-exclamation-circle"></i>
-    <p>{{ error() }}</p>
-    <button type="button" class="btn btn-secondary" (click)="loadNavData()">
-      <i class="pi pi-refresh"></i>
-      <span>Retry</span>
-    </button>
-  </div>
+  <app-state
+    *ngIf="error() && !isLoading()"
+    type="error"
+    icon="pi pi-exclamation-circle"
+    [message]="error() || ''"
+    actionLabel="Retry"
+    (action)="loadNavData()"
+  ></app-state>
 
   <div *ngIf="!isLoading() && !error()" class="cards-grid">
     <div class="card">
@@ -74,8 +76,8 @@
         </div>
       </div>
       <div class="card-body">
-        <div class="table-wrapper">
-          <table class="data-table nav-table">
+        <div appTableWrapper>
+          <table appDataTable class="nav-table">
             <thead>
               <tr>
                 <th>Asset</th>
@@ -90,9 +92,8 @@
                 <td class="text-right mono">{{ formatPercentage(item.percentage) }}</td>
               </tr>
               <tr *ngIf="latestValuesDisplay().length === 0">
-                <td colspan="3" class="empty-state">
-                  <i class="pi pi-info-circle"></i>
-                  <p>No values available</p>
+                <td colspan="3">
+                  <app-state type="empty" icon="pi pi-info-circle" message="No values available" size="compact"></app-state>
                 </td>
               </tr>
               <tr *ngIf="latestValuesDisplay().length > 0" class="total-row">
@@ -189,10 +190,13 @@
             <span class="asset-dot" [style.background]="'hsl(' + (i * 137.508 % 360) + ', 70%, 50%)'"></span>
             {{ asset }}
           </div>
-          <div *ngIf="displayChartData().assets.length === 0" class="empty-state">
-            <i class="pi pi-info-circle"></i>
-            <p>No assets available</p>
-          </div>
+          <app-state
+            *ngIf="displayChartData().assets.length === 0"
+            type="empty"
+            icon="pi pi-info-circle"
+            message="No assets available"
+            size="compact"
+          ></app-state>
         </div>
       </div>
     </div>

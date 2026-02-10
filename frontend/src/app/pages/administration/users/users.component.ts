@@ -4,12 +4,13 @@ import { User } from '../../../models/user.model';
 import { UsersService } from './user.service';
 import { UsersTableComponent } from './users-table/users-table.component';
 import { UserFormDialogComponent } from './users-form-dialog/user-form-dialog.component';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, UsersTableComponent, UserFormDialogComponent],
+  imports: [CommonModule, UsersTableComponent, UserFormDialogComponent, ...UI_IMPORTS],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })

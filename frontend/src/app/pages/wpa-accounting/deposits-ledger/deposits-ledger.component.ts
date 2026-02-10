@@ -1,18 +1,17 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { InputTextModule } from 'primeng/inputtext';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { WpaAccountingService, WpaAsset, WpaDepositLedger } from '../wpa-accounting.service';
 import { DepositLedgerFormDialogComponent } from './deposit-ledger-form-dialog/deposit-ledger-form-dialog.component';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 @Component({
   selector: 'app-deposits-ledger',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputTextModule, DepositLedgerFormDialogComponent],
+  imports: [CommonModule, DepositLedgerFormDialogComponent, ...UI_IMPORTS],
   templateUrl: './deposits-ledger.component.html',
   styleUrl: './deposits-ledger.component.scss'
 })
@@ -29,6 +28,7 @@ export class DepositsLedgerComponent implements OnInit {
   protected loading = signal<boolean>(true);
   protected error = signal<string | null>(null);
   protected showDialog = signal<boolean>(false);
+  protected confirmTarget = signal<WpaDepositLedger | null>(null);
 
   protected readonly depositTypeOptions = computed(() => {
     const types = this.deposits()
@@ -133,12 +133,16 @@ export class DepositsLedgerComponent implements OnInit {
     this.loadDeposits();
   }
 
-  protected deleteDeposit(deposit: WpaDepositLedger): void {
+  protected requestDeleteDeposit(deposit: WpaDepositLedger): void {
     if (!this.isDeletable(deposit)) return;
     if (!deposit.deposit_id) return;
+    this.confirmTarget.set(deposit);
+  }
 
-    const confirmed = confirm(`Delete deposit #${deposit.deposit_id}?`);
-    if (!confirmed) return;
+  protected confirmDeleteDeposit(): void {
+    const deposit = this.confirmTarget();
+    if (!deposit?.deposit_id) return;
+    this.confirmTarget.set(null);
 
     this.wpaService
       .deleteDepositLedger(deposit.deposit_id)
@@ -149,6 +153,10 @@ export class DepositsLedgerComponent implements OnInit {
           console.error('Failed to delete deposit:', error);
         }
       });
+  }
+
+  protected cancelDeleteDeposit(): void {
+    this.confirmTarget.set(null);
   }
 
   protected isDeletable(deposit: WpaDepositLedger): boolean {

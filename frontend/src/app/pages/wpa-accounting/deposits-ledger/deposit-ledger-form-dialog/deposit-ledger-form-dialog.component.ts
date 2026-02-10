@@ -4,11 +4,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { CreateDepositLedgerPayload, WpaAccountingService, WpaAsset } from '../../wpa-accounting.service';
+import { UI_IMPORTS } from '../../../../ui/ui.imports';
 
 @Component({
   selector: 'app-deposit-ledger-form-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputTextModule],
+  imports: [CommonModule, ReactiveFormsModule, InputTextModule, ...UI_IMPORTS],
   templateUrl: './deposit-ledger-form-dialog.component.html',
   styleUrl: './deposit-ledger-form-dialog.component.scss'
 })

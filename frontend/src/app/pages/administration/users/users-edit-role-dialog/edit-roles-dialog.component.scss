@@ -124,11 +124,11 @@
   }
 }
 
-:host ::ng-deep .role-item .p-checkbox .p-checkbox-box {
+:host ::ng-deep .role-item .checkbox-input {
   border-color: #B17840;
 }
 
-:host ::ng-deep .role-item .p-checkbox .p-checkbox-box.p-highlight {
+:host ::ng-deep .role-item .checkbox-input:checked {
   background: #B17840;
   border-color: #B17840;
 }

@@ -11,13 +11,14 @@ import { Fund, FundManagerDetails, FundManagerDocument, FundNote, GroupedFund, M
 import { FundsService } from '../../funds.service';
 import { FundsAccordionComponent } from '../../overview/funds-list.component';
 import { FundManagerEditDialogComponent } from './fund-manager-edit-dialog/fund-manager-edit-dialog.component';
+import { UI_IMPORTS } from '../../../../ui/ui.imports';
 
 type FundManagerTab = 'home' | 'relationships' | 'documents';
 
 @Component({
   selector: 'app-fund-manager-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, ChartModule, RouterLink, FundsAccordionComponent, FundManagerEditDialogComponent],
+  imports: [CommonModule, FormsModule, ChartModule, RouterLink, FundsAccordionComponent, FundManagerEditDialogComponent, ...UI_IMPORTS],
   templateUrl: './fund-manager-detail.component.html',
   styleUrl: './fund-manager-detail.component.scss'
 })

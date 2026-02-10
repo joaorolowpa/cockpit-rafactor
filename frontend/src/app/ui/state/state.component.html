@@ -1,0 +1,13 @@
+<div [class]="stateClass">
+  <i *ngIf="icon" [class]="icon"></i>
+  <p *ngIf="message">{{ message }}</p>
+  <p *ngIf="description" class="state-description">{{ description }}</p>
+  <app-button
+    *ngIf="actionLabel"
+    [variant]="actionVariant"
+    type="button"
+    (click)="action.emit()"
+  >
+    {{ actionLabel }}
+  </app-button>
+</div>

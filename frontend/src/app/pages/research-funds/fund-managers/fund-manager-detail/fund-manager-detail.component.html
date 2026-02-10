@@ -1,5 +1,5 @@
-<div class="page-container">
-  <div class="page-header">
+<div appPageContainer>
+  <div appPageHeader>
     <h1 class="page-title">{{ fund()?.display_name || 'Fund Manager' }}</h1>
   </div>
 
@@ -185,8 +185,8 @@
           <p>No documents available</p>
         </div>
 
-        <div *ngIf="!documentsError() && documents().length > 0" class="table-wrapper">
-          <table class="data-table">
+        <div *ngIf="!documentsError() && documents().length > 0" appTableWrapper>
+          <table appDataTable class="data-table">
             <thead>
               <tr>
                 <th>ID</th>

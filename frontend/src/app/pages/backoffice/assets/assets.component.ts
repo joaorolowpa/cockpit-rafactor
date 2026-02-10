@@ -5,6 +5,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { AssetClassifications, BackofficeAssetsService } from './assets.service';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 type AssetsTabKey = 'classes' | 'geography' | 'gestao' | 'internal' | 'onoff' | 'pubxpvt' | 'tema';
 
@@ -18,7 +19,7 @@ interface AssetsTabConfig {
 @Component({
   selector: 'app-backoffice-assets',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ...UI_IMPORTS],
   templateUrl: './assets.component.html',
   styleUrl: './assets.component.scss'
 })

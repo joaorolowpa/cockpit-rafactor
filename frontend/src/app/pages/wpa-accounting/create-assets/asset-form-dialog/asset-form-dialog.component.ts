@@ -4,11 +4,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { CreateAssetPayload, WpaAccountingService } from '../../wpa-accounting.service';
+import { UI_IMPORTS } from '../../../../ui/ui.imports';
 
 @Component({
   selector: 'app-asset-form-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputTextModule],
+  imports: [CommonModule, ReactiveFormsModule, InputTextModule, ...UI_IMPORTS],
   templateUrl: './asset-form-dialog.component.html',
   styleUrl: './asset-form-dialog.component.scss'
 })

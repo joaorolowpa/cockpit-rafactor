@@ -1,15 +1,14 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { InputTextModule } from 'primeng/inputtext';
 import { CompaniesService } from '../companies.service';
 import { Company } from '../../../models/companies.model';
 import { CompanyFormDialogComponent } from './company-form-dialog/company-form-dialog.component';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 @Component({
   selector: 'app-coverage-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputTextModule, CompanyFormDialogComponent],
+  imports: [CommonModule, CompanyFormDialogComponent, ...UI_IMPORTS],
   templateUrl: './coverage-list.component.html',
   styleUrl: './coverage-list.component.scss'
 })
@@ -21,6 +20,7 @@ export class CoverageListComponent implements OnInit {
   error = signal<string | null>(null);
   showDialog = signal<boolean>(false);
   editingCompany = signal<Company | null>(null);
+  confirmTarget = signal<Company | null>(null);
 
   constructor(private companiesService: CompaniesService) {}
 
@@ -86,11 +86,15 @@ export class CoverageListComponent implements OnInit {
     this.loadCompanies();
   }
 
-  deleteCompany(company: Company): void {
+  requestDeleteCompany(company: Company): void {
     if (!this.isDeletable(company)) return;
+    this.confirmTarget.set(company);
+  }
 
-    const confirmed = confirm(`Delete \"${company.display_name}\"?`);
-    if (!confirmed) return;
+  confirmDeleteCompany(): void {
+    const company = this.confirmTarget();
+    if (!company) return;
+    this.confirmTarget.set(null);
 
     this.companiesService.deleteCompany(company.id).subscribe({
       next: () => {
@@ -100,6 +104,10 @@ export class CoverageListComponent implements OnInit {
         console.error('Error deleting company:', error);
       }
     });
+  }
+
+  cancelDeleteCompany(): void {
+    this.confirmTarget.set(null);
   }
 
   isDeletable(company: Company): boolean {

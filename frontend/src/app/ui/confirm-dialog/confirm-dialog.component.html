@@ -1,0 +1,21 @@
+<app-dialog
+  [title]="title"
+  size="sm"
+  [closeOnOverlay]="true"
+  (close)="cancel.emit()"
+>
+  <p>{{ message }}</p>
+  <div dialog-footer>
+    <button appButton variant="ghost" type="button" (click)="cancel.emit()">
+      {{ cancelLabel }}
+    </button>
+    <button
+      appButton
+      [variant]="confirmVariant === 'danger' ? 'danger' : 'primary'"
+      type="button"
+      (click)="confirm.emit()"
+    >
+      {{ confirmLabel }}
+    </button>
+  </div>
+</app-dialog>

@@ -1,54 +1,45 @@
-<div class="page-container">
-  <div class="page-header">
+<div appPageContainer>
+  <div appPageHeader>
     <div>
       <h1 class="page-title">Coverage List</h1>
       <p class="page-subtitle">Manage your companies</p>
     </div>
-    <div class="page-actions">
-      <button class="btn btn-primary" type="button" (click)="openCreateDialog()">
+    <div appPageActions>
+      <button appButton variant="primary" type="button" (click)="openCreateDialog()">
         Add Company
       </button>
     </div>
   </div>
 
-  <div class="table-container">
-    <div class="filters-bar">
-      <div class="search-box">
-        <i class="pi pi-search"></i>
-        <input
-          type="text"
-          placeholder="Search for a company"
-          [value]="searchTerm()"
-          (input)="searchTerm.set($any($event.target).value); onSearch()"
-          [disabled]="loading()"
-        />
-        <button
-          *ngIf="searchTerm()"
-          type="button"
-          class="clear-btn"
-          (click)="clearSearch()"
-        >
-          <i class="pi pi-times"></i>
-        </button>
-      </div>
+  <div appTableContainer>
+    <div appFiltersBar>
+      <app-search-input
+        placeholder="Search for a company"
+        [value]="searchTerm()"
+        [disabled]="loading()"
+        (valueChange)="searchTerm.set($event); onSearch()"
+        (cleared)="clearSearch()"
+      ></app-search-input>
     </div>
 
-    <div *ngIf="loading()" class="loading-state">
-      <i class="pi pi-spinner pi-spin"></i>
-      <p>Loading companies...</p>
-    </div>
+    <app-state
+      *ngIf="loading()"
+      type="loading"
+      icon="pi pi-spinner pi-spin"
+      message="Loading companies..."
+    ></app-state>
 
-    <div *ngIf="error() && !loading()" class="error-state">
-      <i class="pi pi-exclamation-circle"></i>
-      <p>{{ error() }}</p>
-      <button type="button" class="btn btn-secondary" (click)="loadCompanies()">
-        <i class="pi pi-refresh"></i>
-        <span>Retry</span>
-      </button>
-    </div>
+    <app-state
+      *ngIf="error() && !loading()"
+      type="error"
+      icon="pi pi-exclamation-circle"
+      [message]="error() || ''"
+      actionLabel="Retry"
+      (action)="loadCompanies()"
+    ></app-state>
 
-    <div *ngIf="!loading() && !error()" class="table-wrapper">
-      <table class="data-table coverage-table">
+    <div *ngIf="!loading() && !error()" appTableWrapper>
+      <table appDataTable class="coverage-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -70,7 +61,10 @@
               <div class="actions-inline">
                 <button
                   type="button"
-                  class="btn btn-icon btn-text action-icon-btn"
+                  appButton
+                  variant="text"
+                  [iconOnly]="true"
+                  class="action-icon-btn"
                   (click)="openEditDialog(company)"
                   title="Edit company"
                 >
@@ -78,8 +72,11 @@
                 </button>
                 <button
                   type="button"
-                  class="btn btn-icon btn-text action-icon-btn delete-btn"
-                  (click)="deleteCompany(company)"
+                  appButton
+                  variant="text"
+                  [iconOnly]="true"
+                  class="action-icon-btn delete-btn"
+                  (click)="requestDeleteCompany(company)"
                   [disabled]="!isDeletable(company)"
                   [title]="isDeletable(company) ? 'Delete company' : 'Delete disabled (older than 7 days)'"
                 >
@@ -89,9 +86,13 @@
             </td>
           </tr>
           <tr *ngIf="filteredCompanies().length === 0">
-            <td colspan="6" class="empty-state">
-              <i class="pi pi-info-circle"></i>
-              <p>No companies found</p>
+            <td colspan="6">
+              <app-state
+                type="empty"
+                icon="pi pi-info-circle"
+                message="No companies found"
+                size="compact"
+              ></app-state>
             </td>
           </tr>
         </tbody>
@@ -112,3 +113,13 @@
   (close)="closeDialog()"
   (saved)="onCompanySaved()"
 ></app-company-form-dialog>
+
+<app-confirm-dialog
+  *ngIf="confirmTarget()"
+  title="Delete company"
+  [message]="'Delete \"' + (confirmTarget()?.display_name || 'company') + '\"?'"
+  confirmLabel="Delete"
+  confirmVariant="danger"
+  (confirm)="confirmDeleteCompany()"
+  (cancel)="cancelDeleteCompany()"
+></app-confirm-dialog>

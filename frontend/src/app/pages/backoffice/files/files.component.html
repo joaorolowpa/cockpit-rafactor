@@ -1,11 +1,12 @@
-<div class="page-container">
-  <div class="page-header">
+<div appPageContainer>
+  <div appPageHeader>
     <div>
       <h1 class="page-title">Files</h1>
       <p class="page-subtitle">Upload and manage files</p>
     </div>
-    <div class="page-actions">
+    <div appPageActions>
       <button
+        appButton
         class="btn btn-primary"
         type="button"
         (click)="handleUpload()"
@@ -71,6 +72,7 @@
         </div>
         <button
           type="button"
+          appButton
           class="btn btn-icon btn-text remove-btn"
           (click)="removeFile(i)"
           [disabled]="isProcessing()"

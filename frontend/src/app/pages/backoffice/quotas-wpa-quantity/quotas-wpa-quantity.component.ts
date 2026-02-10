@@ -10,6 +10,7 @@ import {
   WpaAssetWithQuota
 } from './quotas-wpa-quantity.service';
 import { QuotaAcquisitionFormDialogComponent } from './quota-acquisition-form-dialog/quota-acquisition-form-dialog.component';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 type QuotasTabKey = 'quota_acquisition' | 'position_held';
 
@@ -27,7 +28,7 @@ type PositionHeldRow = {
 @Component({
   selector: 'app-backoffice-quotas-wpa-quantity',
   standalone: true,
-  imports: [CommonModule, ChartModule, QuotaAcquisitionFormDialogComponent],
+  imports: [CommonModule, ChartModule, QuotaAcquisitionFormDialogComponent, ...UI_IMPORTS],
   templateUrl: './quotas-wpa-quantity.component.html',
   styleUrl: './quotas-wpa-quantity.component.scss'
 })
@@ -52,6 +53,7 @@ export class BackofficeQuotasWpaQuantityComponent implements OnInit {
 
   protected readonly showForm = signal<boolean>(false);
   protected readonly searchTerm = signal<string>('');
+  protected readonly confirmTarget = signal<QuotaAcquisition | null>(null);
 
   protected readonly filteredAcquisitions = computed(() => {
     const term = this.searchTerm().toLowerCase().trim();
@@ -140,12 +142,15 @@ export class BackofficeQuotasWpaQuantityComponent implements OnInit {
       });
   }
 
-  protected deleteAcquisition(acquisition: QuotaAcquisition): void {
+  protected requestDeleteAcquisition(acquisition: QuotaAcquisition): void {
     if (!this.canDelete(acquisition)) return;
-    const confirmed = confirm(
-      `Delete acquisition for ${acquisition.asset_name} on ${acquisition.date_reference}?`
-    );
-    if (!confirmed) return;
+    this.confirmTarget.set(acquisition);
+  }
+
+  protected confirmDeleteAcquisition(): void {
+    const acquisition = this.confirmTarget();
+    if (!acquisition) return;
+    this.confirmTarget.set(null);
 
     this.quotasService
       .deleteQuotaAcquisition(acquisition.quota_acquisition_id)
@@ -156,6 +161,10 @@ export class BackofficeQuotasWpaQuantityComponent implements OnInit {
           console.error('Failed to delete acquisition', err);
         }
       });
+  }
+
+  protected cancelDeleteAcquisition(): void {
+    this.confirmTarget.set(null);
   }
 
   protected canDelete(acquisition: QuotaAcquisition): boolean {

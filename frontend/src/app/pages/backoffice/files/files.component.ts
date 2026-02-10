@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { API_BASE_URL, API_KEY } from '../../../config/api.config';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 type FileTabKey = 'all' | 'funds' | 'historical' | 'historicalBook' | 'productClass';
 
@@ -29,7 +30,7 @@ interface FileTabConfig {
 @Component({
   selector: 'app-backoffice-files',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ...UI_IMPORTS],
   templateUrl: './files.component.html',
   styleUrl: './files.component.scss'
 })

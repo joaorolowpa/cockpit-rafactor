@@ -2,15 +2,15 @@ import { Component, output, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
-import { CheckboxModule } from 'primeng/checkbox';
 import { UserRole } from '../../../../models/user.model';
 import { UsersService } from '../user.service';
+import { UI_IMPORTS } from '../../../../ui/ui.imports';
 
 
 @Component({
   selector: 'app-user-form-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputTextModule, CheckboxModule],
+  imports: [CommonModule, ReactiveFormsModule, InputTextModule, ...UI_IMPORTS],
   templateUrl: './user-form-dialog.component.html',
   styleUrl: './user-form-dialog.component.scss'
 })

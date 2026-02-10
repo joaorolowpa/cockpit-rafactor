@@ -113,11 +113,11 @@
 
   <!-- Table Wrapper -->
   <div class="table-shell" [class.expanded]="showExpandedView()">
-    <div 
-      class="table-wrapper"
+    <div
+      appTableWrapper
       [class.expanded]="showExpandedView()"
     >
-    <table class="metrics-table">
+    <table appDataTable class="metrics-table">
       <thead>
         <tr>
           <th class="checkbox-col">
@@ -137,12 +137,11 @@
         @for (row of tableData().rows; track row.seriesName) {
           <tr [class.selected]="isRowSelected(row.seriesName)">
             <td class="checkbox-col">
-              <input
-                type="checkbox"
-                class="row-checkbox"
+              <app-checkbox
                 [checked]="isRowSelected(row.seriesName)"
-                (change)="toggleRowSelection(row.seriesName)"
-              />
+                (checkedChange)="toggleRowSelection(row.seriesName)"
+                inputClass="row-checkbox"
+              ></app-checkbox>
             </td>
             <td class="series-name-cell">
               {{ row.seriesName }}

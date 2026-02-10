@@ -5,11 +5,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FundManagerContent, FundManagerDetails } from '../../../../../models/funds.model';
 import { FundsService } from '../../../funds.service';
 import { RichTextEditorComponent } from './rich-text-editor/rich-text-editor.component';
+import { UI_IMPORTS } from '../../../../../ui/ui.imports';
 
 @Component({
   selector: 'app-fund-manager-edit-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputTextModule, RichTextEditorComponent],
+  imports: [CommonModule, FormsModule, InputTextModule, RichTextEditorComponent, ...UI_IMPORTS],
   templateUrl: './fund-manager-edit-dialog.component.html',
   styleUrl: './fund-manager-edit-dialog.component.scss'
 })

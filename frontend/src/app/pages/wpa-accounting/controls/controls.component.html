@@ -1,28 +1,25 @@
-<div class="page-container">
-  <div class="page-header">
+<div appPageContainer>
+  <div appPageHeader>
     <div>
       <h1 class="page-title">Nav Missing Entries</h1>
       <p class="page-subtitle">Monthly NAV control checklist for missing entries</p>
     </div>
   </div>
 
-  <div class="table-container">
-    <div *ngIf="loading()" class="loading-state">
-      <i class="pi pi-spinner pi-spin"></i>
-      <p>Loading entries...</p>
-    </div>
+  <div appTableContainer>
+    <app-state type="loading" icon="pi pi-spinner pi-spin" message="Loading entries..." *ngIf="loading()"></app-state>
 
-    <div *ngIf="error() && !loading()" class="error-state">
-      <i class="pi pi-exclamation-circle"></i>
-      <p>{{ error() }}</p>
-      <button type="button" class="btn btn-secondary" (click)="loadEntries()">
-        <i class="pi pi-refresh"></i>
-        <span>Retry</span>
-      </button>
-    </div>
+    <app-state
+      *ngIf="error() && !loading()"
+      type="error"
+      icon="pi pi-exclamation-circle"
+      [message]="error() || ''"
+      actionLabel="Retry"
+      (action)="loadEntries()"
+    ></app-state>
 
-    <div *ngIf="!loading() && !error()" class="table-wrapper">
-      <table class="data-table controls-table">
+    <div *ngIf="!loading() && !error()" appTableWrapper>
+      <table appDataTable class="controls-table">
         <thead>
           <tr>
             <th class="sticky-col">Month</th>
@@ -43,9 +40,8 @@
             </td>
           </tr>
           <tr *ngIf="sortedEntries().length === 0">
-            <td [attr.colspan]="portfolioNames().length + 1" class="empty-state">
-              <i class="pi pi-info-circle"></i>
-              <p>No entries found</p>
+            <td [attr.colspan]="portfolioNames().length + 1">
+              <app-state type="empty" icon="pi pi-info-circle" message="No entries found" size="compact"></app-state>
             </td>
           </tr>
         </tbody>

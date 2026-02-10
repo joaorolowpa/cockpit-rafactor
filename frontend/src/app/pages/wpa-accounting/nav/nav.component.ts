@@ -15,6 +15,7 @@ import {
   WpaAccountingService,
   WpaWeightsResponse
 } from '../wpa-accounting.service';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 type NavTab = 'tables_illiquid' | 'chart_liquid' | 'tables_liquid';
 
@@ -98,7 +99,7 @@ const LABEL_DICTIONARY: Record<string, string> = {
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [CommonModule, FormsModule, AgChartsModule],
+  imports: [CommonModule, FormsModule, AgChartsModule, ...UI_IMPORTS],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.scss'
 })

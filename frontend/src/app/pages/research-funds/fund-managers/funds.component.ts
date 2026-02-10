@@ -1,15 +1,14 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { InputTextModule } from 'primeng/inputtext';
 import { RouterLink } from '@angular/router';
 import { Fund } from '../../../models/funds.model';
 import { FundsService } from '../funds.service';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 @Component({
   selector: 'app-fund-managers',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputTextModule, RouterLink],
+  imports: [CommonModule, RouterLink, ...UI_IMPORTS],
   templateUrl: './funds.component.html',
   styleUrl: './funds.component.scss'
 })

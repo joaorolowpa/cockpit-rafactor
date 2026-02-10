@@ -1,0 +1,18 @@
+<div class="search-box">
+  <i class="pi pi-search"></i>
+  <input
+    type="text"
+    [placeholder]="placeholder"
+    [value]="value"
+    [disabled]="disabled"
+    (input)="onInput($event)"
+  />
+  <button
+    *ngIf="value"
+    type="button"
+    class="clear-btn"
+    (click)="onClear()"
+  >
+    <i class="pi pi-times"></i>
+  </button>
+</div>

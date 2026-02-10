@@ -3,6 +3,7 @@ import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angula
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { BackofficeQuotasPricesService, QuotaPrice } from './quotas-prices.service';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 interface UploadFile {
   file: File;
@@ -27,7 +28,7 @@ type TransformedRow = {
 @Component({
   selector: 'app-backoffice-quotas-prices',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ...UI_IMPORTS],
   templateUrl: './quotas-prices.component.html',
   styleUrl: './quotas-prices.component.scss'
 })

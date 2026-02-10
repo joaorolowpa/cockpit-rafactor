@@ -1,91 +1,76 @@
-<div class="dialog-overlay" (click)="onClose()">
-  <div class="dialog-content" (click)="$event.stopPropagation()">
-    <div class="dialog-header">
-      <h2>Add Quota Acquisition</h2>
-      <button
-        type="button"
-        class="btn btn-icon btn-text close-btn"
-        (click)="onClose()"
-      >
-        <i class="pi pi-times"></i>
-      </button>
+<app-dialog title="Add Quota Acquisition" (close)="onClose()">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="wpa_asset_id">Asset *</label>
+      <select id="wpa_asset_id" formControlName="wpa_asset_id">
+        <option [ngValue]="null" disabled>Select an asset</option>
+        <option *ngFor="let asset of assets; trackBy: trackByAsset" [ngValue]="asset.id">
+          {{ asset.name }}
+        </option>
+      </select>
+      @if (form.controls.wpa_asset_id.touched && form.controls.wpa_asset_id.errors?.['required']) {
+        <span class="error-message">Asset is required</span>
+      }
     </div>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div class="dialog-body">
-        <div class="form-group">
-          <label for="wpa_asset_id">Asset *</label>
-          <select id="wpa_asset_id" formControlName="wpa_asset_id">
-            <option [ngValue]="null" disabled>Select an asset</option>
-            <option *ngFor="let asset of assets; trackBy: trackByAsset" [ngValue]="asset.id">
-              {{ asset.name }}
-            </option>
-          </select>
-          @if (form.controls.wpa_asset_id.touched && form.controls.wpa_asset_id.errors?.['required']) {
-            <span class="error-message">Asset is required</span>
-          }
-        </div>
+    <div class="form-group">
+      <label for="date_reference">Date Reference *</label>
+      <input id="date_reference" type="date" formControlName="date_reference" pInputText />
+      @if (form.controls.date_reference.touched && form.controls.date_reference.errors?.['required']) {
+        <span class="error-message">Date reference is required</span>
+      }
+    </div>
 
-        <div class="form-group">
-          <label for="date_reference">Date Reference *</label>
-          <input id="date_reference" type="date" formControlName="date_reference" pInputText />
-          @if (form.controls.date_reference.touched && form.controls.date_reference.errors?.['required']) {
-            <span class="error-message">Date reference is required</span>
-          }
-        </div>
-
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="quantidade_cotas">Quantity *</label>
-            <input
-              id="quantidade_cotas"
-              type="number"
-              step="0.01"
-              formControlName="quantidade_cotas"
-              pInputText
-              placeholder="0.00"
-            />
-            @if (form.controls.quantidade_cotas.touched && form.controls.quantidade_cotas.errors?.['required']) {
-              <span class="error-message">Quantity is required</span>
-            }
-          </div>
-
-          <div class="form-group">
-            <label for="valor_cota">Unit Value *</label>
-            <input
-              id="valor_cota"
-              type="number"
-              step="0.00000001"
-              formControlName="valor_cota"
-              pInputText
-              placeholder="0.00000000"
-            />
-            @if (form.controls.valor_cota.touched && form.controls.valor_cota.errors?.['required']) {
-              <span class="error-message">Unit value is required</span>
-            }
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="comment">Comment</label>
-          <textarea id="comment" rows="3" formControlName="comment" placeholder="Optional note"></textarea>
-        </div>
-
-        <div *ngIf="submitError()" class="submit-error">
-          <i class="pi pi-exclamation-circle"></i>
-          {{ submitError() }}
-        </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="quantidade_cotas">Quantity *</label>
+        <input
+          id="quantidade_cotas"
+          type="number"
+          step="0.01"
+          formControlName="quantidade_cotas"
+          pInputText
+          placeholder="0.00"
+        />
+        @if (form.controls.quantidade_cotas.touched && form.controls.quantidade_cotas.errors?.['required']) {
+          <span class="error-message">Quantity is required</span>
+        }
       </div>
 
-      <div class="dialog-footer">
-        <button type="button" class="btn btn-ghost" (click)="onClose()">Cancel</button>
-        <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isSubmitting()">
-          <span>Save Acquisition</span>
-          @if (isSubmitting()) {
-            <span class="btn-spinner" aria-hidden="true"></span>
-          }
-        </button>
+      <div class="form-group">
+        <label for="valor_cota">Unit Value *</label>
+        <input
+          id="valor_cota"
+          type="number"
+          step="0.00000001"
+          formControlName="valor_cota"
+          pInputText
+          placeholder="0.00000000"
+        />
+        @if (form.controls.valor_cota.touched && form.controls.valor_cota.errors?.['required']) {
+          <span class="error-message">Unit value is required</span>
+        }
       </div>
-    </form>
-  </div>
-</div>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment</label>
+      <textarea id="comment" rows="3" formControlName="comment" placeholder="Optional note"></textarea>
+    </div>
+
+    <div *ngIf="submitError()" class="submit-error">
+      <i class="pi pi-exclamation-circle"></i>
+      {{ submitError() }}
+    </div>
+
+    <div dialog-footer>
+      <button type="button" class="btn btn-ghost" (click)="onClose()">Cancel</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isSubmitting()">
+        <span>Save Acquisition</span>
+        @if (isSubmitting()) {
+          <span class="btn-spinner" aria-hidden="true"></span>
+        }
+      </button>
+    </div>
+  </form>
+</app-dialog>

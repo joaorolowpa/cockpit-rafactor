@@ -1,54 +1,38 @@
-<div class="page-container">
-  <div class="page-header">
+<div appPageContainer>
+  <div appPageHeader>
     <div>
       <h1 class="page-title">Fund Managers</h1>
       <p class="page-subtitle">Manage your fund managers</p>
     </div>
   </div>
 
-  <div class="filters-bar">
-    <div class="search-box">
-      <i class="pi pi-search"></i>
-      <input 
-        type="text"
-        placeholder="Search for a fund or company..."
-        [value]="searchTerm()"
-        (input)="searchTerm.set($any($event.target).value); onSearch()"
-        [disabled]="loading()"
-      />
-      <button 
-        *ngIf="searchTerm()" 
-        type="button"
-        class="clear-btn"
-        (click)="clearSearch()"
-      >
-        <i class="pi pi-times"></i>
-      </button>
-    </div>
+  <div appFiltersBar>
+    <app-search-input
+      placeholder="Search for a fund or company..."
+      [value]="searchTerm()"
+      [disabled]="loading()"
+      (valueChange)="searchTerm.set($event); onSearch()"
+      (cleared)="clearSearch()"
+    ></app-search-input>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading()" class="loading-state">
-    <i class="pi pi-spinner pi-spin"></i>
-    <p>Loading fund managers...</p>
-  </div>
+  <app-state
+    *ngIf="loading()"
+    type="loading"
+    icon="pi pi-spinner pi-spin"
+    message="Loading fund managers..."
+  ></app-state>
 
-  <!-- Error State -->
-  <div *ngIf="error() && !loading()" class="error-state">
-    <i class="pi pi-exclamation-circle"></i>
-    <p>{{ error() }}</p>
-    <button
-      type="button"
-      class="btn btn-secondary"
-      (click)="loadFunds()"
-    >
-      <i class="pi pi-refresh"></i>
-      <span>Retry</span>
-    </button>
-  </div>
+  <app-state
+    *ngIf="error() && !loading()"
+    type="error"
+    icon="pi pi-exclamation-circle"
+    [message]="error() || ''"
+    actionLabel="Retry"
+    (action)="loadFunds()"
+  ></app-state>
 
-  <!-- Funds Grid -->
-  <div *ngIf="!loading() && !error()" class="funds-grid">
+  <div *ngIf="!loading() && !error() && filteredFunds().length > 0" class="funds-grid">
     <a 
       *ngFor="let fund of filteredFunds()" 
       class="fund-card"
@@ -63,9 +47,10 @@
     </a>
   </div>
 
-  <!-- Empty State -->
-  <div *ngIf="!loading() && !error() && filteredFunds().length === 0" class="empty-state">
-    <i class="pi pi-search"></i>
-    <p>No fund managers found</p>
-  </div>
+  <app-state
+    *ngIf="!loading() && !error() && filteredFunds().length === 0"
+    type="empty"
+    icon="pi pi-search"
+    message="No fund managers found"
+  ></app-state>
 </div>

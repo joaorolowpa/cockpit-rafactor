@@ -1,5 +1,5 @@
-﻿<div class="page-container">
-  <div class="page-header">
+﻿<div appPageContainer>
+  <div appPageHeader>
     <div>
       <a class="back-link" [routerLink]="['/research-equities/companies']">
         <i class="pi pi-arrow-left"></i>
@@ -180,8 +180,8 @@
               <div class="section-header">
                 <h4>{{ section.sectionLabel }}</h4>
               </div>
-              <div class="financials-table-wrapper" [class.expanded]="showFinancialsExpanded()" *ngIf="section.sectionData.length > 0">
-                <table class="financials-data-table">
+              <div class="financials-table-wrapper" appTableWrapper [class.expanded]="showFinancialsExpanded()" *ngIf="section.sectionData.length > 0">
+                <table appDataTable class="financials-data-table">
                   <thead>
                     <tr>
                       <th class="checkbox-col"></th>
@@ -193,12 +193,11 @@
                   <tbody>
                     <tr *ngFor="let row of section.sectionData" [class.selected]="isFinancialRowSelected(row.series_code)">
                       <td class="checkbox-col">
-                        <input
-                          type="checkbox"
-                          class="row-checkbox"
+                        <app-checkbox
                           [checked]="isFinancialRowSelected(row.series_code)"
-                          (change)="toggleFinancialRowSelection(row.series_code)"
-                        />
+                          (checkedChange)="toggleFinancialRowSelection(row.series_code)"
+                          inputClass="row-checkbox"
+                        ></app-checkbox>
                       </td>
                       <td>{{ row.description || row.series_code }}</td>
                       <td>{{ row.unit || '-' }}</td>
@@ -290,8 +289,8 @@
             <div *ngIf="orderedDocuments().length === 0" class="empty-state compact">
               <p>No documents available.</p>
             </div>
-            <div class="table-wrapper" *ngIf="orderedDocuments().length > 0">
-              <table class="data-table">
+            <div appTableWrapper class="table-wrapper" *ngIf="orderedDocuments().length > 0">
+              <table appDataTable class="data-table">
                 <thead>
                   <tr>
                     <th>Reference Date</th>
@@ -315,7 +314,12 @@
                         <i class="pi pi-download"></i>
                         <span>Download</span>
                       </button>
-                      <button class="btn btn-text btn-danger" type="button" (click)="deleteCompanyDocument(doc)">
+                      <button
+                        class="btn btn-text btn-danger"
+                        appButton
+                        type="button"
+                        (click)="requestDeleteCompanyDocument(doc)"
+                      >
                         <i class="pi pi-trash"></i>
                         <span>Delete</span>
                       </button>
@@ -351,8 +355,8 @@
           <div *ngIf="colmeiaHistoryRows().length === 0" class="empty-state compact">
             <p>No colmeia history available.</p>
           </div>
-          <div class="table-wrapper" *ngIf="colmeiaHistoryRows().length > 0">
-            <table class="colmeia-history-table">
+          <div appTableWrapper class="table-wrapper" *ngIf="colmeiaHistoryRows().length > 0">
+            <table appDataTable class="colmeia-history-table">
               <thead>
                 <tr>
                   <th>#</th>
@@ -455,3 +459,13 @@
     </div>
   </div>
 </div>
+
+<app-confirm-dialog
+  *ngIf="confirmDocument()"
+  title="Delete document"
+  [message]="'Delete \"' + (confirmDocument()?.filePath ? getFileName(confirmDocument()?.filePath) : 'document') + '\"?'"
+  confirmLabel="Delete"
+  confirmVariant="danger"
+  (confirm)="confirmDeleteCompanyDocument()"
+  (cancel)="cancelDeleteCompanyDocument()"
+></app-confirm-dialog>

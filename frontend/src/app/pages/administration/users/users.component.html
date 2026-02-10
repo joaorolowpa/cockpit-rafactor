@@ -1,10 +1,10 @@
-<div class="page-container">
-  <div class="page-header">
+<div appPageContainer>
+  <div appPageHeader>
     <div>
       <h1 class="page-title">Admin Panel</h1>
       <p class="page-subtitle">Manage users and roles</p>
     </div>
-    <div class="page-actions">
+    <div appPageActions>
       <button class="btn btn-primary admin-create-btn" type="button" (click)="openCreateDialog()">
         <i class="pi pi-plus"></i>
         <span>Create User</span>
@@ -13,10 +13,7 @@
   </div>
 
   @if (isLoading()) {
-    <div class="loading-container">
-      <div class="spinner"></div>
-      <p>Loading users...</p>
-    </div>
+    <app-state type="loading" icon="pi pi-spinner pi-spin" message="Loading users..."></app-state>
   } @else {
     <app-users-table 
       [users]="users()" 

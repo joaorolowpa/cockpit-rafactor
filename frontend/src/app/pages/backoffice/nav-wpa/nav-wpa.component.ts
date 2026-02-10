@@ -10,6 +10,7 @@ import {
   NavProfitabilityData,
   WpaPosition
 } from './nav-wpa.service';
+import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 type ChartDataPoint = {
   date_reference: string;
@@ -32,7 +33,7 @@ type LatestAssetValue = {
 @Component({
   selector: 'app-backoffice-nav-wpa',
   standalone: true,
-  imports: [CommonModule, ChartModule],
+  imports: [CommonModule, ChartModule, ...UI_IMPORTS],
   templateUrl: './nav-wpa.component.html',
   styleUrl: './nav-wpa.component.scss'
 })

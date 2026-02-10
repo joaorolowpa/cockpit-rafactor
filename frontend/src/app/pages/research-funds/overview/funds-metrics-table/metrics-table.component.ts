@@ -1,8 +1,8 @@
 import { Component, input, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CheckboxModule } from 'primeng/checkbox';
 import { Metrics, DISPLAY_SERIES, SERIES_CONFIG } from '../../../../models/funds.model';
+import { UI_IMPORTS } from '../../../../ui/ui.imports';
 
 interface SeriesRow {
   seriesName: string;
@@ -26,7 +26,7 @@ interface DateGroup {
 @Component({
   selector: 'app-metrics-table',
   standalone: true,
-  imports: [CommonModule, FormsModule, CheckboxModule],
+  imports: [CommonModule, FormsModule, ...UI_IMPORTS],
   templateUrl: './metrics-table.component.html',
   styleUrl: './metrics-table.component.scss'
 })

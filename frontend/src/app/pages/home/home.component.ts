@@ -1,11 +1,12 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { Component } from '@angular/core';
 import { RecentDocumentsFeedComponent } from './recent-documents-feed/recent-documents-feed.component';
+import { UI_IMPORTS } from '../../ui/ui.imports';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RecentDocumentsFeedComponent],
+  imports: [CommonModule, RecentDocumentsFeedComponent, ...UI_IMPORTS],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })

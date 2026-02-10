@@ -1,5 +1,5 @@
-<div class="page-container">
-  <div class="page-header">
+<div appPageContainer>
+  <div appPageHeader>
     <div>
       <h1 class="page-title">WPA NAV</h1>
       <p class="page-subtitle">Initial implementation only with ACCOUNTING information.</p>
@@ -34,15 +34,17 @@
     </div>
 
     @if (illiquidLoading()) {
-      <div class="loading-state">
-        <i class="pi pi-spinner pi-spin"></i>
-        <p>Loading illiquid tables...</p>
-      </div>
+      <app-state
+        type="loading"
+        icon="pi pi-spinner pi-spin"
+        message="Loading illiquid tables..."
+      ></app-state>
     } @else if (illiquidError()) {
-      <div class="error-state">
-        <i class="pi pi-exclamation-circle"></i>
-        <p>{{ illiquidError() }}</p>
-      </div>
+      <app-state
+        type="error"
+        icon="pi pi-exclamation-circle"
+        [message]="illiquidError() || ''"
+      ></app-state>
     } @else {
       <div class="table-stack">
         <div class="table-card">
@@ -50,14 +52,16 @@
             <h3>Total dos grupos na data: {{ illiquidDate() | date: 'dd-MMM-yyyy' }}</h3>
           </div>
           @if (illiquidGrouped().length === 0) {
-            <div class="empty-state">
-              <i class="pi pi-info-circle"></i>
-              <p>No grouped data found.</p>
-            </div>
+            <app-state
+              type="empty"
+              icon="pi pi-info-circle"
+              message="No grouped data found."
+              size="compact"
+            ></app-state>
           } @else {
-            <div class="table-container">
-              <div class="table-wrapper">
-                <table class="data-table">
+            <div appTableContainer>
+              <div appTableWrapper>
+                <table appDataTable>
                   <thead>
                     <tr>
                       <th>Type</th>
@@ -83,14 +87,16 @@
             <h3>Saldo de cada ativo na data: {{ illiquidDate() | date: 'dd-MMM-yyyy' }}</h3>
           </div>
           @if (illiquidDistinct().length === 0) {
-            <div class="empty-state">
-              <i class="pi pi-info-circle"></i>
-              <p>No asset balances found.</p>
-            </div>
+            <app-state
+              type="empty"
+              icon="pi pi-info-circle"
+              message="No asset balances found."
+              size="compact"
+            ></app-state>
           } @else {
-            <div class="table-container">
-              <div class="table-wrapper">
-                <table class="data-table">
+            <div appTableContainer>
+              <div appTableWrapper>
+                <table appDataTable>
                   <thead>
                     <tr>
                       <th>Name</th>
@@ -149,20 +155,19 @@
     </div>
 
     @if (weightsLoading()) {
-      <div class="loading-state">
-        <i class="pi pi-spinner pi-spin"></i>
-        <p>Loading charts...</p>
-      </div>
+      <app-state type="loading" icon="pi pi-spinner pi-spin" message="Loading charts..."></app-state>
     } @else if (weightsError()) {
-      <div class="error-state">
-        <i class="pi pi-exclamation-circle"></i>
-        <p>{{ weightsError() }}</p>
-      </div>
+      <app-state
+        type="error"
+        icon="pi pi-exclamation-circle"
+        [message]="weightsError() || ''"
+      ></app-state>
     } @else if (liquidChartData().length === 0) {
-      <div class="empty-state">
-        <i class="pi pi-info-circle"></i>
-        <p>No weight data available.</p>
-      </div>
+      <app-state
+        type="empty"
+        icon="pi pi-info-circle"
+        message="No weight data available."
+      ></app-state>
     } @else {
       <div class="chart-card">
         @if (liquidChartOptions()) {
@@ -193,20 +198,19 @@
     </div>
 
     @if (liquidLoading()) {
-      <div class="loading-state">
-        <i class="pi pi-spinner pi-spin"></i>
-        <p>Loading liquid assets...</p>
-      </div>
+      <app-state type="loading" icon="pi pi-spinner pi-spin" message="Loading liquid assets..."></app-state>
     } @else if (liquidError()) {
-      <div class="error-state">
-        <i class="pi pi-exclamation-circle"></i>
-        <p>{{ liquidError() }}</p>
-      </div>
+      <app-state
+        type="error"
+        icon="pi pi-exclamation-circle"
+        [message]="liquidError() || ''"
+      ></app-state>
     } @else if (liquidValues().length === 0) {
-      <div class="empty-state">
-        <i class="pi pi-info-circle"></i>
-        <p>No liquid assets available.</p>
-      </div>
+      <app-state
+        type="empty"
+        icon="pi pi-info-circle"
+        message="No liquid assets available."
+      ></app-state>
     } @else {
       <div class="table-card liquid-table">
         <div class="table-card-header">
@@ -218,9 +222,9 @@
           </div>
           <div class="table-card-meta">{{ liquidValues().length }} rows</div>
         </div>
-        <div class="table-container">
-          <div class="table-wrapper">
-            <table class="data-table">
+        <div appTableContainer>
+          <div appTableWrapper>
+            <table appDataTable>
               <thead>
                 <tr>
                   <th>Portfolio Name</th>
