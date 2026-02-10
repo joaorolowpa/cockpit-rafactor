@@ -10,21 +10,26 @@
     </div>
   </div>
 
-  <div *ngIf="companyLoading()" class="loading-state">
-    <i class="pi pi-spinner pi-spin"></i>
-    <p>Loading company...</p>
-  </div>
+  @if (companyLoading()) {
+    <div class="loading-state">
+      <i class="pi pi-spinner pi-spin"></i>
+      <p>Loading company...</p>
+    </div>
+  }
 
-  <div *ngIf="companyError() && !companyLoading()" class="error-state">
-    <i class="pi pi-exclamation-circle"></i>
-    <p>{{ companyError() }}</p>
-    <button type="button" class="btn btn-secondary" (click)="retryCompany()">
-      <i class="pi pi-refresh"></i>
-      <span>Retry</span>
-    </button>
-  </div>
+  @if (companyError() && !companyLoading()) {
+    <div class="error-state">
+      <i class="pi pi-exclamation-circle"></i>
+      <p>{{ companyError() }}</p>
+      <button type="button" class="btn btn-secondary" (click)="retryCompany()">
+        <i class="pi pi-refresh"></i>
+        <span>Retry</span>
+      </button>
+    </div>
+  }
 
-  <div *ngIf="!companyLoading() && !companyError()" class="detail-content">
+  @if (!companyLoading() && !companyError()) {
+    <div class="detail-content">
     <div class="tabs">
       <button
         class="tab-btn"
@@ -55,9 +60,12 @@
       </button>
     </div>
 
-    <div class="tab-panel" *ngIf="activeTab() === 'financials'">
-      <div class="expanded-backdrop" *ngIf="showFinancialsExpanded()" (click)="toggleFinancialsExpanded()"></div>
-      <div class="financials-stack">
+    @if (activeTab() === 'financials') {
+      <div class="tab-panel">
+        @if (showFinancialsExpanded()) {
+          <div class="expanded-backdrop" (click)="toggleFinancialsExpanded()"></div>
+        }
+        <div class="financials-stack">
         <div class="financials-top">
           <div class="card colmeia-card">
             <div class="card-header card-header-row">
@@ -87,23 +95,33 @@
                   </div>
                   <div class="score-subtitle">of 5.0</div>
                 </div>
-                <div class="colmeia-chart" *ngIf="colmeiaCategories().length > 0">
-                  <p-chart type="radar" [data]="colmeiaRadarData()" [options]="radarChartOptions"></p-chart>
-                </div>
+                @if (colmeiaCategories().length > 0) {
+                  <div class="colmeia-chart">
+                    <p-chart
+                      type="radar"
+                      [data]="colmeiaRadarData()"
+                      [options]="radarChartOptions"
+                    ></p-chart>
+                  </div>
+                }
               </div>
 
               <div class="colmeia-right">
                 <div class="list-title">Evaluated Categories</div>
                 <div class="colmeia-categories">
-                  <div class="category-row" *ngFor="let category of colmeiaCategories()">
-                    <span>{{ category.label }}</span>
-                    <span class="score-chip" [ngStyle]="getScoreStyle(category.score)">
-                      {{ category.score | number: '1.1-1' }}
-                    </span>
-                  </div>
-                  <div *ngIf="colmeiaCategories().length === 0" class="empty-state compact">
-                    <p>No categories available.</p>
-                  </div>
+                  @for (category of colmeiaCategories(); track category.label) {
+                    <div class="category-row">
+                      <span>{{ category.label }}</span>
+                      <span class="score-chip" [ngStyle]="getScoreStyle(category.score)">
+                        {{ category.score | number: '1.1-1' }}
+                      </span>
+                    </div>
+                  }
+                  @if (colmeiaCategories().length === 0) {
+                    <div class="empty-state compact">
+                      <p>No categories available.</p>
+                    </div>
+                  }
                 </div>
               </div>
             </div>
@@ -114,24 +132,34 @@
               <div class="card-header">
                 <h3>Margins</h3>
               </div>
-              <div class="chart-body" *ngIf="(marginsChartData().labels?.length || 0) > 0; else noMargins">
-                <p-chart type="line" [data]="marginsChartData()" [options]="lineChartOptions"></p-chart>
-              </div>
-              <ng-template #noMargins>
+              @if ((marginsChartData().labels?.length || 0) > 0) {
+                <div class="chart-body">
+                  <p-chart
+                    type="line"
+                    [data]="marginsChartData()"
+                    [options]="lineChartOptions"
+                  ></p-chart>
+                </div>
+              } @else {
                 <p class="empty-state compact">No margins data available.</p>
-              </ng-template>
+              }
             </div>
 
             <div class="card chart-card">
               <div class="card-header">
                 <h3>Growth</h3>
               </div>
-              <div class="chart-body" *ngIf="(growthChartData().labels?.length || 0) > 0; else noGrowth">
-                <p-chart type="line" [data]="growthChartData()" [options]="lineChartOptions"></p-chart>
-              </div>
-              <ng-template #noGrowth>
+              @if ((growthChartData().labels?.length || 0) > 0) {
+                <div class="chart-body">
+                  <p-chart
+                    type="line"
+                    [data]="growthChartData()"
+                    [options]="lineChartOptions"
+                  ></p-chart>
+                </div>
+              } @else {
                 <p class="empty-state compact">No growth data available.</p>
-              </ng-template>
+              }
             </div>
           </div>
         </div>
@@ -161,78 +189,106 @@
             </button>
           </div>
 
-          <div *ngIf="financialsLoading()" class="loading-state small">
-            <i class="pi pi-spinner pi-spin"></i>
-            <p>Loading financials...</p>
-          </div>
-
-          <div *ngIf="financialsError() && !financialsLoading()" class="error-state small">
-            <i class="pi pi-exclamation-circle"></i>
-            <p>{{ financialsError() }}</p>
-          </div>
-
-          <div *ngIf="!financialsLoading() && !financialsError()">
-            <div *ngIf="financialSections().length === 0" class="empty-state compact">
-              <p>No financial data available.</p>
+          @if (financialsLoading()) {
+            <div class="loading-state small">
+              <i class="pi pi-spinner pi-spin"></i>
+              <p>Loading financials...</p>
             </div>
+          }
 
-            <div *ngFor="let section of financialSections()" class="financial-section">
-              <div class="section-header">
-                <h4>{{ section.sectionLabel }}</h4>
-              </div>
-              <div class="financials-table-wrapper" appTableWrapper [class.expanded]="showFinancialsExpanded()" *ngIf="section.sectionData.length > 0">
-                <table appDataTable class="financials-data-table">
-                  <thead>
-                    <tr>
-                      <th class="checkbox-col"></th>
-                      <th>Series</th>
-                      <th>Unit</th>
-                      <th *ngFor="let date of financialDateColumns()">{{ date }}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let row of section.sectionData" [class.selected]="isFinancialRowSelected(row.series_code)">
-                      <td class="checkbox-col">
-                        <app-checkbox
-                          [checked]="isFinancialRowSelected(row.series_code)"
-                          (checkedChange)="toggleFinancialRowSelection(row.series_code)"
-                          inputClass="row-checkbox"
-                        ></app-checkbox>
-                      </td>
-                      <td>{{ row.description || row.series_code }}</td>
-                      <td>{{ row.unit || '-' }}</td>
-                      <td *ngFor="let date of financialDateColumns()">
-                        {{ formatFinancialValue(getSeriesValue(row, date)) }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div *ngIf="section.sectionData.length === 0" class="empty-state compact">
-                <p>No data for {{ section.sectionLabel }}.</p>
-              </div>
+          @if (financialsError() && !financialsLoading()) {
+            <div class="error-state small">
+              <i class="pi pi-exclamation-circle"></i>
+              <p>{{ financialsError() }}</p>
             </div>
-          </div>
+          }
+
+          @if (!financialsLoading() && !financialsError()) {
+            @if (financialSections().length === 0) {
+              <div class="empty-state compact">
+                <p>No financial data available.</p>
+              </div>
+            }
+
+            @for (section of financialSections(); track section.sectionLabel) {
+              <div class="financial-section">
+                <div class="section-header">
+                  <h4>{{ section.sectionLabel }}</h4>
+                </div>
+                @if (section.sectionData.length > 0) {
+                  <div
+                    class="financials-table-wrapper"
+                    appTableWrapper
+                    [class.expanded]="showFinancialsExpanded()"
+                  >
+                    <table appDataTable class="financials-data-table">
+                      <thead>
+                        <tr>
+                          <th class="checkbox-col"></th>
+                          <th>Series</th>
+                          <th>Unit</th>
+                          @for (date of financialDateColumns(); track date) {
+                            <th>{{ date }}</th>
+                          }
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (row of section.sectionData; track row.series_code) {
+                          <tr [class.selected]="isFinancialRowSelected(row.series_code)">
+                            <td class="checkbox-col">
+                              <app-checkbox
+                                [checked]="isFinancialRowSelected(row.series_code)"
+                                (checkedChange)="toggleFinancialRowSelection(row.series_code)"
+                                inputClass="row-checkbox"
+                              ></app-checkbox>
+                            </td>
+                            <td>{{ row.description || row.series_code }}</td>
+                            <td>{{ row.unit || '-' }}</td>
+                            @for (date of financialDateColumns(); track date) {
+                              <td>
+                                {{ formatFinancialValue(getSeriesValue(row, date)) }}
+                              </td>
+                            }
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                }
+                @if (section.sectionData.length === 0) {
+                  <div class="empty-state compact">
+                    <p>No data for {{ section.sectionLabel }}.</p>
+                  </div>
+                }
+              </div>
+            }
+          }
         </div>
       </div>
     </div>
 
-    <div class="tab-panel" *ngIf="activeTab() === 'documents'">
-      <div *ngIf="documentsLoading()" class="loading-state small">
-        <i class="pi pi-spinner pi-spin"></i>
-        <p>Loading documents...</p>
-      </div>
+    @if (activeTab() === 'documents') {
+      <div class="tab-panel">
+        @if (documentsLoading()) {
+          <div class="loading-state small">
+            <i class="pi pi-spinner pi-spin"></i>
+            <p>Loading documents...</p>
+          </div>
+        }
 
-      <div *ngIf="documentsError() && !documentsLoading()" class="error-state small">
-        <i class="pi pi-exclamation-circle"></i>
-        <p>{{ documentsError() }}</p>
-        <button type="button" class="btn btn-secondary btn-compact" (click)="retryDocuments()">
-          <i class="pi pi-refresh"></i>
-          <span>Retry</span>
-        </button>
-      </div>
+        @if (documentsError() && !documentsLoading()) {
+          <div class="error-state small">
+            <i class="pi pi-exclamation-circle"></i>
+            <p>{{ documentsError() }}</p>
+            <button type="button" class="btn btn-secondary btn-compact" (click)="retryDocuments()">
+              <i class="pi pi-refresh"></i>
+              <span>Retry</span>
+            </button>
+          </div>
+        }
 
-      <div *ngIf="!documentsLoading() && !documentsError()" class="documents-stack">
+        @if (!documentsLoading() && !documentsError()) {
+          <div class="documents-stack">
         <div class="documents-toolbar">
           <div class="documents-actions">
             <button
@@ -281,191 +337,263 @@
         </div>
         <span class="hint-text">Upload flows are not wired in Angular yet.</span>
 
-        <div class="document-section">
-          <div class="section-header">
-            <h3>Documents ({{ orderedDocuments().length }})</h3>
-          </div>
-          <div class="section-body">
-            <div *ngIf="orderedDocuments().length === 0" class="empty-state compact">
-              <p>No documents available.</p>
+            <div class="document-section">
+              <div class="section-header">
+                <h3>Documents ({{ orderedDocuments().length }})</h3>
+              </div>
+              <div class="section-body">
+                @if (orderedDocuments().length === 0) {
+                  <div class="empty-state compact">
+                    <p>No documents available.</p>
+                  </div>
+                }
+                @if (orderedDocuments().length > 0) {
+                  <div appTableWrapper class="table-wrapper">
+                    <table appDataTable class="data-table">
+                      <thead>
+                        <tr>
+                          <th>Reference Date</th>
+                          <th>Type</th>
+                          <th>Created At</th>
+                          <th>Created By</th>
+                          <th class="actions-col">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (doc of orderedDocuments(); track doc.filePath) {
+                          <tr>
+                            <td>{{ getReferenceDateLabel(doc) }}</td>
+                            <td>{{ doc.type }}</td>
+                            <td>{{ formatCreatedAt(doc.created_at) }}</td>
+                            <td>
+                              {{ doc.user_name || 'Unknown' }}
+                              @if (doc.user_email) {
+                                <span>• {{ doc.user_email }}</span>
+                              }
+                            </td>
+                            <td class="actions-col">
+                              <button
+                                class="btn btn-text"
+                                type="button"
+                                (click)="downloadDocument(doc.filePath)"
+                              >
+                                <i class="pi pi-download"></i>
+                                <span>Download</span>
+                              </button>
+                              <button
+                                class="btn btn-text btn-danger"
+                                appButton
+                                type="button"
+                                (click)="requestDeleteCompanyDocument(doc)"
+                              >
+                                <i class="pi pi-trash"></i>
+                                <span>Delete</span>
+                              </button>
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                }
+              </div>
             </div>
-            <div appTableWrapper class="table-wrapper" *ngIf="orderedDocuments().length > 0">
-              <table appDataTable class="data-table">
-                <thead>
-                  <tr>
-                    <th>Reference Date</th>
-                    <th>Type</th>
-                    <th>Created At</th>
-                    <th>Created By</th>
-                    <th class="actions-col">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let doc of orderedDocuments()">
-                    <td>{{ getReferenceDateLabel(doc) }}</td>
-                    <td>{{ doc.type }}</td>
-                    <td>{{ formatCreatedAt(doc.created_at) }}</td>
-                    <td>
-                      {{ doc.user_name || 'Unknown' }}
-                      <span *ngIf="doc.user_email">• {{ doc.user_email }}</span>
-                    </td>
-                    <td class="actions-col">
-                      <button class="btn btn-text" type="button" (click)="downloadDocument(doc.filePath)">
-                        <i class="pi pi-download"></i>
-                        <span>Download</span>
-                      </button>
-                      <button
-                        class="btn btn-text btn-danger"
-                        appButton
-                        type="button"
-                        (click)="requestDeleteCompanyDocument(doc)"
-                      >
-                        <i class="pi pi-trash"></i>
-                        <span>Delete</span>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+          </div>
+        }
+      </div>
+    }
+
+    @if (activeTab() === 'colmeia') {
+      <div class="tab-panel">
+        <div class="card colmeia-history">
+          <div class="card-header card-header-row">
+            <div>
+              <h3>Colmeia History</h3>
             </div>
           </div>
+
+          @if (colmeiaLoading()) {
+            <div class="loading-state small">
+              <i class="pi pi-spinner pi-spin"></i>
+              <p>Loading history...</p>
+            </div>
+          }
+
+          @if (colmeiaError() && !colmeiaLoading()) {
+            <div class="error-state small">
+              <i class="pi pi-exclamation-circle"></i>
+              <p>{{ colmeiaError() }}</p>
+            </div>
+          }
+
+          @if (!colmeiaLoading() && !colmeiaError()) {
+            @if (colmeiaHistoryRows().length === 0) {
+              <div class="empty-state compact">
+                <p>No colmeia history available.</p>
+              </div>
+            }
+            @if (colmeiaHistoryRows().length > 0) {
+              <div appTableWrapper class="table-wrapper">
+                <table appDataTable class="colmeia-history-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Date</th>
+                      <th>Final Score</th>
+                      <th>Governance</th>
+                      <th>People Management</th>
+                      <th>Processes and Operations</th>
+                      <th>Innovation</th>
+                      <th>Environmental Sustainability</th>
+                      <th>Social Responsibility</th>
+                      <th>Financial Transparency</th>
+                      <th>Owner</th>
+                      <th class="actions-col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (row of colmeiaHistoryRows(); track row.version) {
+                      <tr>
+                        <td>{{ row.version }}</td>
+                        <td>{{ row.date }}</td>
+                        <td>
+                          <div class="score-cell">
+                            <div class="score-main">
+                              {{ row.finalScore.score | number: '1.1-1' }}
+                            </div>
+                            <div
+                              class="score-variation"
+                              [class]="getVariationClass(row.finalScore.variation)"
+                            >
+                              ({{ formatVariation(row.finalScore.variation) }})
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="score-cell">
+                            <div class="score-main">
+                              {{ row.governance.score | number: '1.1-1' }}
+                            </div>
+                            <div
+                              class="score-variation"
+                              [class]="getVariationClass(row.governance.variation)"
+                            >
+                              ({{ formatVariation(row.governance.variation) }})
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="score-cell">
+                            <div class="score-main">
+                              {{ row.peopleManagement.score | number: '1.1-1' }}
+                            </div>
+                            <div
+                              class="score-variation"
+                              [class]="getVariationClass(row.peopleManagement.variation)"
+                            >
+                              ({{ formatVariation(row.peopleManagement.variation) }})
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="score-cell">
+                            <div class="score-main">
+                              {{ row.processesAndOperations.score | number: '1.1-1' }}
+                            </div>
+                            <div
+                              class="score-variation"
+                              [class]="getVariationClass(row.processesAndOperations.variation)"
+                            >
+                              ({{ formatVariation(row.processesAndOperations.variation) }})
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="score-cell">
+                            <div class="score-main">
+                              {{ row.innovation.score | number: '1.1-1' }}
+                            </div>
+                            <div
+                              class="score-variation"
+                              [class]="getVariationClass(row.innovation.variation)"
+                            >
+                              ({{ formatVariation(row.innovation.variation) }})
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="score-cell">
+                            <div class="score-main">
+                              {{ row.environmentalSustainability.score | number: '1.1-1' }}
+                            </div>
+                            <div
+                              class="score-variation"
+                              [class]="getVariationClass(row.environmentalSustainability.variation)"
+                            >
+                              ({{ formatVariation(row.environmentalSustainability.variation) }})
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="score-cell">
+                            <div class="score-main">
+                              {{ row.socialResponsibility.score | number: '1.1-1' }}
+                            </div>
+                            <div
+                              class="score-variation"
+                              [class]="getVariationClass(row.socialResponsibility.variation)"
+                            >
+                              ({{ formatVariation(row.socialResponsibility.variation) }})
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="score-cell">
+                            <div class="score-main">
+                              {{ row.financialTransparency.score | number: '1.1-1' }}
+                            </div>
+                            <div
+                              class="score-variation"
+                              [class]="getVariationClass(row.financialTransparency.variation)"
+                            >
+                              ({{ formatVariation(row.financialTransparency.variation) }})
+                            </div>
+                          </div>
+                        </td>
+                        <td>{{ row.owner }}</td>
+                        <td class="actions-col">
+                          <button class="btn btn-icon btn-text" type="button" disabled>
+                            <i class="pi pi-eye"></i>
+                          </button>
+                          <button class="btn btn-icon btn-text btn-danger" type="button" disabled>
+                            <i class="pi pi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          }
         </div>
       </div>
-    </div>
-
-    <div class="tab-panel" *ngIf="activeTab() === 'colmeia'">
-      <div class="card colmeia-history">
-        <div class="card-header card-header-row">
-          <div>
-            <h3>Colmeia History</h3>
-          </div>
-        </div>
-
-        <div *ngIf="colmeiaLoading()" class="loading-state small">
-          <i class="pi pi-spinner pi-spin"></i>
-          <p>Loading history...</p>
-        </div>
-
-        <div *ngIf="colmeiaError() && !colmeiaLoading()" class="error-state small">
-          <i class="pi pi-exclamation-circle"></i>
-          <p>{{ colmeiaError() }}</p>
-        </div>
-
-        <div *ngIf="!colmeiaLoading() && !colmeiaError()">
-          <div *ngIf="colmeiaHistoryRows().length === 0" class="empty-state compact">
-            <p>No colmeia history available.</p>
-          </div>
-          <div appTableWrapper class="table-wrapper" *ngIf="colmeiaHistoryRows().length > 0">
-            <table appDataTable class="colmeia-history-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Date</th>
-                  <th>Final Score</th>
-                  <th>Governance</th>
-                  <th>People Management</th>
-                  <th>Processes and Operations</th>
-                  <th>Innovation</th>
-                  <th>Environmental Sustainability</th>
-                  <th>Social Responsibility</th>
-                  <th>Financial Transparency</th>
-                  <th>Owner</th>
-                  <th class="actions-col">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let row of colmeiaHistoryRows()">
-                  <td>{{ row.version }}</td>
-                  <td>{{ row.date }}</td>
-                  <td>
-                    <div class="score-cell">
-                      <div class="score-main">{{ row.finalScore.score | number: '1.1-1' }}</div>
-                      <div class="score-variation" [class]="getVariationClass(row.finalScore.variation)">
-                        ({{ formatVariation(row.finalScore.variation) }})
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="score-cell">
-                      <div class="score-main">{{ row.governance.score | number: '1.1-1' }}</div>
-                      <div class="score-variation" [class]="getVariationClass(row.governance.variation)">
-                        ({{ formatVariation(row.governance.variation) }})
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="score-cell">
-                      <div class="score-main">{{ row.peopleManagement.score | number: '1.1-1' }}</div>
-                      <div class="score-variation" [class]="getVariationClass(row.peopleManagement.variation)">
-                        ({{ formatVariation(row.peopleManagement.variation) }})
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="score-cell">
-                      <div class="score-main">{{ row.processesAndOperations.score | number: '1.1-1' }}</div>
-                      <div class="score-variation" [class]="getVariationClass(row.processesAndOperations.variation)">
-                        ({{ formatVariation(row.processesAndOperations.variation) }})
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="score-cell">
-                      <div class="score-main">{{ row.innovation.score | number: '1.1-1' }}</div>
-                      <div class="score-variation" [class]="getVariationClass(row.innovation.variation)">
-                        ({{ formatVariation(row.innovation.variation) }})
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="score-cell">
-                      <div class="score-main">{{ row.environmentalSustainability.score | number: '1.1-1' }}</div>
-                      <div class="score-variation" [class]="getVariationClass(row.environmentalSustainability.variation)">
-                        ({{ formatVariation(row.environmentalSustainability.variation) }})
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="score-cell">
-                      <div class="score-main">{{ row.socialResponsibility.score | number: '1.1-1' }}</div>
-                      <div class="score-variation" [class]="getVariationClass(row.socialResponsibility.variation)">
-                        ({{ formatVariation(row.socialResponsibility.variation) }})
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="score-cell">
-                      <div class="score-main">{{ row.financialTransparency.score | number: '1.1-1' }}</div>
-                      <div class="score-variation" [class]="getVariationClass(row.financialTransparency.variation)">
-                        ({{ formatVariation(row.financialTransparency.variation) }})
-                      </div>
-                    </div>
-                  </td>
-                  <td>{{ row.owner }}</td>
-                  <td class="actions-col">
-                    <button class="btn btn-icon btn-text" type="button" disabled>
-                      <i class="pi pi-eye"></i>
-                    </button>
-                    <button class="btn btn-icon btn-text btn-danger" type="button" disabled>
-                      <i class="pi pi-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+    }
   </div>
+}
 </div>
 
-<app-confirm-dialog
-  *ngIf="confirmDocument()"
-  title="Delete document"
-  [message]="'Delete \"' + (confirmDocument()?.filePath ? getFileName(confirmDocument()?.filePath) : 'document') + '\"?'"
-  confirmLabel="Delete"
-  confirmVariant="danger"
-  (confirm)="confirmDeleteCompanyDocument()"
-  (cancel)="cancelDeleteCompanyDocument()"
-></app-confirm-dialog>
+@if (confirmDocument()) {
+  <app-confirm-dialog
+    title="Delete document"
+    [message]="
+      'Delete \"' +
+      (confirmDocument()?.filePath ? getFileName(confirmDocument()?.filePath) : 'document') +
+      '\"?'
+    "
+    confirmLabel="Delete"
+    confirmVariant="danger"
+    (confirm)="confirmDeleteCompanyDocument()"
+    (cancel)="cancelDeleteCompanyDocument()"
+  ></app-confirm-dialog>
+}

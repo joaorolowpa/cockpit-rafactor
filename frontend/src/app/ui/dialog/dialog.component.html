@@ -4,23 +4,32 @@
     [ngClass]="[sizeClass, dialogClass]"
     (click)="$event.stopPropagation()"
   >
-    <div class="dialog-header" *ngIf="title || subtitle || showClose">
-      <div class="dialog-heading" *ngIf="title || subtitle">
-        <h2 *ngIf="title">{{ title }}</h2>
-        <p *ngIf="subtitle">{{ subtitle }}</p>
+    @if (title || subtitle || showClose) {
+      <div class="dialog-header">
+        @if (title || subtitle) {
+          <div class="dialog-heading">
+            @if (title) {
+              <h2>{{ title }}</h2>
+            }
+            @if (subtitle) {
+              <p>{{ subtitle }}</p>
+            }
+          </div>
+        }
+        @if (showClose) {
+          <button
+            type="button"
+            appButton
+            variant="text"
+            [iconOnly]="true"
+            class="close-btn"
+            (click)="close.emit()"
+          >
+            <i class="pi pi-times"></i>
+          </button>
+        }
       </div>
-      <button
-        *ngIf="showClose"
-        type="button"
-        appButton
-        variant="text"
-        [iconOnly]="true"
-        class="close-btn"
-        (click)="close.emit()"
-      >
-        <i class="pi pi-times"></i>
-      </button>
-    </div>
+    }
 
     <div class="dialog-body">
       <ng-content></ng-content>

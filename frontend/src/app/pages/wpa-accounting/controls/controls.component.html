@@ -7,45 +7,61 @@
   </div>
 
   <div appTableContainer>
-    <app-state type="loading" icon="pi pi-spinner pi-spin" message="Loading entries..." *ngIf="loading()"></app-state>
+    @if (loading()) {
+      <app-state
+        type="loading"
+        icon="pi pi-spinner pi-spin"
+        message="Loading entries..."
+      ></app-state>
+    }
 
-    <app-state
-      *ngIf="error() && !loading()"
-      type="error"
-      icon="pi pi-exclamation-circle"
-      [message]="error() || ''"
-      actionLabel="Retry"
-      (action)="loadEntries()"
-    ></app-state>
+    @if (error() && !loading()) {
+      <app-state
+        type="error"
+        icon="pi pi-exclamation-circle"
+        [message]="error() || ''"
+        actionLabel="Retry"
+        (action)="loadEntries()"
+      ></app-state>
+    }
 
-    <div *ngIf="!loading() && !error()" appTableWrapper>
-      <table appDataTable class="controls-table">
-        <thead>
-          <tr>
-            <th class="sticky-col">Month</th>
-            <th *ngFor="let portfolio of portfolioNames(); trackBy: trackByPortfolio">
-              {{ formatPortfolioName(portfolio) }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let row of sortedEntries(); trackBy: trackByMonth">
-            <td class="sticky-col month-cell">{{ formatMonth(row.month) }}</td>
-            <td
-              *ngFor="let portfolio of portfolioNames(); trackBy: trackByPortfolio"
-              class="status-cell"
-              [class.missing]="isMissing(row, portfolio)"
-            >
-              {{ formatCell(row, portfolio) }}
-            </td>
-          </tr>
-          <tr *ngIf="sortedEntries().length === 0">
-            <td [attr.colspan]="portfolioNames().length + 1">
-              <app-state type="empty" icon="pi pi-info-circle" message="No entries found" size="compact"></app-state>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    @if (!loading() && !error()) {
+      <div appTableWrapper>
+        <table appDataTable class="controls-table">
+          <thead>
+            <tr>
+              <th class="sticky-col">Month</th>
+              @for (portfolio of portfolioNames(); track trackByPortfolio($index, portfolio)) {
+                <th>{{ formatPortfolioName(portfolio) }}</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of sortedEntries(); track trackByMonth($index, row)) {
+              <tr>
+                <td class="sticky-col month-cell">{{ formatMonth(row.month) }}</td>
+                @for (portfolio of portfolioNames(); track trackByPortfolio($index, portfolio)) {
+                  <td class="status-cell" [class.missing]="isMissing(row, portfolio)">
+                    {{ formatCell(row, portfolio) }}
+                  </td>
+                }
+              </tr>
+            }
+            @if (sortedEntries().length === 0) {
+              <tr>
+                <td [attr.colspan]="portfolioNames().length + 1">
+                  <app-state
+                    type="empty"
+                    icon="pi pi-info-circle"
+                    message="No entries found"
+                    size="compact"
+                  ></app-state>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   </div>
 </div>

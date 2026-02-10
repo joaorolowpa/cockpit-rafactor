@@ -22,104 +22,120 @@
       ></app-search-input>
     </div>
 
-    <app-state
-      *ngIf="loading()"
-      type="loading"
-      icon="pi pi-spinner pi-spin"
-      message="Loading companies..."
-    ></app-state>
+    @if (loading()) {
+      <app-state
+        type="loading"
+        icon="pi pi-spinner pi-spin"
+        message="Loading companies..."
+      ></app-state>
+    }
 
-    <app-state
-      *ngIf="error() && !loading()"
-      type="error"
-      icon="pi pi-exclamation-circle"
-      [message]="error() || ''"
-      actionLabel="Retry"
-      (action)="loadCompanies()"
-    ></app-state>
+    @if (error() && !loading()) {
+      <app-state
+        type="error"
+        icon="pi pi-exclamation-circle"
+        [message]="error() || ''"
+        actionLabel="Retry"
+        (action)="loadCompanies()"
+      ></app-state>
+    }
 
-    <div *ngIf="!loading() && !error()" appTableWrapper>
-      <table appDataTable class="coverage-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Display Name</th>
-            <th>Capital IQ ID</th>
-            <th>Analysts</th>
-            <th>Created At</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let company of filteredCompanies(); trackBy: trackById">
-            <td>{{ company.id }}</td>
-            <td class="name-cell">{{ company.display_name }}</td>
-            <td>{{ company.capital_iq_id }}</td>
-            <td class="analysts-cell">{{ formatAnalysts(company.analysts) }}</td>
-            <td>{{ formatCreatedAt(company.created_at) }}</td>
-            <td class="actions-cell">
-              <div class="actions-inline">
-                <button
-                  type="button"
-                  appButton
-                  variant="text"
-                  [iconOnly]="true"
-                  class="action-icon-btn"
-                  (click)="openEditDialog(company)"
-                  title="Edit company"
-                >
-                  <i class="pi pi-pencil"></i>
-                </button>
-                <button
-                  type="button"
-                  appButton
-                  variant="text"
-                  [iconOnly]="true"
-                  class="action-icon-btn delete-btn"
-                  (click)="requestDeleteCompany(company)"
-                  [disabled]="!isDeletable(company)"
-                  [title]="isDeletable(company) ? 'Delete company' : 'Delete disabled (older than 7 days)'"
-                >
-                  <i class="pi pi-trash"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr *ngIf="filteredCompanies().length === 0">
-            <td colspan="6">
-              <app-state
-                type="empty"
-                icon="pi pi-info-circle"
-                message="No companies found"
-                size="compact"
-              ></app-state>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    @if (!loading() && !error()) {
+      <div appTableWrapper>
+        <table appDataTable class="coverage-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Display Name</th>
+              <th>Capital IQ ID</th>
+              <th>Analysts</th>
+              <th>Created At</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (company of filteredCompanies(); track trackById($index, company)) {
+              <tr>
+                <td>{{ company.id }}</td>
+                <td class="name-cell">{{ company.display_name }}</td>
+                <td>{{ company.capital_iq_id }}</td>
+                <td class="analysts-cell">{{ formatAnalysts(company.analysts) }}</td>
+                <td>{{ formatCreatedAt(company.created_at) }}</td>
+                <td class="actions-cell">
+                  <div class="actions-inline">
+                    <button
+                      type="button"
+                      appButton
+                      variant="text"
+                      [iconOnly]="true"
+                      class="action-icon-btn"
+                      (click)="openEditDialog(company)"
+                      title="Edit company"
+                    >
+                      <i class="pi pi-pencil"></i>
+                    </button>
+                    <button
+                      type="button"
+                      appButton
+                      variant="text"
+                      [iconOnly]="true"
+                      class="action-icon-btn delete-btn"
+                      (click)="requestDeleteCompany(company)"
+                      [disabled]="!isDeletable(company)"
+                      [title]="
+                        isDeletable(company)
+                          ? 'Delete company'
+                          : 'Delete disabled (older than 7 days)'
+                      "
+                    >
+                      <i class="pi pi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @if (filteredCompanies().length === 0) {
+              <tr>
+                <td colspan="6">
+                  <app-state
+                    type="empty"
+                    icon="pi pi-info-circle"
+                    message="No companies found"
+                    size="compact"
+                  ></app-state>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+  @if (!loading() && !error()) {
+    <div class="table-footer">
+      <span class="results-count">
+        Showing {{ filteredCompanies().length }} of {{ companies().length }} companies
+      </span>
     </div>
-  </div>
-
-  <div *ngIf="!loading() && !error()" class="table-footer">
-    <span class="results-count">
-      Showing {{ filteredCompanies().length }} of {{ companies().length }} companies
-    </span>
-  </div>
+  }
 </div>
 
-<app-company-form-dialog
-  *ngIf="showDialog()"
-  [company]="editingCompany()"
-  (close)="closeDialog()"
-  (saved)="onCompanySaved()"
-></app-company-form-dialog>
+@if (showDialog()) {
+  <app-company-form-dialog
+    [company]="editingCompany()"
+    (close)="closeDialog()"
+    (saved)="onCompanySaved()"
+  ></app-company-form-dialog>
+}
 
-<app-confirm-dialog
-  *ngIf="confirmTarget()"
-  title="Delete company"
-  [message]="'Delete \"' + (confirmTarget()?.display_name || 'company') + '\"?'"
-  confirmLabel="Delete"
-  confirmVariant="danger"
-  (confirm)="confirmDeleteCompany()"
-  (cancel)="cancelDeleteCompany()"
-></app-confirm-dialog>
+@if (confirmTarget()) {
+  <app-confirm-dialog
+    title="Delete company"
+    [message]="'Delete \"' + (confirmTarget()?.display_name || 'company') + '\"?'"
+    confirmLabel="Delete"
+    confirmVariant="danger"
+    (confirm)="confirmDeleteCompany()"
+    (cancel)="cancelDeleteCompany()"
+  ></app-confirm-dialog>
+}

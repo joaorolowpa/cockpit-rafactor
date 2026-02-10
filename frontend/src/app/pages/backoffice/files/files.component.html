@@ -12,25 +12,28 @@
         (click)="handleUpload()"
         [disabled]="!canUpload()"
       >
-        <i *ngIf="isProcessing()" class="pi pi-spinner pi-spin"></i>
+        @if (isProcessing()) {
+          <i class="pi pi-spinner pi-spin"></i>
+        }
         <span>{{ isProcessing() ? 'Uploading...' : 'Upload' }}</span>
       </button>
     </div>
   </div>
 
   <div class="tabs">
-    <button
-      class="tab-btn"
-      type="button"
-      *ngFor="let tab of tabs; trackBy: trackByTab"
-      [class.active]="activeTab() === tab.key"
-      (click)="setTab(tab.key)"
-      [attr.data-tooltip]="tab.label"
-      [attr.aria-label]="tab.label"
-    >
-      <i [class]="tab.icon"></i>
-      <span class="tab-label">{{ tab.label }}</span>
-    </button>
+    @for (tab of tabs; track trackByTab($index, tab)) {
+      <button
+        class="tab-btn"
+        type="button"
+        [class.active]="activeTab() === tab.key"
+        (click)="setTab(tab.key)"
+        [attr.data-tooltip]="tab.label"
+        [attr.aria-label]="tab.label"
+      >
+        <i [class]="tab.icon"></i>
+        <span class="tab-label">{{ tab.label }}</span>
+      </button>
+    }
   </div>
 
   <div class="upload-card">
@@ -55,32 +58,42 @@
       </label>
     </div>
 
-    <p class="upload-hint" *ngIf="activeTabConfig()?.nameHint">
-      {{ activeTabConfig()?.nameHint }}
-    </p>
+    @if (activeTabConfig()?.nameHint) {
+      <p class="upload-hint">
+        {{ activeTabConfig()?.nameHint }}
+      </p>
+    }
 
-    <div *ngIf="statusMessage()" class="status-message" [class.error]="statusType() === 'error'">
-      {{ statusMessage() }}
-    </div>
-
-    <div *ngIf="uploadedFiles().length > 0" class="file-list">
-      <div class="file-row" *ngFor="let file of uploadedFiles(); let i = index; trackBy: trackByFile">
-        <div class="file-info">
-          <span class="file-name" [class.invalid]="!file.isValid">{{ file.name }}</span>
-          <span class="file-size">{{ formatFileSize(file.size) }}</span>
-          <span *ngIf="!file.isValid" class="file-error">{{ file.error }}</span>
-        </div>
-        <button
-          type="button"
-          appButton
-          class="btn btn-icon btn-text remove-btn"
-          (click)="removeFile(i)"
-          [disabled]="isProcessing()"
-          aria-label="Remove file"
-        >
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+    @if (statusMessage()) {
+      <div class="status-message" [class.error]="statusType() === 'error'">
+        {{ statusMessage() }}
       </div>
-    </div>
+    }
+
+    @if (uploadedFiles().length > 0) {
+      <div class="file-list">
+        @for (file of uploadedFiles(); track trackByFile($index, file); let i = $index) {
+          <div class="file-row">
+            <div class="file-info">
+              <span class="file-name" [class.invalid]="!file.isValid">{{ file.name }}</span>
+              <span class="file-size">{{ formatFileSize(file.size) }}</span>
+              @if (!file.isValid) {
+                <span class="file-error">{{ file.error }}</span>
+              }
+            </div>
+            <button
+              type="button"
+              appButton
+              class="btn btn-icon btn-text remove-btn"
+              (click)="removeFile(i)"
+              [disabled]="isProcessing()"
+              aria-label="Remove file"
+            >
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        }
+      </div>
+    }
   </div>
 </div>

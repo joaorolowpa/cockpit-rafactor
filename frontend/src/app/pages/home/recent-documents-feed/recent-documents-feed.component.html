@@ -20,24 +20,26 @@
             <span class="feed-date">{{ group.displayDate }}</span>
           </div>
           <div class="feed-card-body">
-            <div class="doc-row" *ngFor="let doc of group.documents">
-              <div class="doc-content">
-                <div class="doc-date-key">{{ group.date }}</div>
-                <div class="doc-meta-line">
-                  Created at {{ formatCreatedAt(doc.created_at) }} by {{ doc.creator_name }}
+            @for (doc of group.documents; track doc) {
+              <div class="doc-row">
+                <div class="doc-content">
+                  <div class="doc-date-key">{{ group.date }}</div>
+                  <div class="doc-meta-line">
+                    Created at {{ formatCreatedAt(doc.created_at) }} by {{ doc.creator_name }}
+                  </div>
+                </div>
+                <div class="doc-actions">
+                  <button
+                    class="btn btn-text doc-download-btn"
+                    type="button"
+                    (click)="downloadDocument(doc)"
+                  >
+                    <i class="pi pi-download"></i>
+                    <span>Download</span>
+                  </button>
                 </div>
               </div>
-              <div class="doc-actions">
-                <button
-                  class="btn btn-text doc-download-btn"
-                  type="button"
-                  (click)="downloadDocument(doc)"
-                >
-                  <i class="pi pi-download"></i>
-                  <span>Download</span>
-                </button>
-              </div>
-            </div>
+            }
           </div>
         </div>
       }

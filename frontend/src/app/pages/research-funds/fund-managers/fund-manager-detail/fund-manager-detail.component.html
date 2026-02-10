@@ -3,30 +3,36 @@
     <h1 class="page-title">{{ fund()?.display_name || 'Fund Manager' }}</h1>
   </div>
 
-  <div *ngIf="isLoading()" class="loading-state">
-    <i class="pi pi-spinner pi-spin"></i>
-    <p>Loading fund manager...</p>
-  </div>
+  @if (isLoading()) {
+    <div class="loading-state">
+      <i class="pi pi-spinner pi-spin"></i>
+      <p>Loading fund manager...</p>
+    </div>
+  }
 
-  <div *ngIf="error() && !isLoading()" class="error-state">
-    <i class="pi pi-exclamation-circle"></i>
-    <p>{{ error() }}</p>
-    <a
-      class="btn btn-secondary"
-      [routerLink]="['/research-funds/fund-managers']"
-    >
-      Back to list
-    </a>
-  </div>
+  @if (error() && !isLoading()) {
+    <div class="error-state">
+      <i class="pi pi-exclamation-circle"></i>
+      <p>{{ error() }}</p>
+      <a
+        class="btn btn-secondary"
+        [routerLink]="['/research-funds/fund-managers']"
+      >
+        Back to list
+      </a>
+    </div>
+  }
 
-  <div *ngIf="!isLoading() && !error()" class="content">
+  @if (!isLoading() && !error()) {
+    <div class="content">
     <div class="tabs">
       <button class="tab-btn" [class.active]="activeTab() === 'home'" (click)="setTab('home')">Overview</button>
       <button class="tab-btn" [class.active]="activeTab() === 'relationships'" (click)="setTab('relationships')">Relationships</button>
       <button class="tab-btn" [class.active]="activeTab() === 'documents'" (click)="setTab('documents')">Documents</button>
     </div>
 
-    <div class="tab-content" *ngIf="activeTab() === 'home'">
+    @if (activeTab() === 'home') {
+      <div class="tab-content">
       
 
       <div class="card">
@@ -62,12 +68,17 @@
 
       <div class="card">
         <h3>Notes</h3>
-        <div *ngIf="notesError()" class="notice">Failed to load notes.</div>
-        <div *ngIf="!notesError() && notes().length === 0" class="empty-state">
-          <i class="pi pi-info-circle"></i>
-          <p>No notes available for this fund manager</p>
-        </div>
-        <div *ngIf="!notesError() && notes().length > 0" class="notes-grid">
+        @if (notesError()) {
+          <div class="notice">Failed to load notes.</div>
+        }
+        @if (!notesError() && notes().length === 0) {
+          <div class="empty-state">
+            <i class="pi pi-info-circle"></i>
+            <p>No notes available for this fund manager</p>
+          </div>
+        }
+        @if (!notesError() && notes().length > 0) {
+          <div class="notes-grid">
           <div class="note-card" *ngFor="let note of notes()">
             <div class="note-title">{{ note.note_title }}</div>
             <div class="note-meta">{{ note.created_by_name || '-' }} · {{ note.created_at | date: 'mediumDate' }}</div>
@@ -75,9 +86,11 @@
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    }
 
-    <div class="tab-content" *ngIf="activeTab() === 'relationships'">
+    @if (activeTab() === 'relationships') {
+      <div class="tab-content">
       <div class="card">
         <div class="card-header">
           <h3>Relationships</h3>
@@ -167,9 +180,11 @@
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    }
 
-    <div class="tab-content" *ngIf="activeTab() === 'documents'">
+    @if (activeTab() === 'documents') {
+      <div class="tab-content">
       <div class="card">
         <div class="card-header">
           <h3>Documents</h3>

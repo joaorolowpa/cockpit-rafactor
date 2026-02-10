@@ -4,9 +4,11 @@
       <label for="wpa_asset_id">Asset *</label>
       <select id="wpa_asset_id" formControlName="wpa_asset_id">
         <option [ngValue]="null" disabled>Select an asset</option>
-        <option *ngFor="let asset of assets; trackBy: trackByAsset" [ngValue]="asset.id">
-          {{ asset.name }}
-        </option>
+        @for (asset of assets; track trackByAsset($index, asset)) {
+          <option [ngValue]="asset.id">
+            {{ asset.name }}
+          </option>
+        }
       </select>
       @if (form.controls.wpa_asset_id.touched && form.controls.wpa_asset_id.errors?.['required']) {
         <span class="error-message">Asset is required</span>
@@ -58,10 +60,12 @@
       <textarea id="comment" rows="3" formControlName="comment" placeholder="Optional note"></textarea>
     </div>
 
-    <div *ngIf="submitError()" class="submit-error">
-      <i class="pi pi-exclamation-circle"></i>
-      {{ submitError() }}
-    </div>
+    @if (submitError()) {
+      <div class="submit-error">
+        <i class="pi pi-exclamation-circle"></i>
+        {{ submitError() }}
+      </div>
+    }
 
     <div dialog-footer>
       <button type="button" class="btn btn-ghost" (click)="onClose()">Cancel</button>

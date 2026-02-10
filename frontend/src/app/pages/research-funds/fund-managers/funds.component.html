@@ -16,41 +16,44 @@
     ></app-search-input>
   </div>
 
-  <app-state
-    *ngIf="loading()"
-    type="loading"
-    icon="pi pi-spinner pi-spin"
-    message="Loading fund managers..."
-  ></app-state>
+  @if (loading()) {
+    <app-state
+      type="loading"
+      icon="pi pi-spinner pi-spin"
+      message="Loading fund managers..."
+    ></app-state>
+  }
 
-  <app-state
-    *ngIf="error() && !loading()"
-    type="error"
-    icon="pi pi-exclamation-circle"
-    [message]="error() || ''"
-    actionLabel="Retry"
-    (action)="loadFunds()"
-  ></app-state>
+  @if (error() && !loading()) {
+    <app-state
+      type="error"
+      icon="pi pi-exclamation-circle"
+      [message]="error() || ''"
+      actionLabel="Retry"
+      (action)="loadFunds()"
+    ></app-state>
+  }
 
-  <div *ngIf="!loading() && !error() && filteredFunds().length > 0" class="funds-grid">
-    <a 
-      *ngFor="let fund of filteredFunds()" 
-      class="fund-card"
-      [routerLink]="['/research-funds/fund-managers', fund.id]"
-    >
-      <div class="fund-initial">
-        {{ fund.display_name.charAt(0) }}
-      </div>
-      <div class="fund-info">
-        <span class="fund-name">{{ fund.display_name }}</span>
-      </div>
-    </a>
-  </div>
+  @if (!loading() && !error() && filteredFunds().length > 0) {
+    <div class="funds-grid">
+      @for (fund of filteredFunds(); track fund.id) {
+        <a class="fund-card" [routerLink]="['/research-funds/fund-managers', fund.id]">
+          <div class="fund-initial">
+            {{ fund.display_name.charAt(0) }}
+          </div>
+          <div class="fund-info">
+            <span class="fund-name">{{ fund.display_name }}</span>
+          </div>
+        </a>
+      }
+    </div>
+  }
 
-  <app-state
-    *ngIf="!loading() && !error() && filteredFunds().length === 0"
-    type="empty"
-    icon="pi pi-search"
-    message="No fund managers found"
-  ></app-state>
+  @if (!loading() && !error() && filteredFunds().length === 0) {
+    <app-state
+      type="empty"
+      icon="pi pi-search"
+      message="No fund managers found"
+    ></app-state>
+  }
 </div>

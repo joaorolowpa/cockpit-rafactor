@@ -7,12 +7,9 @@
     [disabled]="disabled"
     (input)="onInput($event)"
   />
-  <button
-    *ngIf="value"
-    type="button"
-    class="clear-btn"
-    (click)="onClear()"
-  >
-    <i class="pi pi-times"></i>
-  </button>
+  @if (value) {
+    <button type="button" class="clear-btn" (click)="onClear()">
+      <i class="pi pi-times"></i>
+    </button>
+  }
 </div>

@@ -4,37 +4,41 @@
       <h1 class="page-title">Quotas WPA Quantity</h1>
       <p class="page-subtitle">Manage WPA quantity data and track position holdings.</p>
     </div>
-    <div appPageActions *ngIf="activeTab() === 'quota_acquisition'">
-      <button
-        type="button"
-        appButton
-        class="btn btn-primary"
-        (click)="openForm()"
-        [disabled]="assetsLoading() || !!assetsError()"
-        [attr.title]="assetsError() || 'Add acquisition'"
-      >
-        <i class="fa-solid fa-plus"></i>
-        Add Acquisition
-      </button>
-    </div>
+    @if (activeTab() === 'quota_acquisition') {
+      <div appPageActions>
+        <button
+          type="button"
+          appButton
+          class="btn btn-primary"
+          (click)="openForm()"
+          [disabled]="assetsLoading() || !!assetsError()"
+          [attr.title]="assetsError() || 'Add acquisition'"
+        >
+          <i class="fa-solid fa-plus"></i>
+          Add Acquisition
+        </button>
+      </div>
+    }
   </div>
 
   <div class="tabs">
-    <button
-      class="tab-btn"
-      type="button"
-      *ngFor="let tab of tabs; trackBy: trackByTab"
-      [class.active]="activeTab() === tab.key"
-      (click)="setTab(tab.key)"
-      [attr.data-tooltip]="tab.label"
-      [attr.aria-label]="tab.label"
-    >
-      <i [class]="tab.icon"></i>
-      <span class="tab-label">{{ tab.label }}</span>
-    </button>
+    @for (tab of tabs; track trackByTab($index, tab)) {
+      <button
+        class="tab-btn"
+        type="button"
+        [class.active]="activeTab() === tab.key"
+        (click)="setTab(tab.key)"
+        [attr.data-tooltip]="tab.label"
+        [attr.aria-label]="tab.label"
+      >
+        <i [class]="tab.icon"></i>
+        <span class="tab-label">{{ tab.label }}</span>
+      </button>
+    }
   </div>
 
-  <div *ngIf="activeTab() === 'quota_acquisition'" class="cards-grid">
+  @if (activeTab() === 'quota_acquisition') {
+    <div class="cards-grid">
     <div class="card">
       <div class="card-header table-header">
         <div>
@@ -57,85 +61,101 @@
         </div>
       </div>
       <div class="card-body">
-        <div appFiltersBar *ngIf="!isLoading() && !error()">
-          <app-search-input
-            placeholder="Search by asset name..."
-            [value]="searchTerm()"
-            (valueChange)="searchTerm.set($event)"
-            (cleared)="searchTerm.set('')"
-          ></app-search-input>
-          <div class="results-count">
-            <i class="pi pi-list"></i>
-            {{ filteredAcquisitions().length }} results
+        @if (!isLoading() && !error()) {
+          <div appFiltersBar>
+            <app-search-input
+              placeholder="Search by asset name..."
+              [value]="searchTerm()"
+              (valueChange)="searchTerm.set($event)"
+              (cleared)="searchTerm.set('')"
+            ></app-search-input>
+            <div class="results-count">
+              <i class="pi pi-list"></i>
+              {{ filteredAcquisitions().length }} results
+            </div>
           </div>
-        </div>
+        }
 
-        <app-state
-          *ngIf="isLoading()"
-          type="loading"
-          icon="pi pi-spinner pi-spin"
-          message="Loading quota acquisitions..."
-        ></app-state>
+        @if (isLoading()) {
+          <app-state
+            type="loading"
+            icon="pi pi-spinner pi-spin"
+            message="Loading quota acquisitions..."
+          ></app-state>
+        }
 
-        <app-state
-          *ngIf="error() && !isLoading()"
-          type="error"
-          icon="pi pi-exclamation-circle"
-          [message]="error() || ''"
-          actionLabel="Retry"
-          (action)="loadAcquisitions()"
-        ></app-state>
+        @if (error() && !isLoading()) {
+          <app-state
+            type="error"
+            icon="pi pi-exclamation-circle"
+            [message]="error() || ''"
+            actionLabel="Retry"
+            (action)="loadAcquisitions()"
+          ></app-state>
+        }
 
-        <div *ngIf="!isLoading() && !error()" appTableWrapper>
-          <table appDataTable class="acquisition-table">
-            <thead>
-              <tr>
-                <th>Date Reference</th>
-                <th>Asset Name</th>
-                <th class="text-right">Quantity</th>
-                <th class="text-right">Unit Value</th>
-                <th>Comment</th>
-                <th class="actions-cell">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let row of filteredAcquisitions(); trackBy: trackByAcquisition">
-                <td class="mono">{{ formatDateReference(row.date_reference) }}</td>
-                <td class="name-cell">{{ row.asset_name }}</td>
-                <td class="text-right">{{ formatQuantity(row.quantidade_cotas) }}</td>
-                <td class="text-right">{{ formatUnitValue(row.valor_cota) }}</td>
-                <td class="comment-cell">{{ row.comment || '-' }}</td>
-                <td class="actions-cell">
-                  <button
-                    type="button"
-                    appButton
-                    class="btn btn-icon btn-text action-icon-btn delete-btn"
-                    (click)="requestDeleteAcquisition(row)"
-                    [disabled]="!canDelete(row)"
-                    [attr.title]="canDelete(row) ? 'Delete acquisition' : 'Deletion available within 12 months'"
-                  >
-                    <i class="fa-solid fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr *ngIf="filteredAcquisitions().length === 0">
-                <td [attr.colspan]="6">
-                  <app-state
-                    type="empty"
-                    icon="pi pi-info-circle"
-                    message="No quota acquisitions found"
-                    size="compact"
-                  ></app-state>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        @if (!isLoading() && !error()) {
+          <div appTableWrapper>
+            <table appDataTable class="acquisition-table">
+              <thead>
+                <tr>
+                  <th>Date Reference</th>
+                  <th>Asset Name</th>
+                  <th class="text-right">Quantity</th>
+                  <th class="text-right">Unit Value</th>
+                  <th>Comment</th>
+                  <th class="actions-cell">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of filteredAcquisitions(); track trackByAcquisition($index, row)) {
+                  <tr>
+                    <td class="mono">{{ formatDateReference(row.date_reference) }}</td>
+                    <td class="name-cell">{{ row.asset_name }}</td>
+                    <td class="text-right">{{ formatQuantity(row.quantidade_cotas) }}</td>
+                    <td class="text-right">{{ formatUnitValue(row.valor_cota) }}</td>
+                    <td class="comment-cell">{{ row.comment || '-' }}</td>
+                    <td class="actions-cell">
+                      <button
+                        type="button"
+                        appButton
+                        class="btn btn-icon btn-text action-icon-btn delete-btn"
+                        (click)="requestDeleteAcquisition(row)"
+                        [disabled]="!canDelete(row)"
+                        [attr.title]="
+                          canDelete(row)
+                            ? 'Delete acquisition'
+                            : 'Deletion available within 12 months'
+                        "
+                      >
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                }
+                @if (filteredAcquisitions().length === 0) {
+                  <tr>
+                    <td [attr.colspan]="6">
+                      <app-state
+                        type="empty"
+                        icon="pi pi-info-circle"
+                        message="No quota acquisitions found"
+                        size="compact"
+                      ></app-state>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
       </div>
     </div>
-  </div>
+    </div>
+  }
 
-  <div *ngIf="activeTab() === 'position_held'" class="cards-grid">
+  @if (activeTab() === 'position_held') {
+    <div class="cards-grid">
     <div class="card">
       <div class="card-header">
         <div>
@@ -147,83 +167,99 @@
         </div>
       </div>
       <div class="card-body">
-        <app-state *ngIf="isLoading()" type="loading" icon="pi pi-spinner pi-spin" message="Loading position data..."></app-state>
-
-        <app-state
-          *ngIf="error() && !isLoading()"
-          type="error"
-          icon="pi pi-exclamation-circle"
-          [message]="error() || ''"
-        ></app-state>
-
-        <div *ngIf="!isLoading() && !error()">
+        @if (isLoading()) {
           <app-state
-            *ngIf="positionRows().length === 0"
-            type="empty"
-            icon="pi pi-info-circle"
-            message="No position data found"
-            size="compact"
+            type="loading"
+            icon="pi pi-spinner pi-spin"
+            message="Loading position data..."
           ></app-state>
+        }
 
-          <div *ngIf="hasPositionData()" class="chart-wrapper">
-            <p-chart type="line" [data]="chartData()" [options]="chartOptions"></p-chart>
-          </div>
-          <div *ngIf="hasPositionData()" class="chart-notes">
-            <p>This chart shows the cumulative number of shares held for each WPA asset over time.</p>
-            <p>Each line represents a different asset, and values are cumulative from acquisition dates.</p>
-          </div>
-        </div>
+        @if (error() && !isLoading()) {
+          <app-state
+            type="error"
+            icon="pi pi-exclamation-circle"
+            [message]="error() || ''"
+          ></app-state>
+        }
+
+        @if (!isLoading() && !error()) {
+          @if (positionRows().length === 0) {
+            <app-state
+              type="empty"
+              icon="pi pi-info-circle"
+              message="No position data found"
+              size="compact"
+            ></app-state>
+          }
+
+          @if (hasPositionData()) {
+            <div class="chart-wrapper">
+              <p-chart type="line" [data]="chartData()" [options]="chartOptions"></p-chart>
+            </div>
+            <div class="chart-notes">
+              <p>This chart shows the cumulative number of shares held for each WPA asset over time.</p>
+              <p>Each line represents a different asset, and values are cumulative from acquisition dates.</p>
+            </div>
+          }
+        }
       </div>
     </div>
 
-    <div class="card" *ngIf="!isLoading() && !error()">
-      <div class="card-header table-header">
-        <div>
-          <h3>Position Held Data</h3>
-          <p class="card-subtitle">Cumulative values by date</p>
+    @if (!isLoading() && !error()) {
+      <div class="card">
+        <div class="card-header table-header">
+          <div>
+            <h3>Position Held Data</h3>
+            <p class="card-subtitle">Cumulative values by date</p>
+          </div>
+          <div class="table-actions">
+            <button appButton class="btn btn-ghost" type="button" (click)="copyPositionTable()">
+              <i class="fa-regular fa-copy"></i>
+              Copy Table
+            </button>
+          </div>
         </div>
-        <div class="table-actions">
-          <button appButton class="btn btn-ghost" type="button" (click)="copyPositionTable()">
-            <i class="fa-regular fa-copy"></i>
-            Copy Table
-          </button>
+        <div class="card-body">
+          <div appTableWrapper>
+            <table appDataTable class="position-table">
+              <thead>
+                <tr>
+                  <th>Date Reference</th>
+                  @for (asset of positionAssetNames(); track trackByAssetName($index, asset)) {
+                    <th class="text-right">{{ asset }}</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of positionRows(); track trackByPositionRow($index, row)) {
+                  <tr>
+                    <td class="mono">{{ row['date_reference'] }}</td>
+                    @for (asset of positionAssetNames(); track trackByAssetName($index, asset)) {
+                      <td class="text-right">{{ formatPositionNumber(row[asset]) }}</td>
+                    }
+                  </tr>
+                }
+                @if (positionRows().length === 0) {
+                  <tr>
+                    <td [attr.colspan]="positionAssetNames().length + 1">
+                      <app-state
+                        type="empty"
+                        icon="pi pi-info-circle"
+                        message="No position data found"
+                        size="compact"
+                      ></app-state>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-      <div class="card-body">
-        <div appTableWrapper>
-          <table appDataTable class="position-table">
-            <thead>
-              <tr>
-                <th>Date Reference</th>
-                <th
-                  *ngFor="let asset of positionAssetNames(); trackBy: trackByAssetName"
-                  class="text-right"
-                >
-                  {{ asset }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let row of positionRows(); trackBy: trackByPositionRow">
-                <td class="mono">{{ row['date_reference'] }}</td>
-                <td
-                  *ngFor="let asset of positionAssetNames(); trackBy: trackByAssetName"
-                  class="text-right"
-                >
-                  {{ formatPositionNumber(row[asset]) }}
-                </td>
-              </tr>
-              <tr *ngIf="positionRows().length === 0">
-                <td [attr.colspan]="positionAssetNames().length + 1">
-                  <app-state type="empty" icon="pi pi-info-circle" message="No position data found" size="compact"></app-state>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    }
     </div>
-  </div>
+  }
 </div>
 
 @if (showForm()) {
@@ -234,12 +270,13 @@
   ></app-quota-acquisition-form-dialog>
 }
 
-<app-confirm-dialog
-  *ngIf="confirmTarget()"
-  title="Delete acquisition"
-  [message]="'Delete acquisition for ' + (confirmTarget()?.asset_name || 'asset') + '?'"
-  confirmLabel="Delete"
-  confirmVariant="danger"
-  (confirm)="confirmDeleteAcquisition()"
-  (cancel)="cancelDeleteAcquisition()"
-></app-confirm-dialog>
+@if (confirmTarget()) {
+  <app-confirm-dialog
+    title="Delete acquisition"
+    [message]="'Delete acquisition for ' + (confirmTarget()?.asset_name || 'asset') + '?'"
+    confirmLabel="Delete"
+    confirmVariant="danger"
+    (confirm)="confirmDeleteAcquisition()"
+    (cancel)="cancelDeleteAcquisition()"
+  ></app-confirm-dialog>
+}

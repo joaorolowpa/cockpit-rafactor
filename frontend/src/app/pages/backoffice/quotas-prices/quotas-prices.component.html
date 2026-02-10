@@ -12,7 +12,9 @@
         (click)="handleUpload()"
         [disabled]="!canUpload()"
       >
-        <i *ngIf="isProcessing()" class="pi pi-spinner pi-spin"></i>
+        @if (isProcessing()) {
+          <i class="pi pi-spinner pi-spin"></i>
+        }
         <span>{{ isProcessing() ? 'Uploading...' : 'Upload' }}</span>
       </button>
     </div>
@@ -45,32 +47,38 @@
           </label>
         </div>
 
-        <div *ngIf="uploadStatus()" class="status-message" [class.error]="uploadStatus()?.type === 'error'">
-          {{ uploadStatus()?.message }}
-        </div>
-
-        <div *ngIf="uploadedFiles().length > 0" class="file-list">
-          <div class="file-row">
-            <div class="file-info">
-              <span class="file-name" [class.invalid]="!uploadedFiles()[0].isValid">
-                {{ uploadedFiles()[0].name }}
-              </span>
-              <span class="file-size">{{ uploadedFiles()[0].size | number }} bytes</span>
-              <span *ngIf="!uploadedFiles()[0].isValid" class="file-error">
-                {{ uploadedFiles()[0].error }}
-              </span>
-            </div>
-            <button
-              type="button"
-              appButton
-              class="btn btn-icon btn-text remove-btn"
-              (click)="removeFile()"
-              [disabled]="isProcessing()"
-            >
-              <i class="fa-solid fa-xmark"></i>
-            </button>
+        @if (uploadStatus()) {
+          <div class="status-message" [class.error]="uploadStatus()?.type === 'error'">
+            {{ uploadStatus()?.message }}
           </div>
-        </div>
+        }
+
+        @if (uploadedFiles().length > 0) {
+          <div class="file-list">
+            <div class="file-row">
+              <div class="file-info">
+                <span class="file-name" [class.invalid]="!uploadedFiles()[0].isValid">
+                  {{ uploadedFiles()[0].name }}
+                </span>
+                <span class="file-size">{{ uploadedFiles()[0].size | number }} bytes</span>
+                @if (!uploadedFiles()[0].isValid) {
+                  <span class="file-error">
+                    {{ uploadedFiles()[0].error }}
+                  </span>
+                }
+              </div>
+              <button
+                type="button"
+                appButton
+                class="btn btn-icon btn-text remove-btn"
+                (click)="removeFile()"
+                [disabled]="isProcessing()"
+              >
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+        }
       </div>
     </div>
 
@@ -96,50 +104,70 @@
         </div>
       </div>
       <div class="card-body">
-        <app-state
-          *ngIf="isLoading()"
-          type="loading"
-          icon="pi pi-spinner pi-spin"
-          message="Loading quota prices..."
-        ></app-state>
+        @if (isLoading()) {
+          <app-state
+            type="loading"
+            icon="pi pi-spinner pi-spin"
+            message="Loading quota prices..."
+          ></app-state>
+        }
 
-        <app-state
-          *ngIf="error() && !isLoading()"
-          type="error"
-          icon="pi pi-exclamation-circle"
-          [message]="error() || ''"
-          actionLabel="Retry"
-          (action)="loadQuotaPrices()"
-        ></app-state>
+        @if (error() && !isLoading()) {
+          <app-state
+            type="error"
+            icon="pi pi-exclamation-circle"
+            [message]="error() || ''"
+            actionLabel="Retry"
+            (action)="loadQuotaPrices()"
+          ></app-state>
+        }
 
-        <div *ngIf="!isLoading() && !error()" appTableWrapper>
-          <table appDataTable class="quota-table">
-            <thead>
-              <tr>
-                <th *ngFor="let col of columns(); trackBy: trackByColumn" [class.text-right]="col !== 'date_reference'">
-                  {{ col === 'date_reference' ? 'Date Reference' : col }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let row of rows(); trackBy: trackByRow">
-                <td
-                  *ngFor="let col of columns(); trackBy: trackByColumn"
-                  [class.text-right]="col !== 'date_reference'"
-                  [class.missing]="getCellStyle(row, col).isMissing"
-                  [class.first]="getCellStyle(row, col).isFirstNonNull"
-                >
-                  {{ col === 'date_reference' ? formatDateReference(row['date_reference']) : formatNumber(row[col]) }}
-                </td>
-              </tr>
-              <tr *ngIf="rows().length === 0">
-                <td [attr.colspan]="columns().length">
-                  <app-state type="empty" icon="pi pi-info-circle" message="No quota prices found" size="compact"></app-state>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        @if (!isLoading() && !error()) {
+          <div appTableWrapper>
+            <table appDataTable class="quota-table">
+              <thead>
+                <tr>
+                  @for (col of columns(); track trackByColumn($index, col)) {
+                    <th [class.text-right]="col !== 'date_reference'">
+                      {{ col === 'date_reference' ? 'Date Reference' : col }}
+                    </th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of rows(); track trackByRow($index, row)) {
+                  <tr>
+                    @for (col of columns(); track trackByColumn($index, col)) {
+                      <td
+                        [class.text-right]="col !== 'date_reference'"
+                        [class.missing]="getCellStyle(row, col).isMissing"
+                        [class.first]="getCellStyle(row, col).isFirstNonNull"
+                      >
+                        {{
+                          col === 'date_reference'
+                            ? formatDateReference(row['date_reference'])
+                            : formatNumber(row[col])
+                        }}
+                      </td>
+                    }
+                  </tr>
+                }
+                @if (rows().length === 0) {
+                  <tr>
+                    <td [attr.colspan]="columns().length">
+                      <app-state
+                        type="empty"
+                        icon="pi pi-info-circle"
+                        message="No quota prices found"
+                        size="compact"
+                      ></app-state>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
       </div>
     </div>
   </div>

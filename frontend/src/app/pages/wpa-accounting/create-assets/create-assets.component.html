@@ -28,104 +28,128 @@
         [disabled]="loading()"
       >
         <option value="">All Types</option>
-        <option *ngFor="let type of assetTypeOptions()" [value]="type">
-          {{ type }}
-        </option>
+        @for (type of assetTypeOptions(); track type) {
+          <option [value]="type">
+            {{ type }}
+          </option>
+        }
       </select>
 
-      <button
-        *ngIf="searchTerm() || selectedAssetType()"
-        appButton
-        type="button"
-        class="btn btn-ghost clear-filters-btn"
-        (click)="clearFilters()"
-      >
-        Clear Filters
-      </button>
+      @if (searchTerm() || selectedAssetType()) {
+        <button
+          appButton
+          type="button"
+          class="btn btn-ghost clear-filters-btn"
+          (click)="clearFilters()"
+        >
+          Clear Filters
+        </button>
+      }
     </div>
 
-    <app-state
-      *ngIf="loading()"
-      type="loading"
-      icon="pi pi-spinner pi-spin"
-      message="Loading assets..."
-    ></app-state>
+    @if (loading()) {
+      <app-state
+        type="loading"
+        icon="pi pi-spinner pi-spin"
+        message="Loading assets..."
+      ></app-state>
+    }
 
-    <app-state
-      *ngIf="error() && !loading()"
-      type="error"
-      icon="pi pi-exclamation-circle"
-      [message]="error() || ''"
-      actionLabel="Retry"
-      (action)="loadAssets()"
-    ></app-state>
+    @if (error() && !loading()) {
+      <app-state
+        type="error"
+        icon="pi pi-exclamation-circle"
+        [message]="error() || ''"
+        actionLabel="Retry"
+        (action)="loadAssets()"
+      ></app-state>
+    }
 
-    <div *ngIf="!loading() && !error()" appTableWrapper>
-      <table appDataTable class="assets-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Created By (Name)</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Type</th>
-            <th>Created At</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let asset of filteredAssets(); trackBy: trackByAssetId">
-            <td>{{ asset.asset_id }}</td>
-            <td>{{ formatCreatedBy(asset) }}</td>
-            <td class="name-cell">{{ asset.asset_name || '-' }}</td>
-            <td class="description-cell">{{ asset.asset_description || '-' }}</td>
-            <td class="type-cell">{{ asset.asset_type_description || '-' }}</td>
-            <td>{{ formatCreatedAt(asset.asset_created_at) }}</td>
-            <td class="actions-cell">
-              <div class="actions-inline">
-                <button
-                  type="button"
-                  appButton
-                  class="btn btn-icon btn-text action-icon-btn delete-btn"
-                  (click)="requestDeleteAsset(asset)"
-                  [disabled]="!isDeletable(asset)"
-                  [title]="isDeletable(asset) ? 'Delete item' : 'Delete item disabled (older than 7 days)'"
-                >
-                  <i class="pi pi-trash"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr *ngIf="filteredAssets().length === 0">
-            <td colspan="7">
-              <app-state type="empty" icon="pi pi-info-circle" message="No assets found" size="compact"></app-state>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    @if (!loading() && !error()) {
+      <div appTableWrapper>
+        <table appDataTable class="assets-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Created By (Name)</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Type</th>
+              <th>Created At</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (asset of filteredAssets(); track trackByAssetId($index, asset)) {
+              <tr>
+                <td>{{ asset.asset_id }}</td>
+                <td>{{ formatCreatedBy(asset) }}</td>
+                <td class="name-cell">{{ asset.asset_name || '-' }}</td>
+                <td class="description-cell">{{ asset.asset_description || '-' }}</td>
+                <td class="type-cell">{{ asset.asset_type_description || '-' }}</td>
+                <td>{{ formatCreatedAt(asset.asset_created_at) }}</td>
+                <td class="actions-cell">
+                  <div class="actions-inline">
+                    <button
+                      type="button"
+                      appButton
+                      class="btn btn-icon btn-text action-icon-btn delete-btn"
+                      (click)="requestDeleteAsset(asset)"
+                      [disabled]="!isDeletable(asset)"
+                      [title]="
+                        isDeletable(asset)
+                          ? 'Delete item'
+                          : 'Delete item disabled (older than 7 days)'
+                      "
+                    >
+                      <i class="pi pi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @if (filteredAssets().length === 0) {
+              <tr>
+                <td colspan="7">
+                  <app-state
+                    type="empty"
+                    icon="pi pi-info-circle"
+                    message="No assets found"
+                    size="compact"
+                  ></app-state>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+  @if (!loading() && !error()) {
+    <div class="table-footer">
+      <span class="results-count">
+        Showing {{ filteredAssets().length }} of {{ assets().length }} assets
+      </span>
     </div>
-  </div>
-
-  <div *ngIf="!loading() && !error()" class="table-footer">
-    <span class="results-count">
-      Showing {{ filteredAssets().length }} of {{ assets().length }} assets
-    </span>
-  </div>
+  }
 </div>
 
-<app-asset-form-dialog
-  *ngIf="showDialog()"
-  [assetTypes]="assetTypeOptions()"
-  (close)="closeDialog()"
-  (saved)="onAssetSaved()"
-></app-asset-form-dialog>
+@if (showDialog()) {
+  <app-asset-form-dialog
+    [assetTypes]="assetTypeOptions()"
+    (close)="closeDialog()"
+    (saved)="onAssetSaved()"
+  ></app-asset-form-dialog>
+}
 
-<app-confirm-dialog
-  *ngIf="confirmTarget()"
-  title="Delete asset"
-  [message]="'Delete \"' + (confirmTarget()?.asset_name || 'asset') + '\"?'"
-  confirmLabel="Delete"
-  confirmVariant="danger"
-  (confirm)="confirmDeleteAsset()"
-  (cancel)="cancelDeleteAsset()"
-></app-confirm-dialog>
+@if (confirmTarget()) {
+  <app-confirm-dialog
+    title="Delete asset"
+    [message]="'Delete \"' + (confirmTarget()?.asset_name || 'asset') + '\"?'"
+    confirmLabel="Delete"
+    confirmVariant="danger"
+    (confirm)="confirmDeleteAsset()"
+    (cancel)="cancelDeleteAsset()"
+  ></app-confirm-dialog>
+}

@@ -4,9 +4,11 @@
       <label for="asset_id">Asset *</label>
       <select id="asset_id" formControlName="asset_id">
         <option [ngValue]="null" disabled>Select asset</option>
-        <option *ngFor="let asset of assets; trackBy: trackByAssetId" [ngValue]="asset.asset_id">
-          {{ asset.asset_name }}{{ asset.asset_type_description ? ' - ' + asset.asset_type_description : '' }}
-        </option>
+        @for (asset of assets; track trackByAssetId($index, asset)) {
+          <option [ngValue]="asset.asset_id">
+            {{ asset.asset_name }}{{ asset.asset_type_description ? ' - ' + asset.asset_type_description : '' }}
+          </option>
+        }
       </select>
       @if (form.controls.asset_id.touched && form.controls.asset_id.errors?.['required']) {
         <span class="error-message">Asset is required</span>

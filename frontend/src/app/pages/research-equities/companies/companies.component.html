@@ -16,42 +16,49 @@
     ></app-search-input>
   </div>
 
-  <app-state
-    *ngIf="loading()"
-    type="loading"
-    icon="pi pi-spinner pi-spin"
-    message="Loading companies..."
-  ></app-state>
+  @if (loading()) {
+    <app-state
+      type="loading"
+      icon="pi pi-spinner pi-spin"
+      message="Loading companies..."
+    ></app-state>
+  }
 
-  <app-state
-    *ngIf="error() && !loading()"
-    type="error"
-    icon="pi pi-exclamation-circle"
-    [message]="error() || ''"
-    actionLabel="Retry"
-    (action)="loadCompanies()"
-  ></app-state>
+  @if (error() && !loading()) {
+    <app-state
+      type="error"
+      icon="pi pi-exclamation-circle"
+      [message]="error() || ''"
+      actionLabel="Retry"
+      (action)="loadCompanies()"
+    ></app-state>
+  }
 
-  <ul *ngIf="!loading() && !error()" role="list" class="companies-grid">
-    <li *ngFor="let company of filteredCompanies()" class="companies-item">
-      <a
-        class="company-card"
-        [routerLink]="['/research-equities/companies', company.id]"
-      >
-        <div class="company-initial">
-          {{ company.display_name.charAt(0) }}
-        </div>
-        <div class="company-info">
-          <span class="company-name">{{ company.display_name }}</span>
-        </div>
-      </a>
-    </li>
-  </ul>
+  @if (!loading() && !error()) {
+    <ul role="list" class="companies-grid">
+      @for (company of filteredCompanies(); track company.id) {
+        <li class="companies-item">
+          <a
+            class="company-card"
+            [routerLink]="['/research-equities/companies', company.id]"
+          >
+            <div class="company-initial">
+              {{ company.display_name.charAt(0) }}
+            </div>
+            <div class="company-info">
+              <span class="company-name">{{ company.display_name }}</span>
+            </div>
+          </a>
+        </li>
+      }
+    </ul>
+  }
 
-  <app-state
-    *ngIf="!loading() && !error() && filteredCompanies().length === 0"
-    type="empty"
-    icon="pi pi-search"
-    message="No companies found"
-  ></app-state>
+  @if (!loading() && !error() && filteredCompanies().length === 0) {
+    <app-state
+      type="empty"
+      icon="pi pi-search"
+      message="No companies found"
+    ></app-state>
+  }
 </div>

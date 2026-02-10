@@ -10,23 +10,26 @@
     </div>
   </div>
 
-  <app-state
-    *ngIf="isLoading()"
-    type="loading"
-    icon="pi pi-spinner pi-spin"
-    message="Loading NAV data..."
-  ></app-state>
+  @if (isLoading()) {
+    <app-state
+      type="loading"
+      icon="pi pi-spinner pi-spin"
+      message="Loading NAV data..."
+    ></app-state>
+  }
 
-  <app-state
-    *ngIf="error() && !isLoading()"
-    type="error"
-    icon="pi pi-exclamation-circle"
-    [message]="error() || ''"
-    actionLabel="Retry"
-    (action)="loadNavData()"
-  ></app-state>
+  @if (error() && !isLoading()) {
+    <app-state
+      type="error"
+      icon="pi pi-exclamation-circle"
+      [message]="error() || ''"
+      actionLabel="Retry"
+      (action)="loadNavData()"
+    ></app-state>
+  }
 
-  <div *ngIf="!isLoading() && !error()" class="cards-grid">
+  @if (!isLoading() && !error()) {
+    <div class="cards-grid">
     <div class="card">
       <div class="card-header">
         <div>
@@ -45,9 +48,9 @@
               [value]="selectedDate()"
               (change)="onDateChange($event)"
             />
-            <p *ngIf="formattedSelectedDate()" class="hint-text">
-              Using data up to: {{ formattedSelectedDate() }}
-            </p>
+            @if (formattedSelectedDate()) {
+              <p class="hint-text">Using data up to: {{ formattedSelectedDate() }}</p>
+            }
           </div>
           <div class="filter-block">
             <div class="filter-title">Display Options</div>
@@ -86,21 +89,34 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of latestValuesDisplay(); trackBy: trackByLatest">
-                <td class="name-cell">{{ item.displayName }}</td>
-                <td class="text-right mono">{{ item.formattedValue }}</td>
-                <td class="text-right mono">{{ formatPercentage(item.percentage) }}</td>
-              </tr>
-              <tr *ngIf="latestValuesDisplay().length === 0">
-                <td colspan="3">
-                  <app-state type="empty" icon="pi pi-info-circle" message="No values available" size="compact"></app-state>
-                </td>
-              </tr>
-              <tr *ngIf="latestValuesDisplay().length > 0" class="total-row">
-                <td>Total</td>
-                <td class="text-right mono">{{ formatCurrencyInMillions(totalLatestValue()) }}</td>
-                <td class="text-right mono">100.0%</td>
-              </tr>
+              @for (item of latestValuesDisplay(); track trackByLatest($index, item)) {
+                <tr>
+                  <td class="name-cell">{{ item.displayName }}</td>
+                  <td class="text-right mono">{{ item.formattedValue }}</td>
+                  <td class="text-right mono">{{ formatPercentage(item.percentage) }}</td>
+                </tr>
+              }
+              @if (latestValuesDisplay().length === 0) {
+                <tr>
+                  <td colspan="3">
+                    <app-state
+                      type="empty"
+                      icon="pi pi-info-circle"
+                      message="No values available"
+                      size="compact"
+                    ></app-state>
+                  </td>
+                </tr>
+              }
+              @if (latestValuesDisplay().length > 0) {
+                <tr class="total-row">
+                  <td>Total</td>
+                  <td class="text-right mono">
+                    {{ formatCurrencyInMillions(totalLatestValue()) }}
+                  </td>
+                  <td class="text-right mono">100.0%</td>
+                </tr>
+              }
             </tbody>
           </table>
         </div>
@@ -183,22 +199,30 @@
       </div>
       <div class="card-body">
         <div class="assets-grid">
-          <div
-            class="asset-pill"
-            *ngFor="let asset of displayChartData().assets; trackBy: trackByAssetName; index as i"
-          >
-            <span class="asset-dot" [style.background]="'hsl(' + (i * 137.508 % 360) + ', 70%, 50%)'"></span>
-            {{ asset }}
-          </div>
-          <app-state
-            *ngIf="displayChartData().assets.length === 0"
-            type="empty"
-            icon="pi pi-info-circle"
-            message="No assets available"
-            size="compact"
-          ></app-state>
+          @for (
+            asset of displayChartData().assets;
+            track trackByAssetName($index, asset);
+            let i = $index
+          ) {
+            <div class="asset-pill">
+              <span
+                class="asset-dot"
+                [style.background]="'hsl(' + (i * 137.508 % 360) + ', 70%, 50%)'"
+              ></span>
+              {{ asset }}
+            </div>
+          }
+          @if (displayChartData().assets.length === 0) {
+            <app-state
+              type="empty"
+              icon="pi pi-info-circle"
+              message="No assets available"
+              size="compact"
+            ></app-state>
+          }
         </div>
       </div>
     </div>
-  </div>
+    </div>
+  }
 </div>
