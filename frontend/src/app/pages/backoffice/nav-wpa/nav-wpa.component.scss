@@ -1,1 +1,268 @@
+.cards-grid {
+  display: grid;
+  gap: 1.5rem;
+}
 
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-200);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-900);
+  }
+}
+
+.card-subtitle {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  color: var(--text-600);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.filters-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.filters-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.filter-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-block label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-900);
+}
+
+.date-input {
+  padding: 0.7rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.date-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(177, 120, 64, 0.1);
+  outline: none;
+}
+
+.filter-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--text-900);
+}
+
+.toggle-row input {
+  width: 16px;
+  height: 16px;
+}
+
+.hint-text {
+  font-size: 0.8rem;
+  color: var(--text-600);
+}
+
+.nav-table td,
+.nav-table th {
+  white-space: nowrap;
+}
+
+.nav-table tbody tr:nth-child(even) {
+  background: #fbfcfd;
+}
+
+.total-row {
+  border-top: 2px solid #e2e8f0;
+  font-weight: 600;
+  background: #f8fafc;
+}
+
+.charts-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.chart-card {
+  min-height: 360px;
+}
+
+.chart-card .card-body {
+  height: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-card p-chart {
+  display: block;
+  flex: 1;
+  min-height: 0;
+}
+
+.chart-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-900);
+  margin-bottom: 0.75rem;
+}
+
+.summary-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.summary-item {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.summary-value {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--text-900);
+  margin: 0;
+}
+
+.summary-value.small {
+  font-size: 1rem;
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  color: var(--text-600);
+  margin: 0.35rem 0 0;
+}
+
+.assets-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.asset-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  background: #f8fafc;
+  color: var(--text-900);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.asset-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mono {
+  font-family: 'SFMono-Regular', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+}
+
+.name-cell {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--text-600);
+  padding: 2rem 1rem;
+
+  i {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #94a3b8;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.loading-state,
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+
+  i {
+    font-size: 2.5rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1rem;
+    color: var(--text-600);
+    margin: 0;
+  }
+}
+
+.error-state i {
+  color: #dc2626;
+}
+
+@media (max-width: 900px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chart-card .card-body {
+    height: 320px;
+  }
+}

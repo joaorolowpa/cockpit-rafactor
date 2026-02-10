@@ -1,7 +1,200 @@
 <div class="page-container">
   <div class="page-header">
     <div>
-      <h1 class="page-title">NAV (WPA)</h1>
+      <h1 class="page-title">NAV Evolution</h1>
+      <p class="page-subtitle">
+        Displaying NAV evolution for {{ displayChartData().assets.length }} assets
+        from {{ consolidatedChartData().dateRange.min || '-' }} to
+        {{ consolidatedChartData().dateRange.max || '-' }} (values in BRL)
+      </p>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading()" class="loading-state">
+    <i class="pi pi-spinner pi-spin"></i>
+    <p>Loading NAV data...</p>
+  </div>
+
+  <div *ngIf="error() && !isLoading()" class="error-state">
+    <i class="pi pi-exclamation-circle"></i>
+    <p>{{ error() }}</p>
+    <button type="button" class="btn btn-secondary" (click)="loadNavData()">
+      <i class="pi pi-refresh"></i>
+      <span>Retry</span>
+    </button>
+  </div>
+
+  <div *ngIf="!isLoading() && !error()" class="cards-grid">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>Filters &amp; Display</h3>
+          <p class="card-subtitle">Adjust the reference date and display options</p>
+        </div>
+      </div>
+      <div class="card-body filters-card">
+        <div class="filters-grid">
+          <div class="filter-block">
+            <label for="nav-date">Select Reference Date</label>
+            <input
+              id="nav-date"
+              class="date-input"
+              type="date"
+              [value]="selectedDate()"
+              (change)="onDateChange($event)"
+            />
+            <p *ngIf="formattedSelectedDate()" class="hint-text">
+              Using data up to: {{ formattedSelectedDate() }}
+            </p>
+          </div>
+          <div class="filter-block">
+            <div class="filter-title">Display Options</div>
+            <label class="toggle-row">
+              <input
+                type="checkbox"
+                [checked]="consolidateStocksEnabled()"
+                (change)="toggleConsolidate($event)"
+              />
+              <span>Consolidate stocks as "Stocks"</span>
+            </label>
+            <p class="hint-text">
+              When enabled, individual stock symbols are grouped under a single
+              "Stocks" category.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>Current Portfolio Values (Latest Month)</h3>
+          <p class="card-subtitle">Values shown in millions of BRL</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-wrapper">
+          <table class="data-table nav-table">
+            <thead>
+              <tr>
+                <th>Asset</th>
+                <th class="text-right">Value (Millions BRL)</th>
+                <th class="text-right">Percentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of latestValuesDisplay(); trackBy: trackByLatest">
+                <td class="name-cell">{{ item.displayName }}</td>
+                <td class="text-right mono">{{ item.formattedValue }}</td>
+                <td class="text-right mono">{{ formatPercentage(item.percentage) }}</td>
+              </tr>
+              <tr *ngIf="latestValuesDisplay().length === 0">
+                <td colspan="3" class="empty-state">
+                  <i class="pi pi-info-circle"></i>
+                  <p>No values available</p>
+                </td>
+              </tr>
+              <tr *ngIf="latestValuesDisplay().length > 0" class="total-row">
+                <td>Total</td>
+                <td class="text-right mono">{{ formatCurrencyInMillions(totalLatestValue()) }}</td>
+                <td class="text-right mono">100.0%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="card chart-card">
+        <div class="card-body">
+          <div class="chart-title">Current NAV Distribution</div>
+          <p-chart type="pie" [data]="pieChartData()" [options]="pieChartOptions"></p-chart>
+        </div>
+      </div>
+      <div class="card chart-card">
+        <div class="card-body">
+          <div class="chart-title">NAV Index Chart</div>
+          <p-chart
+            type="line"
+            [data]="profitabilityChartData()"
+            [options]="profitabilityChartOptions"
+          ></p-chart>
+        </div>
+      </div>
+      <div class="card chart-card">
+        <div class="card-body">
+          <div class="chart-title">NAV Evolution - Stacked Area</div>
+          <p-chart type="line" [data]="stackedChartData()" [options]="stackedChartOptions"></p-chart>
+        </div>
+      </div>
+      <div class="card chart-card">
+        <div class="card-body">
+          <div class="chart-title">NAV Evolution - Line Chart</div>
+          <p-chart type="line" [data]="lineChartData()" [options]="lineChartOptions"></p-chart>
+        </div>
+      </div>
+      <div class="card chart-card">
+        <div class="card-body">
+          <div class="chart-title">NAV Evolution - 100% Stacked</div>
+          <p-chart
+            type="line"
+            [data]="percentageLineChartData()"
+            [options]="percentageChartOptions"
+          ></p-chart>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>Summary</h3>
+          <p class="card-subtitle">Quick overview of the NAV dataset</p>
+        </div>
+      </div>
+      <div class="card-body summary-grid">
+        <div class="summary-item">
+          <p class="summary-value">{{ displayChartData().assets.length }}</p>
+          <p class="summary-label">Assets</p>
+        </div>
+        <div class="summary-item">
+          <p class="summary-value">{{ displayChartData().data.length }}</p>
+          <p class="summary-label">Data Points</p>
+        </div>
+        <div class="summary-item">
+          <p class="summary-label">Date Range</p>
+          <p class="summary-value small">
+            {{ consolidatedChartData().dateRange.min || '-' }} to
+            {{ consolidatedChartData().dateRange.max || '-' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3>Assets in Portfolio</h3>
+          <p class="card-subtitle">List of assets in the selected data set</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="assets-grid">
+          <div
+            class="asset-pill"
+            *ngFor="let asset of displayChartData().assets; trackBy: trackByAssetName; index as i"
+          >
+            <span class="asset-dot" [style.background]="'hsl(' + (i * 137.508 % 360) + ', 70%, 50%)'"></span>
+            {{ asset }}
+          </div>
+          <div *ngIf="displayChartData().assets.length === 0" class="empty-state">
+            <i class="pi pi-info-circle"></i>
+            <p>No assets available</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
