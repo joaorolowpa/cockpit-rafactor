@@ -268,43 +268,6 @@
   margin-bottom: 0;
 }
 
-.colmeia-history .table-wrapper {
-  overflow-x: auto;
-}
-
-.colmeia-history-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.82rem;
-  min-width: 1200px;
-}
-
-.colmeia-history-table thead th {
-  padding: 0.75rem 0.9rem;
-  text-align: left;
-  font-weight: 600;
-  color: var(--text-600);
-  border-bottom: 1px solid var(--border-200);
-  background: var(--surface-0);
-  white-space: nowrap;
-}
-
-.colmeia-history-table tbody td {
-  padding: 0.75rem 0.9rem;
-  border-bottom: 1px solid var(--border-200);
-  white-space: nowrap;
-  color: var(--text-900);
-  vertical-align: middle;
-}
-
-.colmeia-history-table tbody tr:hover {
-  background: var(--surface-0);
-}
-
-.colmeia-history-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
 .score-cell {
   display: flex;
   flex-direction: column;
@@ -416,79 +379,6 @@
   background: var(--surface-1);
 }
 
-.financials-table-wrapper {
-  overflow: auto;
-  max-height: 420px;
-  transition: max-height 0.3s ease;
-}
-
-.financials-table-wrapper.expanded {
-  max-height: calc(100vh - 260px);
-}
-
-.financials-data-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 0.85rem;
-  min-width: 760px;
-}
-
-.financials-data-table thead {
-  position: sticky;
-  top: 0;
-  background: var(--surface-0);
-  z-index: 5;
-}
-
-.financials-data-table thead th {
-  padding: 0.75rem 0.9rem;
-  border-bottom: 1px solid var(--border-200);
-  font-weight: 600;
-  color: var(--text-900);
-  text-align: left;
-  white-space: nowrap;
-  font-size: 0.8rem;
-}
-
-.financials-data-table tbody tr.selected {
-  background: #fef3e2;
-}
-
-.financials-data-table tbody td {
-  padding: 0.7rem 0.9rem;
-  border-bottom: 1px solid var(--border-200);
-  white-space: nowrap;
-  color: var(--text-900);
-}
-
-.financials-data-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.financials-data-table .checkbox-col {
-  width: 44px;
-  text-align: center;
-}
-
-.row-checkbox {
-  width: 16px;
-  height: 16px;
-  margin: 0;
-  cursor: pointer;
-  appearance: none;
-  border: 1px solid var(--border-200);
-  border-radius: 3px;
-  background: #ffffff;
-  display: inline-grid;
-  place-content: center;
-}
-
-.row-checkbox:checked {
-  border-color: var(--accent);
-  background: var(--accent);
-}
-
 .row-checkbox:checked::after {
   content: "";
   width: 7px;
@@ -527,97 +417,6 @@
 .hint-text {
   font-size: 0.8rem;
   color: var(--text-600);
-}
-
-.table-wrapper {
-  overflow-x: auto;
-  border-top: 1px solid var(--border-200);
-}
-
-.data-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 0.85rem;
-}
-
-.data-table th,
-.data-table td {
-  padding: 0.65rem 0.75rem;
-  border-bottom: 1px solid var(--border-200);
-  text-align: left;
-}
-
-.data-table thead th {
-  background: var(--surface-0);
-  font-weight: 600;
-  color: var(--text-900);
-  font-size: 0.82rem;
-  text-transform: none;
-  letter-spacing: 0;
-}
-
-.data-table tbody tr:hover {
-  background: var(--surface-0);
-}
-
-.data-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.financials-data-table.data-table thead th {
-  padding: 0.75rem 0.9rem;
-  border-bottom: 1px solid var(--border-200);
-  font-weight: 600;
-  color: var(--text-900);
-  text-align: left;
-  white-space: nowrap;
-  font-size: 0.8rem;
-  text-transform: none;
-  letter-spacing: 0;
-}
-
-.financials-data-table.data-table tbody tr.selected {
-  background: #fef3e2;
-}
-
-.financials-data-table.data-table tbody td {
-  padding: 0.7rem 0.9rem;
-  border-bottom: 1px solid var(--border-200);
-  white-space: nowrap;
-  color: var(--text-900);
-}
-
-.financials-data-table.data-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.colmeia-history-table.data-table thead th {
-  padding: 0.75rem 0.9rem;
-  text-align: left;
-  font-weight: 600;
-  color: var(--text-600);
-  border-bottom: 1px solid var(--border-200);
-  background: var(--surface-0);
-  white-space: nowrap;
-  text-transform: none;
-  letter-spacing: 0;
-}
-
-.colmeia-history-table.data-table tbody td {
-  padding: 0.75rem 0.9rem;
-  border-bottom: 1px solid var(--border-200);
-  white-space: nowrap;
-  color: var(--text-900);
-  vertical-align: middle;
-}
-
-.colmeia-history-table.data-table tbody tr:hover {
-  background: var(--surface-0);
-}
-
-.colmeia-history-table.data-table tbody tr:last-child td {
-  border-bottom: none;
 }
 
 .section-header {
@@ -680,10 +479,6 @@
 .document-subtitle {
   font-size: 0.82rem;
   color: var(--text-600);
-}
-
-.btn-compact {
-  margin-top: 0.75rem;
 }
 
 .empty-state.compact {
