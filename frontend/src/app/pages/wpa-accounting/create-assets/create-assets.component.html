@@ -146,10 +146,12 @@
 @if (confirmTarget()) {
   <app-confirm-dialog
     title="Delete asset"
-    [message]="'Delete \"' + (confirmTarget()?.asset_name || 'asset') + '\"?'"
+    [message]="'Delete &quot;' + (confirmTarget()?.asset_name || 'asset') + '&quot;?'"
     confirmLabel="Delete"
     confirmVariant="danger"
     (confirm)="confirmDeleteAsset()"
     (cancel)="cancelDeleteAsset()"
   ></app-confirm-dialog>
 }
+
+

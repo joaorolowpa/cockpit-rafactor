@@ -9,8 +9,8 @@
     <p class="state-description">{{ description }}</p>
   }
   @if (actionLabel) {
-    <app-button [variant]="actionVariant" type="button" (click)="action.emit()">
+    <button appButton [variant]="actionVariant" type="button" (click)="action.emit()">
       {{ actionLabel }}
-    </app-button>
+    </button>
   }
 </div>

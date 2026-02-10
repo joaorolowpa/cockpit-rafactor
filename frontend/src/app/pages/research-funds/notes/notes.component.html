@@ -22,80 +22,94 @@
       ></app-search-input>
     </div>
 
-    <app-state
-      *ngIf="loading()"
-      type="loading"
-      icon="pi pi-spinner pi-spin"
-      message="Loading note types..."
-    ></app-state>
+    @if (loading()) {
+      <app-state
+        type="loading"
+        icon="pi pi-spinner pi-spin"
+        message="Loading note types..."
+      ></app-state>
+    }
 
-    <app-state
-      *ngIf="error() && !loading()"
-      type="error"
-      icon="pi pi-exclamation-circle"
-      [message]="error() || ''"
-      actionLabel="Retry"
-      (action)="loadTypes()"
-    ></app-state>
+    @if (error() && !loading()) {
+      <app-state
+        type="error"
+        icon="pi pi-exclamation-circle"
+        [message]="error() || ''"
+        actionLabel="Retry"
+        (action)="loadTypes()"
+      ></app-state>
+    }
 
-    <div *ngIf="!loading() && !error()" appTableWrapper>
-      <table appDataTable class="notes-types-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Created At</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of filteredTypes(); trackBy: trackById">
-            <td>{{ item.id }}</td>
-            <td class="name-cell">{{ item.display_name }}</td>
-            <td class="description-cell">{{ item.description || '-' }}</td>
-            <td>{{ formatCreatedAt(item.created_at) }}</td>
-            <td class="actions-cell">
-              <button
-                type="button"
-                class="btn btn-icon btn-text action-icon-btn delete-btn"
-                (click)="requestDeleteType(item)"
-                [disabled]="!isDeletable(item)"
-                [title]="isDeletable(item) ? 'Delete type' : 'Delete disabled (older than 7 days)'"
-              >
-                <i class="pi pi-trash"></i>
-              </button>
-            </td>
-          </tr>
-          <tr *ngIf="filteredTypes().length === 0">
-            <td colspan="5">
-              <app-state type="empty" icon="pi pi-info-circle" message="No note types found" size="compact"></app-state>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    @if (!loading() && !error()) {
+      <div appTableWrapper>
+        <table appDataTable class="notes-types-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Created At</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of filteredTypes(); track trackById($index, item)) {
+              <tr>
+                <td>{{ item.id }}</td>
+                <td class="name-cell">{{ item.display_name }}</td>
+                <td class="description-cell">{{ item.description || '-' }}</td>
+                <td>{{ formatCreatedAt(item.created_at) }}</td>
+                <td class="actions-cell">
+                  <button
+                    type="button"
+                    class="btn btn-icon btn-text action-icon-btn delete-btn"
+                    (click)="requestDeleteType(item)"
+                    [disabled]="!isDeletable(item)"
+                    [title]="isDeletable(item) ? 'Delete type' : 'Delete disabled (older than 7 days)'"
+                  >
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            }
+            @if (filteredTypes().length === 0) {
+              <tr>
+                <td colspan="5">
+                  <app-state type="empty" icon="pi pi-info-circle" message="No note types found" size="compact"></app-state>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+  @if (!loading() && !error()) {
+    <div class="table-footer">
+      <span class="results-count">
+        Showing {{ filteredTypes().length }} of {{ types().length }} types
+      </span>
     </div>
-  </div>
-
-  <div *ngIf="!loading() && !error()" class="table-footer">
-    <span class="results-count">
-      Showing {{ filteredTypes().length }} of {{ types().length }} types
-    </span>
-  </div>
+  }
 </div>
 
-<app-funds-note-type-dialog
-  *ngIf="showDialog()"
-  (close)="closeDialog()"
-  (created)="onTypeCreated($event)"
-></app-funds-note-type-dialog>
+@if (showDialog()) {
+  <app-funds-note-type-dialog
+    (close)="closeDialog()"
+    (created)="onTypeCreated($event)"
+  ></app-funds-note-type-dialog>
+}
 
-<app-confirm-dialog
-  *ngIf="confirmTarget()"
-  title="Delete note type"
-  [message]="'Delete \"' + (confirmTarget()?.display_name || 'note type') + '\"?'"
-  confirmLabel="Delete"
-  confirmVariant="danger"
-  (confirm)="confirmDeleteType()"
-  (cancel)="cancelDeleteType()"
-></app-confirm-dialog>
+@if (confirmTarget()) {
+  <app-confirm-dialog
+    title="Delete note type"
+    [message]="'Delete &quot;' + (confirmTarget()?.display_name || 'note type') + '&quot;?'"
+    confirmLabel="Delete"
+    confirmVariant="danger"
+    (confirm)="confirmDeleteType()"
+    (cancel)="cancelDeleteType()"
+  ></app-confirm-dialog>
+}
+
+

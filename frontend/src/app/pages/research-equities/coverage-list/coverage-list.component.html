@@ -132,10 +132,12 @@
 @if (confirmTarget()) {
   <app-confirm-dialog
     title="Delete company"
-    [message]="'Delete \"' + (confirmTarget()?.display_name || 'company') + '\"?'"
+    [message]="'Delete &quot;' + (confirmTarget()?.display_name || 'company') + '&quot;?'"
     confirmLabel="Delete"
     confirmVariant="danger"
     (confirm)="confirmDeleteCompany()"
     (cancel)="cancelDeleteCompany()"
   ></app-confirm-dialog>
 }
+
+

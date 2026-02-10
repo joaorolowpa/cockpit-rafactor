@@ -6,31 +6,35 @@
     </div>
   </div>
 
-  <app-state
-    *ngIf="isLoading()"
-    type="loading"
-    icon="pi pi-spinner pi-spin"
-    message="Loading funds overview..."
-  ></app-state>
+  @if (isLoading()) {
+    <app-state
+      type="loading"
+      icon="pi pi-spinner pi-spin"
+      message="Loading funds overview..."
+    ></app-state>
+  }
 
-  <app-state
-    *ngIf="error() && !isLoading()"
-    type="error"
-    icon="pi pi-exclamation-circle"
-    [message]="error() || ''"
-    actionLabel="Retry"
-    (action)="loadData()"
-  ></app-state>
+  @if (error() && !isLoading()) {
+    <app-state
+      type="error"
+      icon="pi pi-exclamation-circle"
+      [message]="error() || ''"
+      actionLabel="Retry"
+      (action)="loadData()"
+    ></app-state>
+  }
 
-  <app-state
-    *ngIf="!isLoading() && !error() && groupedFunds().length === 0"
-    type="empty"
-    icon="pi pi-folder-open"
-    message="No funds data available"
-  ></app-state>
+  @if (!isLoading() && !error() && groupedFunds().length === 0) {
+    <app-state
+      type="empty"
+      icon="pi pi-folder-open"
+      message="No funds data available"
+    ></app-state>
+  }
 
-  <app-funds-accordion
-    *ngIf="!isLoading() && !error() && groupedFunds().length > 0"
-    [groupedFunds]="groupedFunds()"
-  />
+  @if (!isLoading() && !error() && groupedFunds().length > 0) {
+    <app-funds-accordion
+      [groupedFunds]="groupedFunds()"
+    />
+  }
 </div>

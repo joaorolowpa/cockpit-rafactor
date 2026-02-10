@@ -1,4 +1,4 @@
-﻿<div appPageContainer>
+<div appPageContainer>
   <div appPageHeader>
     <div>
       <a class="back-link" [routerLink]="['/research-equities/companies']">
@@ -266,6 +266,7 @@
         </div>
       </div>
     </div>
+    }
 
     @if (activeTab() === 'documents') {
       <div class="tab-panel">
@@ -368,7 +369,7 @@
                             <td>
                               {{ doc.user_name || 'Unknown' }}
                               @if (doc.user_email) {
-                                <span>• {{ doc.user_email }}</span>
+                                <span>� {{ doc.user_email }}</span>
                               }
                             </td>
                             <td class="actions-col">
@@ -587,9 +588,9 @@
   <app-confirm-dialog
     title="Delete document"
     [message]="
-      'Delete \"' +
+      'Delete &quot;' +
       (confirmDocument()?.filePath ? getFileName(confirmDocument()?.filePath) : 'document') +
-      '\"?'
+      '&quot;?'
     "
     confirmLabel="Delete"
     confirmVariant="danger"
@@ -597,3 +598,4 @@
     (cancel)="cancelDeleteCompanyDocument()"
   ></app-confirm-dialog>
 }
+
