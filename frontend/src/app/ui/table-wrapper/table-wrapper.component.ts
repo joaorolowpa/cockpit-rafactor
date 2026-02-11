@@ -6,7 +6,8 @@ import { Component, HostBinding, Input } from '@angular/core';
   template: '<ng-content></ng-content>',
   host: {
     class: 'table-wrapper'
-  }
+  },
+  styleUrl: './table-wrapper.component.scss'
 })
 export class TableWrapperComponent {
   @Input() compact = false;

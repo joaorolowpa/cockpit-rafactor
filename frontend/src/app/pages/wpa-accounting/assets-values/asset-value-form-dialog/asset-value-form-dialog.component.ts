@@ -11,7 +11,6 @@ import { UI_IMPORTS } from '../../../../ui/ui.imports';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputTextModule, ...UI_IMPORTS],
   templateUrl: './asset-value-form-dialog.component.html',
-  styleUrl: './asset-value-form-dialog.component.scss'
 })
 export class AssetValueFormDialogComponent {
   private readonly fb = inject(FormBuilder);

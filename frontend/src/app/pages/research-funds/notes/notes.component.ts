@@ -2,14 +2,21 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
 import { FundNoteFileType } from '../../../models/funds.model';
 import { FundsNoteTypeDialogComponent } from './funds-note-type-dialog/funds-note-type-dialog.component';
+import { NotesTypesTableComponent } from './notes-types-table/notes-types-table.component';
+import { NotesTypesFooterComponent } from './notes-types-footer/notes-types-footer.component';
 import { UI_IMPORTS } from '../../../ui/ui.imports';
 
 @Component({
   selector: 'app-notes',
   standalone: true,
-  imports: [CommonModule, FundsNoteTypeDialogComponent, ...UI_IMPORTS],
-  templateUrl: './notes.component.html',
-  styleUrl: './notes.component.scss'
+  imports: [
+    CommonModule,
+    FundsNoteTypeDialogComponent,
+    NotesTypesTableComponent,
+    NotesTypesFooterComponent,
+    ...UI_IMPORTS
+  ],
+  templateUrl: './notes.component.html'
 })
 export class NotesComponent implements OnInit {
   types = signal<FundNoteFileType[]>([]);
@@ -19,6 +26,8 @@ export class NotesComponent implements OnInit {
   error = signal<string | null>(null);
   showDialog = signal<boolean>(false);
   confirmTarget = signal<FundNoteFileType | null>(null);
+  readonly isDeletableFn = (item: FundNoteFileType): boolean => this.isDeletable(item);
+  readonly formatCreatedAtFn = (value: string): string => this.formatCreatedAt(value);
 
   constructor() {}
 
@@ -109,10 +118,6 @@ export class NotesComponent implements OnInit {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return value;
     return formatDate(date, 'MMM d, y', 'en-US');
-  }
-
-  trackById(_index: number, item: FundNoteFileType): number {
-    return item.id;
   }
 
   private getMockTypes(): FundNoteFileType[] {

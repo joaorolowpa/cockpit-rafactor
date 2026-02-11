@@ -1,0 +1,25 @@
+.notes-types-table tbody tr:nth-child(even) {
+  background: #fbfcfd;
+}
+
+.notes-types-table .name-cell {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.notes-types-table .description-cell {
+  max-width: 360px;
+  white-space: normal;
+  line-height: 1.35;
+  color: #475569;
+}
+
+.actions-cell {
+  width: 80px;
+}
+
+@media (max-width: 900px) {
+  .notes-types-table .description-cell {
+    max-width: 220px;
+  }
+}

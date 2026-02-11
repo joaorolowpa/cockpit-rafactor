@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
   template: '<ng-content></ng-content>',
   host: {
     class: 'data-table'
-  }
+  },
+  styleUrl: './data-table.component.scss'
 })
 export class DataTableComponent {}

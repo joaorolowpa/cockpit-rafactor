@@ -10,8 +10,7 @@ import { UI_IMPORTS } from '../../../ui/ui.imports';
   selector: 'app-overview',
   standalone: true,
   imports: [CommonModule, FundsAccordionComponent, ...UI_IMPORTS],
-  templateUrl: './overview.component.html',
-  styleUrl: './overview.component.scss'
+  templateUrl: './overview.component.html'
 })
 export class OverviewComponent implements OnInit {
   private readonly fundsService = inject(FundsService);

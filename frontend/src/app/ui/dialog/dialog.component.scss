@@ -108,3 +108,264 @@
   padding: 1.5rem;
   border-top: 1px solid #e2e8f0;
 }
+
+:host ::ng-deep .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+:host ::ng-deep .form-group label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+:host ::ng-deep .form-group input[type="text"],
+:host ::ng-deep .form-group input[type="email"],
+:host ::ng-deep .form-group input[type="number"],
+:host ::ng-deep .form-group input[type="date"],
+:host ::ng-deep .form-group textarea,
+:host ::ng-deep .form-group select {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  outline: none;
+  transition: all 0.2s ease;
+  background: #ffffff;
+}
+
+:host ::ng-deep .form-group input:focus,
+:host ::ng-deep .form-group textarea:focus,
+:host ::ng-deep .form-group select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(177, 120, 64, 0.12);
+}
+
+:host ::ng-deep .form-group input::placeholder,
+:host ::ng-deep .form-group textarea::placeholder {
+  color: #94a3b8;
+}
+
+:host ::ng-deep .form-group textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+:host ::ng-deep .form-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7l5 5 5-5' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 16px 16px;
+  padding-right: 2.5rem;
+}
+
+:host ::ng-deep .form-row,
+:host ::ng-deep .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+:host ::ng-deep .checkbox-group {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+:host ::ng-deep .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+:host ::ng-deep .checkbox-label span {
+  font-size: 0.9375rem;
+  color: #2c3e50;
+}
+
+:host ::ng-deep .checkbox-label .checkbox-input {
+  border-color: var(--accent);
+  border-radius: 0;
+  width: 18px;
+  height: 18px;
+  background: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--accent);
+  box-sizing: border-box;
+}
+
+:host ::ng-deep .checkbox-label .checkbox-input:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+:host ::ng-deep .helper-text {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+}
+
+:host ::ng-deep .error-message {
+  font-size: 0.8125rem;
+  color: #dc2626;
+  margin-top: 0.25rem;
+}
+
+:host ::ng-deep .description {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #64748b;
+}
+
+:host ::ng-deep .roles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+:host ::ng-deep .role-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+:host ::ng-deep .role-item:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+:host ::ng-deep .role-item .checkbox-label {
+  width: 100%;
+}
+
+:host ::ng-deep .role-item .checkbox-label span {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+:host ::ng-deep .role-item .checkbox-input {
+  border-color: var(--accent);
+}
+
+:host ::ng-deep .role-item .checkbox-input:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+:host ::ng-deep .summary-section {
+  margin-top: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+:host ::ng-deep .summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+:host ::ng-deep .summary-header:hover {
+  background: #f1f5f9;
+}
+
+:host ::ng-deep .summary-header h4 {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+:host ::ng-deep .toggle-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+:host ::ng-deep .toggle-btn i {
+  font-size: 0.875rem;
+  transition: transform 0.2s ease;
+}
+
+:host ::ng-deep .summary-content {
+  padding: 1rem;
+  background: white;
+}
+
+:host ::ng-deep .no-roles-selected {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #94a3b8;
+  font-style: italic;
+  text-align: center;
+  padding: 1rem;
+}
+
+:host ::ng-deep .selected-roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+:host ::ng-deep .role-badge {
+  display: inline-flex;
+  padding: 0.375rem 0.75rem;
+  background: #f1f5f9;
+  color: #475569;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+:host ::ng-deep .submit-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 0.875rem;
+}
+
+:host ::ng-deep .submit-error i {
+  color: #ef4444;
+}
+
+@media (max-width: 720px) {
+  :host ::ng-deep .form-row,
+  :host ::ng-deep .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  :host ::ng-deep .roles-grid {
+    grid-template-columns: 1fr;
+  }
+}

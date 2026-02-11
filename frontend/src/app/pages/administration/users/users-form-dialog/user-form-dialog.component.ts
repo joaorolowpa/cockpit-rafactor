@@ -12,7 +12,6 @@ import { UI_IMPORTS } from '../../../../ui/ui.imports';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputTextModule, ...UI_IMPORTS],
   templateUrl: './user-form-dialog.component.html',
-  styleUrl: './user-form-dialog.component.scss'
 })
 export class UserFormDialogComponent {
   private readonly fb = inject(FormBuilder);

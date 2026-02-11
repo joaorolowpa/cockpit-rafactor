@@ -10,7 +10,6 @@ import { UI_IMPORTS } from '../../../../ui/ui.imports';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputTextModule, ...UI_IMPORTS],
   templateUrl: './funds-note-type-dialog.component.html',
-  styleUrl: './funds-note-type-dialog.component.scss'
 })
 export class FundsNoteTypeDialogComponent {
   private readonly fb = inject(FormBuilder);

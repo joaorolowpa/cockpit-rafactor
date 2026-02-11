@@ -5,7 +5,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   selector: 'app-search-input',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './search-input.component.html'
+  templateUrl: './search-input.component.html',
+  styleUrl: './search-input.component.scss'
 })
 export class SearchInputComponent {
   @Input() value = '';

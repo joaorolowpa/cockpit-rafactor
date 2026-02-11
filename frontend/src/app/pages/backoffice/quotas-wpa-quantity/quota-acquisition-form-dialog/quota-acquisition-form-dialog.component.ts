@@ -15,7 +15,6 @@ import { UI_IMPORTS } from '../../../../ui/ui.imports';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputTextModule, ...UI_IMPORTS],
   templateUrl: './quota-acquisition-form-dialog.component.html',
-  styleUrl: './quota-acquisition-form-dialog.component.scss'
 })
 export class QuotaAcquisitionFormDialogComponent {
   private readonly fb = inject(FormBuilder);

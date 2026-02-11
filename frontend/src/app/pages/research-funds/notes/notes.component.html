@@ -41,56 +41,21 @@
     }
 
     @if (!loading() && !error()) {
-      <div appTableWrapper>
-        <table appDataTable class="notes-types-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Created At</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (item of filteredTypes(); track trackById($index, item)) {
-              <tr>
-                <td>{{ item.id }}</td>
-                <td class="name-cell">{{ item.display_name }}</td>
-                <td class="description-cell">{{ item.description || '-' }}</td>
-                <td>{{ formatCreatedAt(item.created_at) }}</td>
-                <td class="actions-cell">
-                  <button
-                    type="button"
-                    class="btn btn-icon btn-text action-icon-btn delete-btn"
-                    (click)="requestDeleteType(item)"
-                    [disabled]="!isDeletable(item)"
-                    [title]="isDeletable(item) ? 'Delete type' : 'Delete disabled (older than 7 days)'"
-                  >
-                    <i class="pi pi-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            }
-            @if (filteredTypes().length === 0) {
-              <tr>
-                <td colspan="5">
-                  <app-state type="empty" icon="pi pi-info-circle" message="No note types found" size="compact"></app-state>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+      <app-notes-types-table
+        [types]="types()"
+        [filteredTypes]="filteredTypes()"
+        [isDeletable]="isDeletableFn"
+        [formatCreatedAt]="formatCreatedAtFn"
+        (deleteRequested)="requestDeleteType($event)"
+      ></app-notes-types-table>
     }
   </div>
 
   @if (!loading() && !error()) {
-    <div class="table-footer">
-      <span class="results-count">
-        Showing {{ filteredTypes().length }} of {{ types().length }} types
-      </span>
-    </div>
+    <app-notes-types-footer
+      [filteredCount]="filteredTypes().length"
+      [totalCount]="types().length"
+    ></app-notes-types-footer>
   }
 </div>
 

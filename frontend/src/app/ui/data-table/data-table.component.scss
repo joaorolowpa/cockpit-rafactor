@@ -1,0 +1,41 @@
+:host {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+:host ::ng-deep thead {
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+:host ::ng-deep thead th {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+:host ::ng-deep tbody tr {
+  border-bottom: 1px solid #e2e8f0;
+  transition: background 0.2s ease;
+}
+
+:host ::ng-deep tbody tr:hover {
+  background: #f8fafc;
+}
+
+:host ::ng-deep tbody tr:last-child {
+  border-bottom: none;
+}
+
+:host ::ng-deep tbody td {
+  padding: 1rem 1.5rem;
+  font-size: 0.9375rem;
+  color: var(--text-900);
+  vertical-align: middle;
+  white-space: nowrap;
+}

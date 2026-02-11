@@ -12,7 +12,6 @@ import { UI_IMPORTS } from '../../../../../ui/ui.imports';
   standalone: true,
   imports: [CommonModule, FormsModule, InputTextModule, RichTextEditorComponent, ...UI_IMPORTS],
   templateUrl: './fund-manager-edit-dialog.component.html',
-  styleUrl: './fund-manager-edit-dialog.component.scss'
 })
 export class FundManagerEditDialogComponent {
   private readonly fundsService = inject(FundsService);

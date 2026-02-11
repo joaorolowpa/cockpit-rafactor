@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
   template: '<ng-content></ng-content>',
   host: {
     class: 'filters-bar'
-  }
+  },
+  styleUrl: './filters-bar.component.scss'
 })
 export class FiltersBarComponent {}

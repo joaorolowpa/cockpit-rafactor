@@ -11,7 +11,6 @@ import { UI_IMPORTS } from '../../../../ui/ui.imports';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, InputTextModule, ...UI_IMPORTS],
   templateUrl: './deposit-ledger-form-dialog.component.html',
-  styleUrl: './deposit-ledger-form-dialog.component.scss'
 })
 export class DepositLedgerFormDialogComponent {
   private readonly fb = inject(FormBuilder);

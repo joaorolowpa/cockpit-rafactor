@@ -10,7 +10,6 @@ import { UI_IMPORTS } from '../../../../ui/ui.imports';
   standalone: true,
   imports: [CommonModule, ...UI_IMPORTS],
   templateUrl: './edit-roles-dialog.component.html',
-  styleUrl: './edit-roles-dialog.component.scss'
 })
 export class EditRolesDialogComponent implements OnInit {
   private readonly usersService = inject(UsersService);
